@@ -36,7 +36,7 @@ Here are some ideas to get you started:
 - 📝 I regularly write articles on [https://hackhubafrica8.wordpress.com/](https://hackhubafrica8.wordpress.com/)
 
 - 💬 Ask me about **network security, ethical hacking, and best practices for cybersecurity.**
-
+- 😄 Pronouns: He/Him
 - 📫 How to reach me **You can reach me via email at [your-email@example.com] or connect with me on LinkedIn at [your-LinkedIn-profile].**
 
 - 📄 Know about my experiences [https://hackhubafrica8.wordpress.com/](https://hackhubafrica8.wordpress.com/)
