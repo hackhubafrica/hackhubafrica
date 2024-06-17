@@ -37,7 +37,7 @@ Here are some ideas to get you started:
 
 - 💬 Ask me about **network security, ethical hacking, and best practices for cybersecurity.**
 - 😄 Pronouns: He/Him
-- 📫 How to reach me **You can reach me via email at crimsonsummer81@gmail.com or connect with me on LinkedIn at https://www.linkedin.com/in/brian-muthoni-368755275/
+- 📫 How to reach me **You can reach me via email at crimsonsummer81@gmail.com or connect with me on LinkedIn at www.linkedin.com/in/hackhub-africa
 
 - 📄 Know about my experiences [https://hackhubafrica8.wordpress.com/](https://hackhubafrica8.wordpress.com/)
 
