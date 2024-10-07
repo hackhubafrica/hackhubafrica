@@ -91,9 +91,10 @@ footer {
 
 
 .social-media a {
-    color: #333; /* Default icon color */
+    color: black; /* Default icon color */
     text-decoration: none; /* Remove underline from links */
     font-size: 36px; /* Adjust icon size */
+    gap: 5px;
 }
 
 .social-media a:hover {
