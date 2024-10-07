@@ -200,3 +200,8 @@ img {
     /* background-image: -webkit-repeating-radial-gradient(60deg, black, transparent)); */
 
 }
+
+
+h2 ,h3 {
+    color: blue;
+}
