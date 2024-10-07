@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Differential Equations Explained</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="../assets/images/avatar.ico">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>HackHubAfrica</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="container">
+        <article>
+            <h2>Differential Equations Explained</h2>
+            <img src="../assets/images/post4.jpg" alt="Suricata Logo"> 
+            <p class="post-meta">October 1, 2024 - Written by: hackhubafrica</p>
+            <div style="font-family: 'Arial', sans-serif; margin: 20px; padding: 20px;">
+                <p>A differential equation is any equation that contains the derivatives or differentials of one or more dependent variables with respect to one or more independent variables.</p>
+
+                <p>Imagine you have a toy car going on a track. Now, if we want to know how fast the car is going, we don’t just look at where the car is at one moment—we look at how much it moves between two moments. That’s kind of like a "derivative."</p>
+
+                <p>A differential equation is like a rule that tells us how things change. Instead of saying exactly where the toy car is, it tells us how fast it’s going or how much it speeds up or slows down as time goes by.</p>
+
+                <p>So, a differential equation helps us understand how things are changing, like how fast or slow something is moving or growing, instead of just where it is at one point.</p>
+
+                <h3>Dependent and Independent Variables</h3>
+                <p>Let's first break down what dependent and independent variables mean in the context of a differential equation:</p>
+
+                <ul>
+                    <li><strong>Dependent variable:</strong> This is the quantity that is changing, and its value depends on the other variables. For example, if we are tracking the speed of a car, the speed is the dependent variable because it changes based on time.</li>
+                    <li><strong>Independent variable:</strong> This is the quantity that we control or observe as it changes. For example, time is often the independent variable because other things (like position or speed) depend on it.</li>
+                </ul>
+
+                <h3>Examples</h3>
+                
+                <p><strong>Example 1:</strong></p>
+                <p>Equation: \( \frac{dy}{dt} = 3t \)</p>
+                <p><strong>Dependent variable:</strong> y (this is what changes over time, like the position or speed of the toy car).</p>
+                <p><strong>Independent variable:</strong> t (time is the independent variable here because the changes in y depend on t).</p>
+
+                <p><strong>Example 2:</strong></p>
+                <p>Equation: \( \frac{\partial u}{\partial t} = \frac{\partial^2 u}{\partial x^2} \)</p>
+                <p><strong>Dependent variable:</strong> u (this could represent something like the temperature or height that changes over time and space).</p>
+                <p><strong>Independent variables:</strong> t (time) and x (position in space, like where the car is on the track).</p>
+
+                <p><strong>Example 3:</strong></p>
+                <p>Equation: \( \frac{d^2y}{dt^2} = -9.8 \)</p>
+                <p><strong>Dependent variable:</strong> y (this could be the height of a ball falling down).</p>
+                <p><strong>Independent variable:</strong> t (time is what we track to see how the height y changes).</p>
+
+                <p>In short:</p>
+                <ul>
+                    <li><strong>Dependent variable:</strong> The quantity whose value depends on other variables (e.g., y, u).</li>
+                    <li><strong>Independent variable:</strong> The variable that the dependent variable changes with respect to (e.g., t, x).</li>
+                </ul>
+
+                <div className="plot-container">
+                    <h2>Plot Section</h2>
+                    <div id="plot" style="width: 100%; height: 500px;"></div>
+                </div>
+            </div>
+        </article>
+
+        <div class="share">
+            <h3>Share this:</h3>
+            <a href="#">Twitter</a> |
+            <a href="#">Facebook</a>
+        </div>
+
+        <div class="latest-articles">
+            <h2>Latest Articles</h2>
+            <article>
+                <h3><a href="#">Enhancing System Security with Auditd on Kali Linux</a></h3>
+                <p>June 18, 2024</p>
+            </article>
+            <article>
+                <h3><a href="#">Wazuh-Docker Deployment</a></h3>
+                <p>June 16, 2024</p>
+            </article>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 HackHubAfrica</p>
+        <div class="social-media">
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://x.com/@HackHubAfrica" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-youtube"></i></a>
+            <a href="https://github.com/HackHubAfrica" aria-label="Instagram"><i class="fab fa-github"></i></a>
+        </div>
+    </footer>
+
+    <script>
+        // Load Plotly.js and Numeric.js if they're not already loaded
+        const loadScripts = () => {
+            const plotlyScript = document.createElement('script');
+            plotlyScript.src = "https://cdn.plot.ly/plotly-latest.min.js";
+            plotlyScript.async = true;
+            document.body.appendChild(plotlyScript);
+
+            const numericScript = document.createElement('script');
+            numericScript.src = "https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js";
+            numericScript.async = true;
+            document.body.appendChild(numericScript);
+
+            const mathjaxScript = document.createElement('script');
+            mathjaxScript.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+            mathjaxScript.async = true;
+            document.body.appendChild(mathjaxScript);
+        };
+
+        loadScripts();
+        
+        const plotSolution = () => {
+            const solution = solveODE();
+
+            const trace = {
+                x: solution.t,
+                y: solution.y,
+                mode: 'lines',
+                type: 'scatter'
+            };
+
+            const data = [trace];
+            const layout = {
+                title: 'Solution to dy/dt = -2y',
+                xaxis: { title: 'Time (t)' },
+                yaxis: { title: 'y(t)' }
+            };
+
+            // Plot the graph in the 'plot' div
+            Plotly.newPlot('plot', data, layout);
+        };
+
+        const solveODE = () => {
+            const dydt = (y, t) => -2 * y;
+            const y0 = [5];
+            const t = numeric.linspace(0, 5, 100);
+            const y = [y0[0]];
+
+            for (let i = 1; i < t.length; i++) {
+                const dt = t[i] - t[i - 1];
+                const dydt_value = dydt(y[i - 1], t[i - 1]);
+                y.push(y[i - 1] + dydt_value * dt);
+            }
+
+            return { t, y };
+        };
+
+        plotSolution(); // Call the plot function once scripts are loaded
+    </script>
+</body>
+</html>

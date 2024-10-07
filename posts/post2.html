@@ -4,20 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HackHubAfrica - Blog Post</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+    <link rel="icon" type="image/x-icon" href="../assets/images/avatar.ico">
 </head>
 <body>
     <header>
-        <!-- <h1>HackHubAfrica</h1> -->
-        <a href="../index.html">HackHubAfrica</a>
+        <div class="logo">
+            <h1>HackHubAfrica</h1>
+        </div>
         <nav>
-            <a href="#contact">Contact me</a> |
-            <a href="#portfolio">Portfolio</a> |
-            <a href="#about">About Me</a>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
         </nav>
     </header>
+
 
     <div id="container">
         <article>
@@ -34,7 +39,7 @@
             sudo apt update
             sudo apt install auditd
             </code></pre>
-            <p>This will update your package list and install auditd if it’s not already installed. Once installed, auditd is ready to be enabled and configured.</p>
+            <p>This will update your package list and install auditd if it's not already installed. Once installed, auditd is ready to be enabled and configured.</p>
 
             <h2>Enabling auditd</h2>
             <p>Enabling auditd ensures that it starts automatically at boot time. To enable auditd, run the following command:</p>

@@ -2,12 +2,12 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    color: #333;
     background-color: #afb4bd;
+    line-height: 1.6;
 }
 
 header {
-    background-color: #0073e6;
+    background-color: #124b85;
     color: white;
     padding: 10px 20px;
     display: flex;
@@ -32,7 +32,6 @@ nav a {
 }
 
 .hero {
-/*    background-image: url('hero.jpg'); /* Replace with your hero image */*/
     color: white;
     text-align: center;
     padding:20px;
@@ -60,25 +59,25 @@ footer {
 
 .social-media {
     display: inline-flex;
-    gap: 15px; /* Adds space between icons */
-    align-items: center; /* Align the icons vertically in case there's extra height */
-    height: 10vh; /* Make the container take up the full height of the viewport */
+    gap: 15px; 
+    align-items: center; 
+    height: 10vh; 
     gap: 20px; /
 }
 
 .social-media a {
-    color: #333; /* Default icon color */
-    text-decoration: none; /* Remove underline from links */
+    color: #333; 
+    text-decoration: none; 
     font-size: 36px; /* Adjust icon size */
 }
 
 .social-media a:hover {
-    color: #007BFF; /* Change color on hover */
+    color: #a03749; /* Change color on hover */
 }
 
 
 a {
-    text-decoration: none; /* Removes underline from all links */
+    text-decoration: none; 
 }
 
 /* If you want to target only the buttons inside links */
@@ -119,6 +118,10 @@ a .button {
 
 }
 
+img {
+    max-width: 100%;
+    height: auto;
+}
 
 
 .post img{
@@ -131,13 +134,11 @@ a .button {
     margin-bottom: 10px;
 }
 
-
-
 .post {
     border: 8px solid #ccc;
     border-radius: 20px;
     padding: 10px;
-    background-color: #f9f9f9; /* Optional background color for posts */
+    background-color: #ac8989; /* Optional background color for posts */
     margin: 10px 0;
     
 
@@ -186,4 +187,16 @@ a .button {
 .pagination-button:hover {
     background-color: #0056b3;
     color: white;
+}
+
+
+#container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-image: linear-gradient(60deg,gray, transparent);
+    /* background-image: -webkit-repeating-radial-gradient(60deg, black, transparent)); */
+
 }
