@@ -87,3 +87,15 @@ footer {
     border-radius: 5px; /* Rounded corners */
     background-color: #fff; /* White background for posts */
 }
+
+
+
+.social-media a {
+    color: #333; /* Default icon color */
+    text-decoration: none; /* Remove underline from links */
+    font-size: 36px; /* Adjust icon size */
+}
+
+.social-media a:hover {
+    color: #007BFF; /* Change color on hover */
+}
