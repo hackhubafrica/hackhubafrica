@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HackHub Africa Blog</title>
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+<body>
+    <header>
+        <h1>Welcome to HackHub Africa Blog</h1>
+        <p>Explore all the blog posts below!</p>
+    </header>
+
+    <main>
+        <section id="posts-list">
+            <h2>All Blog Posts</h2>
+            <ul>
+                {% for post in site.posts %}
+                    <li>
+                        <a href="{{ post.url | relative_url }}">
+                            <h3>{{ post.title }}</h3>
+                        </a>
+                        <p>{{ post.excerpt }}</p>
+                        <small>Published on {{ post.date | date: "%B %d, %Y" }}</small>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 HackHub Africa Blog</p>
+    </footer>
+</body>
+</html>

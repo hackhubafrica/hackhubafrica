@@ -1,0 +1,189 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    background-color: #afb4bd;
+}
+
+header {
+    background-color: #0073e6;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-left: 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+}
+
+.hero {
+/*    background-image: url('hero.jpg'); /* Replace with your hero image */*/
+    color: white;
+    text-align: center;
+    padding:20px;
+}
+
+.cta-button {
+    background-color: #e6e600;
+    color: black;
+    padding: 10px 20px;
+    text-decoration: none;
+}
+
+
+section {
+    padding: 20px;
+}
+
+footer {
+    background-color: #8a9ab5;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    height: 20vh;
+}
+
+.social-media {
+    display: inline-flex;
+    gap: 15px; /* Adds space between icons */
+    align-items: center; /* Align the icons vertically in case there's extra height */
+    height: 10vh; /* Make the container take up the full height of the viewport */
+    gap: 20px; /
+}
+
+.social-media a {
+    color: #333; /* Default icon color */
+    text-decoration: none; /* Remove underline from links */
+    font-size: 36px; /* Adjust icon size */
+}
+
+.social-media a:hover {
+    color: #007BFF; /* Change color on hover */
+}
+
+
+a {
+    text-decoration: none; /* Removes underline from all links */
+}
+
+/* If you want to target only the buttons inside links */
+a .button {
+    text-decoration: none; /* Ensure no underline for the button text */
+}
+
+
+.button{
+    border-radius: 40px;
+    display: block;
+    background-size: 200% auto;
+    width: 20vw;
+    align-items: center;
+    font-size: 20px;
+    height: 10vh;
+    margin: 0 auto;
+    background-image: linear-gradient(to right, #FFC886 10%, #97a2b8  50%, #52555c  50%);
+    text-decoration: none;
+
+    margin-top: auto; /* Push the button to the bottom of the container */
+    align-self: center; /* Center the button horizontally */
+}
+
+.button:hover{
+    color: red;
+    background-image: linear-gradient(to right,#020f26 40%, #FF8C9A  80%, #7EB3C2  100%);
+
+}
+
+
+
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Creates 3 equal columns */
+    gap: 20px; /* Space between the grid items */
+    margin: 20px 0; /* Space above and below the grid */
+
+}
+
+
+
+.post img{
+    background-color: blue;
+    height: 400px;
+    width: 3000px;
+}
+/* Make sure the headings and images don't affect button positioning */
+.post h3, .post img, .post p {
+    margin-bottom: 10px;
+}
+
+
+
+.post {
+    border: 8px solid #ccc;
+    border-radius: 20px;
+    padding: 10px;
+    background-color: #f9f9f9; /* Optional background color for posts */
+    margin: 10px 0;
+    
+
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    justify-content: space-between; /* Align the button at the bottom */
+    height: 100%; /* Make sure all posts have the same height */
+    margin-bottom: 20px; /* Add spacing between posts */
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+}
+
+.post img {
+    max-width: 100%; /* Ensures images are responsive */
+    height: auto; /* Maintains aspect ratio */
+}
+
+@media (max-width: 900px) {
+    .blog-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for medium screens */
+    }
+}
+
+@media (max-width: 600px) {
+    .blog-grid {
+        grid-template-columns: 1fr; /* 1 column for small screens */
+    }
+}
+
+
+.pagination-button {
+    margin: 5px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border: 1px solid;
+}
+
+.pagination-button.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination-button:hover {
+    background-color: #0056b3;
+    color: white;
+}
