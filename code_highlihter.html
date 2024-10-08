@@ -1,0 +1,83 @@
+<body>
+
+<h2>Kernel Debugging Commands</h2>
+<div class="code-container">
+    <button id="copy-button">Copy Code</button>
+    <pre><code class="language-assembly" id="code-snippet">
+    0: kd> dps nt!KeServiceDescriptorTable
+81472400 813564d0 nt!KiServiceTable ; Base
+81472404 00000000
+81472408 000001ad
+8147240c 81356b88 nt!KiArgumentTable
+0: kd> dd nt!KiServiceTable
+813564d0 81330901 812cf1e2 81581540 816090af
+813564e0 815be478 814b048f 8164e434 8164e3cb
+813564f0 812dfa09 814e303f 814a0830 81613a9f
+81356500 814e5b65 815b9e3a 815e0c4e 8158ce33
+...
+0: kd> dps nt!KiServiceTable
+813564d0 81330901 nt!NtWorkerFactoryWorkerReady
+813564d4 812cf1e2 nt!NtYieldExecution
+813564d8 81581540 nt!NtWriteVirtualMemory
+813564dc 816090af nt!NtWriteRequestData
+</code></pre>
+</div>
+
+<!-- Include Prism.js for syntax highlighting -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+
+<script>
+    document.getElementById('copy-button').onclick = function() {
+        // Get the code snippet text
+        var codeSnippet = document.getElementById('code-snippet').innerText;
+
+        // Create a temporary textarea element to copy the text
+        var textarea = document.createElement('textarea');
+        textarea.value = codeSnippet;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        
+        // Alert user that the text has been copied
+        alert('Code copied to clipboard!');
+    };
+</script>
+
+</body>
+<style>
+       
+        .code-container {
+            position: relative; /* Positioning context for absolute positioning */
+            width: 80%; /* Adjust width as needed */
+            max-width: 800px; /* Maximum width for large screens */
+            margin-bottom: 20px; /* Space below the code container */
+        }
+        pre {
+            background-color: #282c34; /* Dark background for code */
+            border: 1px solid #ddd;
+            padding: 10px;
+            overflow: auto;
+            border-radius: 5px;
+            white-space: pre-wrap; /* Ensures code wraps nicely */
+            color: #abb2bf; /* Light text color */
+            font-size: 14px; /* Font size */
+            margin: 0; /* Remove default margin */
+        }
+        button {
+            padding: 8px 12px;
+            position: absolute; /* Position the button relative to the container */
+            top: 10px; /* Distance from the top */
+            right: 10px; /* Distance from the right */
+            cursor: pointer;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 1; /* Ensure button is above other elements */
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+</style>

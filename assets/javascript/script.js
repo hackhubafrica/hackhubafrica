@@ -73,3 +73,21 @@ document.addEventListener('DOMContentLoaded', function () {
     createPagination();
     updateActivePage(initialPage);
 });
+
+
+document.getElementById('copy-button').onclick = function() {
+    // Get the code snippet text
+    var codeSnippet = document.getElementById('code-snippet').innerText;
+
+    // Create a temporary textarea element to copy the text
+    var textarea = document.createElement('textarea');
+    textarea.value = codeSnippet;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    
+    // Alert user that the text has been copied
+    alert('Code copied to clipboard!');
+};
+

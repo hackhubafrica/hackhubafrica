@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #afb4bd;
+    background-color: #1c2331;
     line-height: 1.6;
 }
 
@@ -203,5 +203,66 @@ img {
 
 
 h2 ,h3 {
-    color: blue;
+    color: rgb(33, 31, 37);
+    color: #2c3e50;
+}
+
+p {
+    margin: 10px 0;
+}
+ul {
+    margin: 10px 20px;
+}
+.important {
+    color: #521c16;
+}
+
+}
+#plot {
+    width: 100%;
+    max-width: 800px;
+    margin: auto;
+}
+
+
+.code-container {
+    position: relative; /* Positioning context for absolute positioning */
+    width: 80%; /* Adjust width as needed */
+    max-width: 800px; /* Maximum width for large screens */
+    margin-bottom: 20px; /* Space below the code container */
+    justify-content: center;
+}
+pre {
+    background-color: #282c34; /* Dark background for code */
+    border: 1px solid #ddd;
+    padding: 10px;
+    overflow: auto;
+    border-radius: 5px;
+    white-space: pre-wrap; /* Ensures code wraps nicely */
+    color: #abb2bf; /* Light text color */
+    font-size: 14px; /* Font size */
+    margin: 0; /* Remove default margin */
+}
+button {
+    padding: 8px 12px;
+    position: absolute; /* Position the button relative to the container */
+    top: 10px; /* Distance from the top */
+    right: 10px; /* Distance from the right */
+    cursor: pointer;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    font-size: 14px;
+    z-index: 1; /* Ensure button is above other elements */
+}
+button:hover {
+    background-color: #0056b3;
+}
+
+.language-assembly{
+    max-width: 100%; /* Ensures images are responsive */
+    height: auto; 
+    max-width: 100%; 
+    flex-direction: column;
 }
