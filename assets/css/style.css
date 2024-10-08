@@ -5,7 +5,15 @@ body {
     background-color: #b2b8c4;
     line-height: 1.6;
 }
-
+.logo{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 24px;
+    background: #124b85;
+    font-style: oblique;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
 header {
     background-color: #124b85;
     color: white;
