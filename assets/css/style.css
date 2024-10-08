@@ -80,7 +80,6 @@ a {
     text-decoration: none; 
 }
 
-/* If you want to target only the buttons inside links */
 a .button {
     text-decoration: none; /* Ensure no underline for the button text */
 }
@@ -98,8 +97,8 @@ a .button {
     background-image: linear-gradient(to right, #FFC886 10%, #97a2b8  50%, #52555c  50%);
     text-decoration: none;
 
-    margin-top: auto; /* Push the button to the bottom of the container */
-    align-self: center; /* Center the button horizontally */
+    margin-top: auto; 
+    align-self: center;
 }
 
 .button:hover{
@@ -129,7 +128,7 @@ img {
     height: 400px;
     width: 3000px;
 }
-/* Make sure the headings and images don't affect button positioning */
+
 .post h3, .post img, .post p {
     margin-bottom: 10px;
 }
@@ -138,15 +137,15 @@ img {
     border: 8px solid #ccc;
     border-radius: 20px;
     padding: 10px;
-    background-color: #ac8989; /* Optional background color for posts */
+    background-color: #ac8989;
     margin: 10px 0;
     
 
     display: flex;
-    flex-direction: column; /* Stack elements vertically */
-    justify-content: space-between; /* Align the button at the bottom */
-    height: 100%; /* Make sure all posts have the same height */
-    margin-bottom: 20px; /* Add spacing between posts */
+    flex-direction: column; 
+    justify-content: space-between; 
+    height: 100%; 
+    margin-bottom: 20px;
     padding: 10px;
     box-sizing: border-box;
     border: 1px solid #ddd;
@@ -207,9 +206,7 @@ h2 ,h3 {
     color: #2c3e50;
 }
 
-p {
-    margin: 10px 0;
-}
+
 ul {
     margin: 10px 20px;
 }
@@ -226,14 +223,14 @@ ul {
 
 
 .code-container {
-    position: relative; /* Positioning context for absolute positioning */
-    width: 80%; /* Adjust width as needed */
-    max-width: 800px; /* Maximum width for large screens */
-    margin-bottom: 20px; /* Space below the code container */
+    position: relative; 
+    width: 80%; 
+    max-width: 800px;
+    margin-bottom: 20px; 
     justify-content: center;
 }
 pre {
-    background-color: #282c34; /* Dark background for code */
+    background-color: #282c34; 
     border: 1px solid #ddd;
     padding: 10px;
     overflow: auto;
@@ -243,19 +240,7 @@ pre {
     font-size: 14px; /* Font size */
     margin: 0; /* Remove default margin */
 }
-button {
-    padding: 8px 12px;
-    position: absolute; /* Position the button relative to the container */
-    top: 10px; /* Distance from the top */
-    right: 10px; /* Distance from the right */
-    cursor: pointer;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 5px;
-    font-size: 14px;
-    z-index: 1; /* Ensure button is above other elements */
-}
+
 button:hover {
     background-color: #0056b3;
 }
