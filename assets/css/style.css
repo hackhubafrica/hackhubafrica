@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #1c2331;
+    background-color: #8798b9;
     line-height: 1.6;
 }
 
@@ -50,7 +50,7 @@ section {
 }
 
 footer {
-    background-color: #8a9ab5;
+    background-color: #0f1825;
     color: white;
     text-align: center;
     padding: 10px 0;
@@ -66,7 +66,7 @@ footer {
 }
 
 .social-media a {
-    color: #333; 
+    color: #da6363; 
     text-decoration: none; 
     font-size: 36px; /* Adjust icon size */
 }
@@ -241,7 +241,20 @@ pre {
     margin: 0; /* Remove default margin */
 }
 
-button:hover {
+.copy{
+    padding: 8px 12px;
+    position: absolute; /* Position the button relative to the container */
+    top: 10px; /* Distance from the top */
+    right: 10px; /* Distance from the right */
+    cursor: pointer;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    font-size: 14px;
+    z-index: 1; /* Ensure button is above other elements */
+}
+.copy:hover {
     background-color: #0056b3;
 }
 
