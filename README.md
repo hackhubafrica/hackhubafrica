@@ -1,7 +1,6 @@
 ## Hi there 👋
 
 
-
 <h1 align="center">Hi 👋, I'm hackhubafrica</h1>
 <h3 align="center">I am an Electrical and Telecommunications Engineer with a passion for Cybersecurity.</h3>
 
@@ -17,15 +16,15 @@
 
 - 🤝 I’m looking for help with **with integrating machine learning algorithms into security monitoring systems.**
 
-- 👨‍💻 All of my projects are available at [https://hackhubafrica8.wordpress.com/](https://hackhubafrica8.wordpress.com/)
+- 👨‍💻 All of my projects are available at [https://hackhubafrica.github.io/hackhubafrica/](https://hackhubafrica.github.io/hackhubafrica/)
 
-- 📝 I regularly write articles on [https://hackhubafrica8.wordpress.com/](https://hackhubafrica8.wordpress.com/)
+- 📝 I regularly write articles on [https://hackhubafrica.github.io/hackhubafrica/](https://hackhubafrica.github.io/hackhubafrica/)
 
 - 💬 Ask me about **network security, ethical hacking, and best practices for cybersecurity.**
 - 😄 Pronouns: He/Him
 - 📫 How to reach me **You can reach me via email at crimsonsummer81@gmail.com or connect with me on LinkedIn at www.linkedin.com/in/hackhub-africa
 
-- 📄 Know about my experiences [https://hackhubafrica8.wordpress.com/](https://hackhubafrica8.wordpress.com/)
+- 📄 Know about my experiences [https://hackhubafrica.github.io/hackhubafrica/](https://hackhubafrica.github.io/hackhubafrica/)
 
 - ⚡ Fun fact **I enjoy participating in Capture the Flag (CTF) competitions and have a knack for solving complex puzzles.**
 
