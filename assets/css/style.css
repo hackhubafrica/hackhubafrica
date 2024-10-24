@@ -181,9 +181,9 @@ img {
     margin: 5px;
     padding: 10px;
     background-color: #f0f0f0;
-    border: 1px solid #ccc;
+    border: 10px solid #ccc;
     cursor: pointer;
-    border: 1px solid;
+    border: 10px solid;
 }
 
 .pagination-button.active {
@@ -233,6 +233,8 @@ ul {
     max-width: 800px;
     margin-bottom: 20px; 
     justify-content: center;
+    background-color: white;
+    color:white;
 }
 pre {
     background-color: #282c34; 
