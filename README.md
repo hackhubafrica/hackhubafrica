@@ -18,9 +18,9 @@
 
 - 👨‍💻 All of my projects are available at [https://hackhubafrica.github.io/hackhubafrica/](https://hackhubafrica.github.io/hackhubafrica/)
 
-- 📝 I regularly write articles on [https://hackhubafrica.github.io/hackhubafrica/](https://hackhubafrica.github.io/hackhubafrica/)
+- 📝 I regularly write articles on [https://www.medium.com/@HackHubAfrica](https://www.medium.com/@HackHubAfrica)
 
-- 💬 Ask me about **network security, ethical hacking, and best practices for cybersecurity.**
+- 💬 Ask me about **Control Systems ,network security, ethical hacking, and best practices for cybersecurity.**
 - 😄 Pronouns: He/Him
 - 📫 How to reach me **You can reach me via email at crimsonsummer81@gmail.com or connect with me on LinkedIn at www.linkedin.com/in/hackhub-africa
 
