@@ -22,36 +22,6 @@ I am an experienced and driven engineer with expertise in **Network Security** a
 - **Security Researcher**: Conducted several penetration tests and security audits on enterprise-level infrastructures.
 - **Competitive Edge**: Engaged in Capture the Flag (CTF) challenges with a strong record of solving complex cybersecurity puzzles.
 
-<p align="left">
-  <!-- Social Media Links -->
-  <a href="https://dev.to/hackhubafrica" target="blank"><i class="fa fa-dev" style="font-size: 30px;"></i></a>
-  <a href="https://twitter.com/hackhubafrica" target="blank"><i class="fa fa-twitter" style="font-size: 30px;"></i></a>
-  <a href="https://linkedin.com/in/brian-muthoni" target="blank"><i class="fa fa-linkedin" style="font-size: 30px;"></i></a>
-  <a href="https://medium.com/hackhubafrica" target="blank"><i class="fa fa-medium" style="font-size: 30px;"></i></a>
-  <a href="https://www.youtube.com/c/hackhubafrica" target="blank"><i class="fa fa-youtube" style="font-size: 30px;"></i></a>
-
-  <!-- Coding/Developer Platforms -->
-  <a href="https://github.com/hackhubafrica" target="blank"><i class="fa fa-github" style="font-size: 30px;"></i></a>
-  <a href="https://www.stackoverflow.com/users/xxxxxx/hackhubafrica" target="blank"><i class="fa fa-stack-overflow" style="font-size: 30px;"></i></a>
-  <a href="https://www.codewars.com/users/hackhubafrica" target="blank"><i class="fa fa-code" style="font-size: 30px;"></i></a>
-
-  <!-- Bug Bounty Platforms -->
-  <a href="https://www.hackerone.com/hackhubafrica" target="blank"><i class="fa fa-hacker-news" style="font-size: 30px;"></i></a>
-  <a href="https://www.bugcrowd.com/hackhubafrica" target="blank"><i class="fa fa-bug" style="font-size: 30px;"></i></a>
-
-  <!-- Popular Websites -->
-  <a href="https://www.reddit.com/r/programming/" target="blank"><i class="fa fa-reddit" style="font-size: 30px;"></i></a>
-  <a href="https://www.quora.com/topic/Programming-Languages-1" target="blank"><i class="fa fa-quora" style="font-size: 30px;"></i></a>
-  <a href="https://www.gitlab.com/hackhubafrica" target="blank"><i class="fa fa-gitlab" style="font-size: 30px;"></i></a>
-
-  <!-- More Social Media Links -->
-  <a href="https://www.instagram.com/hackhubafrica" target="blank"><i class="fa fa-instagram" style="font-size: 30px;"></i></a>
-  <a href="https://www.facebook.com/hackhubafrica" target="blank"><i class="fa fa-facebook" style="font-size: 30px;"></i></a>
-  <a href="https://www.twitch.tv/hackhubafrica" target="blank"><i class="fa fa-twitch" style="font-size: 30px;"></i></a>
-</p>
-
-<!-- Add FontAwesome CDN -->
-<script src="https://kit.fontawesome.com/a076d05399.js"></script>
 
 #### 🌐 Connect with me:
 I believe in collaboration and knowledge sharing. Feel free to reach out via the following platforms:
@@ -93,3 +63,33 @@ Here's an overview of my activity and contributions:
 <p>&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api?username=hackhubafrica&show_icons=true&locale=en" alt="hackhubafrica" /></p>
 
 <p><img align="center" src="https://github-readme-streak-stats.herokuapp.com/?user=hackhubafrica&" alt="hackhubafrica" /></p>
+<p align="left">
+  <!-- Social Media Links -->
+  <a href="https://dev.to/hackhubafrica" target="blank"><i class="fa fa-dev" style="font-size: 30px;"></i></a>
+  <a href="https://twitter.com/hackhubafrica" target="blank"><i class="fa fa-twitter" style="font-size: 30px;"></i></a>
+  <a href="https://linkedin.com/in/brian-muthoni" target="blank"><i class="fa fa-linkedin" style="font-size: 30px;"></i></a>
+  <a href="https://medium.com/hackhubafrica" target="blank"><i class="fa fa-medium" style="font-size: 30px;"></i></a>
+  <a href="https://www.youtube.com/c/hackhubafrica" target="blank"><i class="fa fa-youtube" style="font-size: 30px;"></i></a>
+
+  <!-- Coding/Developer Platforms -->
+  <a href="https://github.com/hackhubafrica" target="blank"><i class="fa fa-github" style="font-size: 30px;"></i></a>
+  <a href="https://www.stackoverflow.com/users/xxxxxx/hackhubafrica" target="blank"><i class="fa fa-stack-overflow" style="font-size: 30px;"></i></a>
+  <a href="https://www.codewars.com/users/hackhubafrica" target="blank"><i class="fa fa-code" style="font-size: 30px;"></i></a>
+
+  <!-- Bug Bounty Platforms -->
+  <a href="https://www.hackerone.com/hackhubafrica" target="blank"><i class="fa fa-hacker-news" style="font-size: 30px;"></i></a>
+  <a href="https://www.bugcrowd.com/hackhubafrica" target="blank"><i class="fa fa-bug" style="font-size: 30px;"></i></a>
+
+  <!-- Popular Websites -->
+  <a href="https://www.reddit.com/r/programming/" target="blank"><i class="fa fa-reddit" style="font-size: 30px;"></i></a>
+  <a href="https://www.quora.com/topic/Programming-Languages-1" target="blank"><i class="fa fa-quora" style="font-size: 30px;"></i></a>
+  <a href="https://www.gitlab.com/hackhubafrica" target="blank"><i class="fa fa-gitlab" style="font-size: 30px;"></i></a>
+
+  <!-- More Social Media Links -->
+  <a href="https://www.instagram.com/hackhubafrica" target="blank"><i class="fa fa-instagram" style="font-size: 30px;"></i></a>
+  <a href="https://www.facebook.com/hackhubafrica" target="blank"><i class="fa fa-facebook" style="font-size: 30px;"></i></a>
+  <a href="https://www.twitch.tv/hackhubafrica" target="blank"><i class="fa fa-twitch" style="font-size: 30px;"></i></a>
+</p>
+
+<!-- Add FontAwesome CDN -->
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
