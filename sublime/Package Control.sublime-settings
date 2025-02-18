@@ -1,0 +1,33 @@
+{
+	"bootstrapped": true,
+	"in_process_packages":
+	[
+	],
+	"installed_packages":
+	[
+		"ayu",
+		"BracketHighlighter",
+		"FileIcons",
+		"FileManager",
+		"Golang",
+		"Golang Tools Integration",
+		"LSP",
+		"LSP-clangd",
+		"LSP-gopls",
+		"LSP-pylsp",
+		"LSP-pyright",
+		"LSP-pyvoice",
+		"LSP-rust-analyzer",
+		"LSP-typescript",
+		"MarkdownEditing",
+		"MarkdownLivePreview",
+		"Package Control",
+		"Pretty JSON",
+		"Python 3",
+		"Python Completions",
+		"Rust Enhanced",
+		"RustAutoComplete",
+		"SublimeLinter-pylint",
+		"Terminus",
+	],
+}

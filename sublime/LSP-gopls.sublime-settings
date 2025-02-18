@@ -1,0 +1,48 @@
+{
+    "LSP": {
+        "clients": {
+            "pyls": {
+                "enabled": true,
+                "command": ["pyls"],
+                "settings": {
+                    "pyls": {
+                        "configurationSources": ["pylint", "flake8"]
+                    }
+                },
+                "scopes": ["source.python"],
+                "syntaxes": ["Packages/Python/Python.sublime-syntax"]
+            },
+            "pyright": {
+                "enabled": true,
+                "command": ["pyright-langserver", "--stdio"],
+                "settings": {
+                    "pyright": {
+                        "linting": {
+                            "enabled": true,
+                            "linters": ["eslint", "flake8"]
+                        }
+                    }
+                },
+                "languageId": "python",
+                "scopes": ["source.python"],
+                "syntaxes": ["Packages/Python/Python.sublime-syntax"]
+            },
+            "gopls": {
+                "enabled": true,
+                "command": ["gopls", "serve"],
+                "settings": {
+                    "gopls": {
+                        "staticcheck": true,
+                        "analyses": {
+                            "unusedparams": true,
+                            "unreachable": true
+                        }
+                    }
+                },
+                "languageId": "go",
+                "scopes": ["source.go"],
+                "syntaxes": ["Packages/Go/Go.sublime-syntax"]
+            }
+        }
+    }
+}

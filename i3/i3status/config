@@ -1,0 +1,22 @@
+# i3status configuration
+general {
+    output_format = i3bar
+}
+order += "cpu_usage"
+order += "disk /"
+order += "memory"
+order += "time"
+
+# Memory section
+memory {
+    format = " %used / %total"
+}
+disk "/" {
+    format = " %avail"
+}
+
+# CPU usage section
+cpu_usage {
+    format = " %usage"
+}
+

@@ -1,0 +1,6 @@
+{
+    "cmd": ["clang", "${file}", "-o", "${file_path}/${file_base_name}", "&&", "${file_path}/${file_base_name}"],
+    "file_regex": "^(...*?):([0-9]*):([0-9]*)?:? (.*)",
+    "selector": "source.c",
+    "working_dir": "${file_path}"
+}

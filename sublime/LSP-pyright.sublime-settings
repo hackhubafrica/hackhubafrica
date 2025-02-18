@@ -1,0 +1,32 @@
+{
+    "LSP": {
+        "clients": {
+            "pyls": {
+                "enabled": true,
+                "command": ["pyls"],
+                "settings": {
+                    "pyls": {
+                        "configurationSources": ["pylint", "flake8"]
+                    }
+                },
+                "scopes": ["source.python"],
+                "syntaxes": ["Packages/Python/Python.sublime-syntax"]
+            },
+            "pyright": {
+                "enabled": true,
+                "command": ["pyright-langserver", "--stdio"],
+                "settings": {
+                    "pyright": {
+                        "linting": {
+                            "enabled": true,
+                            "linters": ["eslint", "flake8"]
+                        }
+                    }
+                },
+                "languageId": "python",
+                "scopes": ["source.python"],
+                "syntaxes": ["Packages/Python/Python.sublime-syntax"]
+            }
+        }
+    }
+}

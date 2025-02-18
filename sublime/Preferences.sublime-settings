@@ -1,0 +1,13 @@
+{
+	"ignored_packages":
+	[
+		"Rust",
+		"Vintage",
+	],
+	"index_files": true,
+	"font_size": 12,
+	"remember_workspace": false,
+
+	"color_scheme": "ayu-dark.sublime-color-scheme",
+	"theme": "Default Dark.sublime-theme",
+}

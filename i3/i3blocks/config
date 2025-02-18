@@ -1,0 +1,3 @@
+[capslock]
+command=~/.config/i3/scripts/capslock_status.sh
+interval=1

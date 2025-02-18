@@ -1,0 +1,34 @@
+{
+    "prefix": "",  // Added prefix for query
+    "suffix": "",  // Added suffix for query
+    "docs": {      // Custom documentation lookup configuration for each scope
+        "css": "http://devdocs.io/#q=%(scope)s+%(query)s",  // Example for CSS
+        "python": {
+            "command": ["py", "-m", "pydoc", "%(query)s"],  // Command to fetch docs for Python
+            "failTest": ".*no Python documentation found for.*",  // Regex to check for invalid response
+            "changeMatch": "(Related help topics)",  // Regex to extract relevant info
+            "changeWith": "-------\n\\1",  // Replace pattern
+            "url": "http://docs.python.org/3/search.html?q=%(query)s"  // Fallback URL if failTest matches
+        },
+        "go": {
+            "command": ["go", "doc", "%(query)s"],  // Command to fetch Go docs
+            "failTest": ".*no documentation available.*",  // Regex for Go failures
+            "url": "https://pkg.go.dev/%(query)s"  // Fallback URL
+        },
+        "java": {
+            "command": ["javadoc", "-subpackages", "%(query)s"],  // Command to fetch Java docs
+            "failTest": ".*error: no public classes found for.*",  // Java-specific failure regex
+            "url": "https://docs.oracle.com/en/java/javase/11/docs/api/%(query)s"  // Fallback URL
+        },
+        "ruby": {
+            "command": ["ri", "%(query)s"],  // Command to fetch Ruby docs
+            "failTest": ".*could not find information on.*",  // Ruby-specific failure regex
+            "url": "https://ruby-doc.org/core/%(query)s"  // Fallback URL
+        },
+        "default": {
+            "command": "google",  // Fallback scope for general queries
+            "url": "https://www.google.com/search?q=%(query)s"  // Google as fallback
+        }
+    },
+    "fallback_scope": "google"  // Fallback scope if no specific docs found
+}

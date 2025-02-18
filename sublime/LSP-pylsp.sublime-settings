@@ -1,0 +1,17 @@
+{
+    "LSP": {
+        "clients": {
+            "pyls": {
+                "enabled": true,
+                "command": ["pyls"],
+                "settings": {
+                    "pyls": {
+                        "configurationSources": ["pylint", "flake8"]
+                    }
+                },
+                "scopes": ["source.python"],
+                "syntaxes": ["Packages/Python/Python.sublime-syntax"]
+            }
+        }
+    }
+}
