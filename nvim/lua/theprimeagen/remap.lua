@@ -1,0 +1,21 @@
+vim.g.mapleader = " "
+vim.api.nvim_command('command! ForceQuit q!')
+vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+vim.keymap.set("v", "<leader>pv", vim.cmd.Ex)
+vim.keymap.set("n", '<C-s>' ,vim.cmd.w)
+vim.keymap.set("n", '<C-w>', vim.cmd.wq)
+vim.keymap.set("n", '<C-t>', vim.cmd.tabnew)
+vim.keymap.set("n", '<C-q>' ,vim.cmd.ForceQuit)
+vim.keymap.set("n", '<C-a>' ,vim.cmd.TSPlaygroundToggle)
+vim.keymap.set("n", '<S-v>',vim.cmd.vs)
+vim.keymap.set("n", '<S-h>',vim.cmd.sp)
+vim.keymap.set("n", '<C-x>' ,vim.cmd.q)
+vim.keymap.set("n", '<leader>r' ,vim.cmd.so)
+vim.keymap.set("n", '<leader>v',vim.cmd.vs)
+vim.keymap.set("n", '<leader>h',vim.cmd.sp)
+vim.keymap.set("n", '<leader>/',vim.cmd.Commentary)
+vim.keymap.set("v", '<leader>/',vim.cmd.Commentary)
+
+vim.api.nvim_set_keymap('n', '<leader>p', ':Glow<CR>', { noremap = true, silent = true })
+vim.keymap.set('i', '<C-l>', '<Plug>(copilot-accept-word)')
+
