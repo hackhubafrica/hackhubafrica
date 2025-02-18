@@ -30,6 +30,8 @@ I believe in collaboration and knowledge sharing. Feel free to reach out via the
   <a href="https://www.youtube.com/c/hackhubafrica" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/youtube.svg" alt="hackhubafrica" height="30" width="40" /></a>
 </p>
 
+
+
 #### 🛠️ Tools & Technologies:
 As a developer and cybersecurity engineer, I work with a wide variety of tools and technologies. Here's a snapshot of my technical skills:
 <p align="left"> 
