@@ -7,6 +7,8 @@
   <img src="https://komarev.com/ghpvc/?username=hackhubafrica&label=Profile%20views&color=0e75b6&style=flat" alt="hackhubafrica" />
 </p>
 
+
+
 #### 👨‍💻 About Me:
 I am an experienced and driven engineer with expertise in **Network Security** and **Penetration Testing**. My focus lies in securing digital infrastructures and developing advanced protocols to defend against evolving cyber threats. I’m continually learning and adapting to the latest trends in both **AI** and **Cybersecurity** to enhance my skillset and stay ahead of emerging risks.
 
@@ -19,7 +21,33 @@ I am an experienced and driven engineer with expertise in **Network Security** a
 - **Cybersecurity Certifications**: Actively pursuing certifications in **Certified Ethical Hacker (CEH)**, **CompTIA Security+**, and **CISSP**.
 - **Security Researcher**: Conducted several penetration tests and security audits on enterprise-level infrastructures.
 - **Competitive Edge**: Engaged in Capture the Flag (CTF) challenges with a strong record of solving complex cybersecurity puzzles.
+<p align="left">
+  <!-- Social Media Links -->
+  <a href="https://dev.to/hackhubafrica" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/devto.svg" alt="hackhubafrica" height="30" width="40" /></a>
+  <a href="https://twitter.com/hackhubafrica" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/twitter.svg" alt="hackhubafrica" height="30" width="40" /></a>
+  <a href="https://linkedin.com/in/brian-muthoni" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="hackhubafrica" height="30" width="40" /></a>
+  <a href="https://medium.com/hackhubafrica" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/medium.svg" alt="hackhubafrica" height="30" width="40" /></a>
+  <a href="https://www.youtube.com/c/hackhubafrica" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/youtube.svg" alt="hackhubafrica" height="30" width="40" /></a>
 
+  <!-- Coding/Developer Platforms -->
+  <a href="https://github.com/hackhubafrica" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/github.svg" alt="hackhubafrica" height="30" width="40" /></a>
+  <a href="https://www.stackoverflow.com/users/xxxxxx/hackhubafrica" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/stackoverflow.svg" alt="hackhubafrica" height="30" width="40" /></a>
+  <a href="https://www.codewars.com/users/hackhubafrica" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/codewars.svg" alt="hackhubafrica" height="30" width="40" /></a>
+
+  <!-- Bug Bounty Platforms -->
+  <a href="https://www.hackerone.com/hackhubafrica" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/hackerone.svg" alt="hackhubafrica" height="30" width="40" /></a>
+  <a href="https://www.bugcrowd.com/hackhubafrica" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/bugcrowd.svg" alt="hackhubafrica" height="30" width="40" /></a>
+
+  <!-- Popular Websites -->
+  <a href="https://www.reddit.com/r/programming/" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/reddit.svg" alt="hackhubafrica" height="30" width="40" /></a>
+  <a href="https://www.quora.com/topic/Programming-Languages-1" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/quora.svg" alt="hackhubafrica" height="30" width="40" /></a>
+  <a href="https://www.gitlab.com/hackhubafrica" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/gitlab.svg" alt="hackhubafrica" height="30" width="40" /></a>
+
+  <!-- More Social Media Links -->
+  <a href="https://www.instagram.com/hackhubafrica" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="hackhubafrica" height="30" width="40" /></a>
+  <a href="https://www.facebook.com/hackhubafrica" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/facebook.svg" alt="hackhubafrica" height="30" width="40" /></a>
+  <a href="https://www.twitch.tv/hackhubafrica" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/twitch.svg" alt="hackhubafrica" height="30" width="40" /></a>
+</p>
 #### 🌐 Connect with me:
 I believe in collaboration and knowledge sharing. Feel free to reach out via the following platforms:
 <p align="left">
