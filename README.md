@@ -59,6 +59,8 @@ As a developer and cybersecurity engineer, I work with a wide variety of tools a
   <a href="https://www.rust-lang.org" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/rust/rust-plain.svg" alt="rust" width="40" height="40"/> </a> 
   <a href="https://www.selenium.dev" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/detain/svg-logos/780f25886640cef088af994181646db2f6b1a3f8/svg/selenium-logo.svg" alt="selenium" width="40" height="40"/> </a> 
 </p>
+# IMPORTANT WEBSITES I USE
+[Eletrical](https://www.falstad.com/circuit/)
 
 #### 📊 GitHub Stats:
 Here's an overview of my activity and contributions:
