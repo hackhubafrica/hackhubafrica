@@ -34,10 +34,10 @@ I believe in collaboration and knowledge sharing. Feel free to reach out via the
 </p>
 
 # Websites
-[Telecom](https://telecom-1.gitbook.io/telecom/)
-[HackHubAfrica](https://hackhubafricas-organization-1.gitbook.io/ctf/)
-[CTF](https://hackhubafricas-organization-1.gitbook.io/index/)
-[#ack3r](https://ck3r.gitbook.io/ck3r/)
+- [Telecom](https://telecom-1.gitbook.io/telecom/)
+- [HackHubAfrica](https://hackhubafricas-organization-1.gitbook.io/ctf/)
+- [CTF](https://hackhubafricas-organization-1.gitbook.io/index/)
+- [#ack3r](https://ck3r.gitbook.io/ck3r/)
 
 
 #### 🛠️ Tools & Technologies:
