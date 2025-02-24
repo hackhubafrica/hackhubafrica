@@ -33,6 +33,8 @@ I believe in collaboration and knowledge sharing. Feel free to reach out via the
   <a href="https://www.youtube.com/c/hackhubafrica" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/youtube.svg" alt="hackhubafrica" height="30" width="40" /></a>
 </p>
 
+# Websites
+[Telecom](https://telecom-1.gitbook.io/telecom/)
 
 
 #### 🛠️ Tools & Technologies:
