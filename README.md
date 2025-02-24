@@ -96,5 +96,3 @@ Here's an overview of my activity and contributions:
   <a href="https://www.twitch.tv/hackhubafrica" target="blank"><i class="fa fa-twitch" style="font-size: 30px;"></i></a>
 </p>
 
-<!-- Add FontAwesome CDN -->
-<script src="https://kit.fontawesome.com/a076d05399.js"></script>
