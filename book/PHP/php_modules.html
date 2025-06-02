@@ -1,0 +1,533 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Php Modules</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h5 id="you-said"><a class="header" href="#you-said">You said:</a></h5>
+<p>Feb 15 03:23:52 Archie httpd[2649417]: httpd: Syntax error on line 64 of /etc/httpd/conf/httpd.conf: Cannot load mod&gt; Feb 15 03:23:53 Archie systemd[1]: httpd.service: Main process exited, code=exited, status=1/FAILURE Feb 15 03:23:53 Archie systemd[1]: httpd.service: Failed with result 'exit-code'. Feb 15 03:24:53 Archie systemd[1]: Started Apache Web Server. Feb 15 03:24:53 Archie httpd[2654212]: httpd: Syntax error on line 64 of /etc/httpd/conf/httpd.conf: Cannot load mod&gt; Feb 15 03:24:53 Archie systemd[1]: httpd.service: Main process exited, code=exited, status=1/FAILURE Feb 15 03:24:53 Archie systemd[1]: httpd.service: Failed with result 'exit-code'. Feb 15 03:31:56 Archie systemd[1]: Started Apache Web Server. Feb 15 03:31:56 Archie httpd[2683602]: httpd: Syntax error on line 64 of /etc/httpd/conf/httpd.conf: Cannot load mod&gt; Feb 15 03:31:56 Archie systemd[1]: httpd.service: Main process exited, code=exited, status=1/FAILURE Feb 15 03:31:56 Archie systemd[1]: httpd.service: Failed with result 'exit-code'. ~DO THESE MODULES EVEN EIST</p>
+<h6 id="chatgpt-said"><a class="header" href="#chatgpt-said">ChatGPT said:</a></h6>
+<p>The error message you're seeing indicates that Apache is failing to start due to a <strong>syntax error</strong> related to the loading of a module in <code>/etc/httpd/conf/httpd.conf</code>, specifically on line 64. It suggests that there is an issue with the <code>LoadModule</code> directive, possibly due to a missing or incorrectly specified module.</p>
+<h3 id="1-check-the-specific-error-message"><a class="header" href="#1-check-the-specific-error-message">1. <strong>Check the Specific Error Message</strong></a></h3>
+<p>To better diagnose the issue, check the exact error message in the Apache log, which should be available in <code>/var/log/httpd/error_log</code>. Run this command to check the log:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo tail -n 50 /var/log/httpd/error_log</code></p>
+<p>The error should tell you which module is problematic (e.g., <code>mod_php</code> or another Apache module). It will typically say something like:</p>
+<p>swift</p>
+<p>Copy</p>
+<p><code>Cannot load /etc/httpd/modules/mod_php.so: /etc/httpd/modules/mod_php.so: cannot open shared object file: No such file or directory</code></p>
+<p>This will help identify which module is missing or misconfigured.</p>
+<h3 id="2-check-for-missing-php-module"><a class="header" href="#2-check-for-missing-php-module">2. <strong>Check for Missing PHP Module</strong></a></h3>
+<p>From the error message, it looks like there might be an issue with the PHP module, which might not be installed or is improperly referenced in the <code>httpd.conf</code> file.</p>
+<h4 id="check-if-the-php-module-is-installed"><a class="header" href="#check-if-the-php-module-is-installed">Check if the PHP module is installed:</a></h4>
+<ol>
+<li>
+<p>Run this command to check if the PHP module is installed and available for Apache:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>ls /etc/httpd/modules | grep php</code></p>
+<p>You should see something like <code>mod_php.so</code> if the PHP module is installed. If it’s not there, you need to install it.</p>
+</li>
+<li>
+<p><strong>Install the necessary PHP packages</strong> if the module is missing:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo pacman -S php php-apache</code></p>
+</li>
+<li>
+<p><strong>Ensure that the <code>LoadModule</code> directive</strong> is correctly set in <code>/etc/httpd/conf/httpd.conf</code>. This should be something like:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>LoadModule php_module modules/libphp.so</code></p>
+<p>If you don't see <code>libphp.so</code> or <code>mod_php.so</code>, it means the PHP module is not installed or not linked correctly.</p>
+</li>
+</ol>
+<h3 id="3-ensure-apache-modules-are-available"><a class="header" href="#3-ensure-apache-modules-are-available">3. <strong>Ensure Apache Modules Are Available</strong></a></h3>
+<p>It’s also possible that the required Apache modules are missing or not properly installed. If Apache can’t find the module specified in the configuration, it will fail to start.</p>
+<ul>
+<li>
+<p>Run the following to check if the modules are actually installed:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>ls /usr/lib/httpd/modules/ | grep mod_</code></p>
+<p>This will list all available Apache modules. If <code>mod_php.so</code> is not listed, the <strong>PHP module</strong> might not have been installed correctly.</p>
+</li>
+</ul>
+<h3 id="4-update-the-apache-configuration"><a class="header" href="#4-update-the-apache-configuration">4. <strong>Update the Apache Configuration</strong></a></h3>
+<p>If the correct PHP module is available but Apache is still failing, try adjusting the <code>httpd.conf</code> file.</p>
+<ol start="4">
+<li>
+<p><strong>Check the <code>LoadModule</code> directive:</strong></p>
+<p>In the <code>httpd.conf</code> file, ensure that the <code>LoadModule</code> directive points to the correct file. For PHP, it should look like:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>LoadModule php_module modules/libphp.so</code></p>
+<p>Ensure this path matches the actual path to <code>libphp.so</code>. If <code>libphp.so</code> is in <code>/usr/lib/httpd/modules/</code>, you may need to change the <code>httpd.conf</code> file to point to that location:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>LoadModule php_module /usr/lib/httpd/modules/libphp.so</code></p>
+</li>
+<li>
+<p><strong>Ensure that <code>mod_php</code> is loaded properly:</strong></p>
+<p>Apache requires <code>mod_php</code> to interpret PHP. Check if it's being loaded properly by searching the <code>httpd.conf</code> file for <code>mod_php</code>:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>grep mod_php /etc/httpd/conf/httpd.conf</code></p>
+<p>If there is no <code>mod_php</code> in the config, you may need to manually add it:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>LoadModule php_module /usr/lib/httpd/modules/libphp.so</code></p>
+</li>
+</ol>
+<h3 id="5-reinstall-apache-and-php"><a class="header" href="#5-reinstall-apache-and-php">5. <strong>Reinstall Apache and PHP</strong></a></h3>
+<p>If you're still having trouble, try reinstalling Apache and PHP:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo pacman -Rns apache php php-apache sudo pacman -S apache php php-apache</code></p>
+<p>After reinstalling, make sure that the <code>LoadModule php_module</code> directive is correctly specified and points to the correct PHP module file.</p>
+<h3 id="6-restart-apache"><a class="header" href="#6-restart-apache">6. <strong>Restart Apache</strong></a></h3>
+<p>Once you've checked everything and made any necessary adjustments, restart Apache:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl restart httpd</code></p>
+<p>If everything is set up correctly, Apache should start successfully and serve your PHP files.</p>
+<hr />
+<p>If you continue to experience issues, feel free to provide the exact error message from the Apache logs, and I can help you further diagnose the problem.</p>
+<h5 id="you-said-1"><a class="header" href="#you-said-1">You said:</a></h5>
+<p>in PID: 2701302 (code=exited, status=1/FAILURE) Mem peak: 2.8M CPU: 39ms Feb 15 03:36:01 Archie systemd[1]: Started Apache Web Server. Feb 15 03:36:01 Archie httpd[2701302]: [Sat Feb 15 03:36:01.715207 2025] [php:crit] [pid 2701302:tid 2701302] Ap&gt; Feb 15 03:36:01 Archie httpd[2701302]: AH00013: Pre-configuration failed Feb 15 03:36:01 Archie systemd[1]: httpd.service: Main process exited, code=exited, status=1/FAILURE Feb 15 03:36:01 Archie systemd[1]: httpd.service: Failed with result 'exit-code'. ~ ~ ~ ~ ~ ~</p>
+<h6 id="chatgpt-said-1"><a class="header" href="#chatgpt-said-1">ChatGPT said:</a></h6>
+<p>The error message you're seeing:</p>
+<p>makefile</p>
+<p>Copy</p>
+<p><code>AH00013: Pre-configuration failed</code></p>
+<p>indicates that Apache failed to start due to an issue occurring before it could even enter its normal configuration phase. This is typically caused by a misconfiguration or missing file/module, particularly with PHP in this case.</p>
+<h3 id="steps-to-resolve-the-issue"><a class="header" href="#steps-to-resolve-the-issue">Steps to Resolve the Issue</a></h3>
+<h4 id="1-check-apache-error-logs"><a class="header" href="#1-check-apache-error-logs">1. <strong>Check Apache Error Logs</strong></a></h4>
+<p>To get more details about the issue, let's examine the full Apache error log. Run the following command to read the log:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo tail -f /var/log/httpd/error_log</code></p>
+<p>Look for any specific errors related to PHP or missing modules. This could give us a clue about what exactly is failing.</p>
+<h4 id="2-ensure-php-is-installed-correctly"><a class="header" href="#2-ensure-php-is-installed-correctly">2. <strong>Ensure PHP is Installed Correctly</strong></a></h4>
+<p>Since it appears that the issue is related to PHP, let's verify that PHP is properly installed.</p>
+<ol start="6">
+<li>
+<p><strong>Check if PHP is installed:</strong></p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>php -v</code></p>
+<p>If PHP is not installed, install it using:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo pacman -S php php-apache</code></p>
+</li>
+<li>
+<p><strong>Ensure that PHP module is loaded</strong>:</p>
+<p>In the Apache configuration file (<code>/etc/httpd/conf/httpd.conf</code>), check the following:</p>
+<ul>
+<li>
+<p>Ensure that the <code>mod_php.so</code> module is properly loaded. The correct line should be:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>LoadModule php_module modules/libphp.so</code></p>
+<p><strong>Note</strong>: The exact path to <code>libphp.so</code> may differ depending on your PHP installation. You may need to check if the file exists in <code>/usr/lib/httpd/modules/libphp.so</code>.</p>
+<p>To verify, run:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>ls /usr/lib/httpd/modules/libphp.so</code></p>
+<p>If the file doesn't exist, there may be a problem with your PHP installation.</p>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="3-reconfigure-apache-to-use-php"><a class="header" href="#3-reconfigure-apache-to-use-php">3. <strong>Reconfigure Apache to Use PHP</strong></a></h4>
+<ol start="8">
+<li>
+<p><strong>Update the Apache configuration</strong> to handle <code>.php</code> files correctly. Ensure that the following lines are present in <code>/etc/httpd/conf/httpd.conf</code>:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>AddHandler application/x-httpd-php .php LoadModule php_module modules/libphp.so</code></p>
+</li>
+<li>
+<p><strong>Check the <code>Directory</code> directive</strong> for the correct permissions. The following should be present:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>&lt;Directory "/srv/http"&gt;     AllowOverride None     Options Indexes FollowSymLinks     Require all granted &lt;/Directory&gt;</code></p>
+</li>
+<li>
+<p><strong>Save changes and restart Apache</strong>:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl restart httpd</code></p>
+</li>
+</ol>
+<h4 id="4-check-for-missing-dependencies"><a class="header" href="#4-check-for-missing-dependencies">4. <strong>Check for Missing Dependencies</strong></a></h4>
+<p>There could also be missing dependencies for PHP or Apache. To make sure everything is up to date:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo pacman -Syu</code></p>
+<p>This will update all your packages and ensure that there are no missing dependencies.</p>
+<h4 id="5-try-starting-apache-manually"><a class="header" href="#5-try-starting-apache-manually">5. <strong>Try Starting Apache Manually</strong></a></h4>
+<p>If the service is still failing to start, try running Apache manually to see if any errors are displayed directly in the terminal:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo httpd -k start</code></p>
+<p>This might provide a more specific error message.</p>
+<h4 id="6-check-for-conflicting-apache-modules"><a class="header" href="#6-check-for-conflicting-apache-modules">6. <strong>Check for Conflicting Apache Modules</strong></a></h4>
+<p>Sometimes, conflicts can arise if multiple PHP modules are loaded (for example, <code>mod_php</code> and <code>php_fpm</code>), or if there are other conflicting modules in the Apache configuration.</p>
+<ul>
+<li>Search through <code>/etc/httpd/conf/httpd.conf</code> for any other PHP-related lines or modules that may conflict with <code>mod_php</code>.</li>
+</ul>
+<hr />
+<p>If you're still encountering issues, feel free to share more specific error messages from the log files, and I'll be happy to help you troubleshoot further.</p>
+<h5 id="you-said-2"><a class="header" href="#you-said-2">You said:</a></h5>
+<p>Feb 15 03:38:45 Archie httpd[2712741]: AH00013: Pre-configuration failed root@Archie ~ # httpd -k start zsh: correct 'httpd' to 'ntpd' [nyae]? n [Sat Feb 15 03:39:10.004500 2025] [php:crit] [pid 2714553:tid 2714553] Apache is running a threaded MPM, but your PHP Module is not compiled to be threadsafe. You need to recompile PHP. AH00013: Pre-configuration failed</p>
+<h6 id="chatgpt-said-2"><a class="header" href="#chatgpt-said-2">ChatGPT said:</a></h6>
+<p>The error you're seeing indicates that there is a <strong>thread-safety conflict</strong> between Apache's <strong>threaded MPM (Multi-Processing Module)</strong> and the <strong>PHP module</strong>.</p>
+<p>The error:</p>
+<p>vbnet</p>
+<p>Copy</p>
+<p><code>Apache is running a threaded MPM, but your PHP Module is not compiled to be threadsafe. You need to recompile PHP.</code></p>
+<h3 id="what-this-means"><a class="header" href="#what-this-means">What this means:</a></h3>
+<ul>
+<li>Apache is configured to use a threaded MPM, but your PHP installation is not compiled to be thread-safe, causing this issue.</li>
+<li>When using a threaded MPM (like <code>worker</code> or <code>event</code>), PHP must be compiled as <strong>thread-safe</strong>. If it's not, you'll need to either recompile PHP with thread-safety or switch to an Apache MPM that does not require thread-safety, such as the <code>prefork</code> MPM.</li>
+</ul>
+<h3 id="steps-to-resolve-the-issue-1"><a class="header" href="#steps-to-resolve-the-issue-1">Steps to Resolve the Issue</a></h3>
+<h4 id="1-switch-apache-to-prefork-mpm"><a class="header" href="#1-switch-apache-to-prefork-mpm">1. <strong>Switch Apache to Prefork MPM</strong></a></h4>
+<p>If recompiling PHP is too complicated or not necessary, the simplest solution is to switch Apache to use the <code>prefork</code> MPM instead of the threaded <code>worker</code> or <code>event</code> MPM. The <code>prefork</code> MPM does not require PHP to be thread-safe.</p>
+<ol start="11">
+<li>
+<p>Open the Apache configuration file:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo nano /etc/httpd/conf/httpd.conf</code></p>
+</li>
+<li>
+<p>Look for the <code>LoadModule mpm_*</code> directives, which load the MPM modules. You should see something like:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>LoadModule mpm_worker_module modules/mod_mpm_worker.so</code></p>
+</li>
+<li>
+<p>Comment out (add a <code>#</code> at the beginning of) the <code>mpm_worker_module</code> or <code>mpm_event_module</code> line and uncomment the <code>mpm_prefork_module</code> line:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code># LoadModule mpm_worker_module modules/mod_mpm_worker.so LoadModule mpm_prefork_module modules/mod_mpm_prefork.so</code></p>
+</li>
+<li>
+<p>Save the changes and exit.</p>
+</li>
+<li>
+<p>Restart Apache:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl restart httpd</code></p>
+</li>
+</ol>
+<p>This will make Apache use the <code>prefork</code> MPM, which should resolve the thread-safety issue with PHP.</p>
+<h4 id="2-recompile-php-with-thread-safety"><a class="header" href="#2-recompile-php-with-thread-safety">2. <strong>Recompile PHP with Thread-Safety</strong></a></h4>
+<p>If you want to continue using a threaded MPM like <code>worker</code> or <code>event</code>, you'll need to recompile PHP with thread-safety enabled. However, this is more complex and may not be necessary if switching MPMs resolves your issue.</p>
+<p>To compile PHP with thread-safety, you'd need to:</p>
+<ul>
+<li>Download and extract the PHP source code.</li>
+<li>Configure PHP to build with thread-safety (<code>--enable-maintainer-zts</code> flag).</li>
+<li>Recompile PHP and install it.</li>
+</ul>
+<p>However, this is more advanced and often not needed if switching to <code>prefork</code> works.</p>
+<h4 id="3-verify-php-version-and-configuration"><a class="header" href="#3-verify-php-version-and-configuration">3. <strong>Verify PHP Version and Configuration</strong></a></h4>
+<p>Make sure your PHP installation is correct for your setup. For Apache with <code>prefork</code>, ensure you're using a compatible version of PHP.</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>php -v</code></p>
+<p>If necessary, reinstall PHP with the correct configuration:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo pacman -S php php-apache</code></p>
+<p>Afterward, ensure PHP is loaded correctly by checking your <code>httpd.conf</code>:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>LoadModule php_module modules/libphp.so</code></p>
+<h4 id="4-restart-apache"><a class="header" href="#4-restart-apache">4. <strong>Restart Apache</strong></a></h4>
+<p>After making the changes (switching MPM or recompiling PHP), restart Apache:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl restart httpd</code></p>
+<hr />
+<p>After these steps, the issue should be resolved. If the problem persists or you want to recompile PHP, I can guide you through that process as well, but switching the MPM is the easier fix in most cases.</p>
+<h5 id="you-said-3"><a class="header" href="#you-said-3">You said:</a></h5>
+<p>Feb 15 03:40:46 Archie systemd[1]: httpd.service: Failed with result 'exit-code'. root@Archie ~ # httpd -k start AH00534: httpd: Configuration error: More than one MPM loaded.</p>
+<h6 id="chatgpt-said-3"><a class="header" href="#chatgpt-said-3">ChatGPT said:</a></h6>
+<p>The error <code>AH00534: httpd: Configuration error: More than one MPM loaded</code> indicates that Apache is trying to load more than one MPM (Multi-Processing Module), which is causing a conflict.</p>
+<h3 id="explanation"><a class="header" href="#explanation">Explanation:</a></h3>
+<p>Apache can only use <strong>one</strong> MPM at a time, and it looks like both the <code>mpm_worker_module</code> (or <code>mpm_event_module</code>) and <code>mpm_prefork_module</code> are being loaded at the same time, leading to the conflict.</p>
+<h3 id="steps-to-resolve"><a class="header" href="#steps-to-resolve">Steps to Resolve:</a></h3>
+<h4 id="1-identify-and-correct-the-mpm-modules-in-apache-configuration"><a class="header" href="#1-identify-and-correct-the-mpm-modules-in-apache-configuration">1. <strong>Identify and Correct the MPM Modules in Apache Configuration</strong></a></h4>
+<ol start="16">
+<li>
+<p>Open the Apache configuration file <code>/etc/httpd/conf/httpd.conf</code>:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo nano /etc/httpd/conf/httpd.conf</code></p>
+</li>
+<li>
+<p>Look for the <code>LoadModule</code> directives for the MPM modules. You should see something like the following:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>LoadModule mpm_worker_module modules/mod_mpm_worker.so LoadModule mpm_prefork_module modules/mod_mpm_prefork.so</code></p>
+<p>There may also be a <code>mod_mpm_event.so</code> module loaded.</p>
+</li>
+<li>
+<p><strong>Comment out</strong> the lines for all MPM modules except the one you want to use. For example, if you're switching to the <code>prefork</code> MPM, comment out the <code>worker</code> and <code>event</code> modules:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code># LoadModule mpm_worker_module modules/mod_mpm_worker.so # LoadModule mpm_event_module modules/mod_mpm_event.so LoadModule mpm_prefork_module modules/mod_mpm_prefork.so</code></p>
+</li>
+<li>
+<p><strong>Save and exit</strong> the file.</p>
+</li>
+</ol>
+<h4 id="2-restart-apache"><a class="header" href="#2-restart-apache">2. <strong>Restart Apache</strong></a></h4>
+<p>After making the changes to the configuration file, restart Apache:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl restart httpd</code></p>
+<h3 id="verify-the-status"><a class="header" href="#verify-the-status">Verify the Status:</a></h3>
+<p>Once you've restarted Apache, check the status to make sure it's running properly:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl status httpd</code></p>
+<p>If there are no errors, Apache should be running without conflicts.</p>
+<h3 id="3-double-check-for-additional-mpm-conflicts"><a class="header" href="#3-double-check-for-additional-mpm-conflicts">3. <strong>Double-Check for Additional MPM Conflicts</strong></a></h3>
+<p>If the error persists, double-check the entire Apache configuration directory for any other conflicting MPM configuration files. Apache may have additional MPM-related configurations in the following files:</p>
+<ul>
+<li><code>/etc/httpd/conf.d/</code></li>
+<li><code>/etc/httpd/conf.modules.d/</code></li>
+</ul>
+<p>To search for any additional MPM-related directives, use:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>grep -i mpm /etc/httpd/conf* -R</code></p>
+<p>This will list all occurrences of <code>mpm_*</code> in the configuration files. Ensure that only one MPM module is being loaded across all files.</p>
+<hr />
+<p>If you still encounter issues, feel free to provide more details or error messages, and I'll assist you further!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../OperatingSystems/Windows/Windows_bypass_login.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../posts/company.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../OperatingSystems/Windows/Windows_bypass_login.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../posts/company.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

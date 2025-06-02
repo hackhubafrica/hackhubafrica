@@ -1,0 +1,599 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Docker Cheat</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="interactive-terminal"><a class="header" href="#interactive-terminal">Interactive terminal</a></h1>
+<p>You can get an interactive terminal inside a running Docker container using:</p>
+<pre><code class="language-sh">docker exec -it &lt;container_id_or_name&gt; /bin/bash
+</code></pre>
+<p>or, if the container doesn't have Bash:</p>
+<pre><code class="language-sh">
+docker exec -it &lt;container_id_or_name&gt; /bin/sh
+</code></pre>
+<h3 id="explanation"><a class="header" href="#explanation">Explanation:</a></h3>
+<ul>
+<li><code>docker exec</code> runs a command inside an existing container.</li>
+<li><code>-i</code> keeps the input open.</li>
+<li><code>-t</code> allocates a pseudo-TTY.</li>
+<li><code>&lt;container_id_or_name&gt;</code> should be replaced with the actual container ID or name.</li>
+<li><code>/bin/bash</code> starts an interactive shell (use <code>/bin/sh</code> for Alpine-based containers).</li>
+</ul>
+<h4 id="alternative"><a class="header" href="#alternative">Alternative:</a></h4>
+<p>If you want to attach directly to the main process running in the container:</p>
+<pre><code class="language-sh">docker attach &lt;container_id_or_name&gt;
+</code></pre>
+<p>However, <code>docker attach</code> connects to the container’s <code>primary process</code> and may not give you a <code>shell.</code></p>
+<h4 id="if-the-container-is-stopped"><a class="header" href="#if-the-container-is-stopped">If the container is stopped:</a></h4>
+<p>You can start it and open a shell in one step:</p>
+<pre><code class="language-sh">docker run -it &lt;image_name&gt; /bin/bash
+</code></pre>
+<p>Let me know if you're dealing with a specific issue!</p>
+<h1 id="full-cyberscurity-lab-with-docker-where-i-wiil-have-kali-linuxwulnerable-containers-web-apps-and-all---the-good-stuff"><a class="header" href="#full-cyberscurity-lab-with-docker-where-i-wiil-have-kali-linuxwulnerable-containers-web-apps-and-all---the-good-stuff">full cyberscurity lab with docker where i wiil have kali linux,wulnerable containers ,web apps and all   the good stuff</a></h1>
+<p>You’ll want a well-structured setup with isolated networks, exposed ports, and easy container management. Here’s how you can get started:</p>
+<hr />
+<h3 id="step-1-install-docker-and-docker-compose"><a class="header" href="#step-1-install-docker-and-docker-compose"><strong>Step 1: Install Docker and Docker Compose</strong></a></h3>
+<p>Ensure you have Docker and Docker Compose installed. If not, install them:</p>
+<p>sh
+<code>sudo apt update &amp;&amp; sudo apt install docker.io docker-compose -y</code></p>
+<p>Verify installation:</p>
+<p><code>docker --version docker-compose --version</code></p>
+<hr />
+<h3 id="step-2-set-up-a-docker-network"><a class="header" href="#step-2-set-up-a-docker-network"><strong>Step 2: Set Up a Docker Network</strong></a></h3>
+<p>To allow containers to communicate:</p>
+<p>sh</p>
+<p><code>docker network create cyberlab</code></p>
+<hr />
+<h3 id="step-3-create-a-docker-composeyml"><a class="header" href="#step-3-create-a-docker-composeyml"><strong>Step 3: Create a <code>docker-compose.yml</code></strong></a></h3>
+<p>This file will define all your containers and their networking.</p>
+<p>Create a <code>cyberlab</code> folder:</p>
+<p>sh</p>
+<p><code>mkdir ~/cyberlab &amp;&amp; cd ~/cyberlab nano docker-compose.yml</code></p>
+<p>Paste this inside:</p>
+<pre><code class="language-yaml">version: '3.8' services: kali: image: kalilinux/kali-rolling container_name: kali command: tail -f /dev/null # Keeps container running tty: true stdin_open: true networks: - cyberlab dvwa: image: vulnerables/web-dvwa container_name: dvwa ports: - "8080:80" restart: always networks: - cyberlab metasploitable: image: tleemcjr/metasploitable2 container_name: metasploitable ports: - "2222:22" # SSH - "3389:3389" # RDP networks: - cyberlab juice-shop: image: bkimminich/juice-shop container_name: juice-shop ports: - "3000:3000" restart: always networks: - cyberlab networks: cyberlab: driver: bridge
+</code></pre>
+<hr />
+<h3 id="step-4-start-the-lab"><a class="header" href="#step-4-start-the-lab"><strong>Step 4: Start the Lab</strong></a></h3>
+<p>Run:</p>
+<p>sh</p>
+<p><code>docker-compose up -d</code></p>
+<p>This will start all containers in detached mode.</p>
+<hr />
+<h3 id="step-5-access-containers"><a class="header" href="#step-5-access-containers"><strong>Step 5: Access Containers</strong></a></h3>
+<ul>
+<li>
+<p><strong>Kali Linux Shell:</strong></p>
+<p>sh</p>
+<p><code>docker exec -it kali /bin/bash</code></p>
+</li>
+<li>
+<p><strong>DVWA (Damn Vulnerable Web App):</strong><br />
+Open http://localhost:8080<br />
+Login: <code>admin</code> / <code>password</code></p>
+</li>
+<li>
+<p><strong>Metasploitable SSH:</strong></p>
+<p>sh</p>
+<p><code>ssh msfadmin@localhost -p 2222</code></p>
+<p>Password: <code>msfadmin</code></p>
+</li>
+<li>
+<p><strong>Juice Shop:</strong><br />
+Open http://localhost:3000</p>
+</li>
+</ul>
+<h3 id="enhancing-your-cybersecurity-lab-with-reverse-proxy-logging-and-a-dedicated-subnet"><a class="header" href="#enhancing-your-cybersecurity-lab-with-reverse-proxy-logging-and-a-dedicated-subnet"><strong>Enhancing Your Cybersecurity Lab with Reverse Proxy, Logging, and a Dedicated Subnet</strong></a></h3>
+<p>To make your lab more realistic and organized, you’ll implement:<br />
+✅ <strong>Reverse Proxy</strong>: Using <strong>Traefik</strong> or <strong>NGINX</strong> to manage multiple web services.<br />
+✅ <strong>Logging &amp; Monitoring</strong>: Using <strong>ELK Stack</strong> (Elasticsearch, Logstash, Kibana) to analyze traffic &amp; security events.<br />
+✅ <strong>Dedicated Subnet</strong>: Using <strong>Docker custom networks</strong> (e.g., <code>192.168.100.x</code>).</p>
+<hr />
+<h2 id="1-set-up-a-reverse-proxy-traefik-or-nginx"><a class="header" href="#1-set-up-a-reverse-proxy-traefik-or-nginx"><strong>1️⃣ Set Up a Reverse Proxy (Traefik or NGINX)</strong></a></h2>
+<p>A reverse proxy routes traffic from a single <strong>entry point (e.g., port 80/443)</strong> to multiple internal services.</p>
+<h3 id="-using-traefik-dynamic--auto-discovery"><a class="header" href="#-using-traefik-dynamic--auto-discovery"><strong>🔹 Using Traefik (Dynamic &amp; Auto-Discovery)</strong></a></h3>
+<p>Traefik automatically discovers services from <code>docker-compose</code> labels.</p>
+<h4 id="step-1-define-traefik-in-docker-composeyml"><a class="header" href="#step-1-define-traefik-in-docker-composeyml"><strong>Step 1: Define Traefik in <code>docker-compose.yml</code></strong></a></h4>
+<p>Modify your <code>docker-compose.yml</code>:</p>
+<p>yaml</p>
+<p>CopyEdit</p>
+<p><code>version: '3.8'  networks:   cyberlab:     ipam:       config:         - subnet: 192.168.100.0/24  services:   traefik:     image: traefik:v2.9     container_name: traefik     command:       - "--api.insecure=true"       - "--providers.docker=true"       - "--entrypoints.web.address=:80"     ports:       - "80:80"       - "8080:8080" # Traefik Dashboard     networks:       cyberlab:         ipv4_address: 192.168.100.2     volumes:       - "/var/run/docker.sock:/var/run/docker.sock"    dvwa:     image: vulnerables/web-dvwa     container_name: dvwa     networks:       cyberlab:         ipv4_address: 192.168.100.10     labels:       - "traefik.enable=true"       - "traefik.http.routers.dvwa.rule=Host(`dvwa.local`)"</code></p>
+<h4 id="step-2-modify-etchosts-local-testing"><a class="header" href="#step-2-modify-etchosts-local-testing"><strong>Step 2: Modify <code>/etc/hosts</code> (Local Testing)</strong></a></h4>
+<p>To access <code>dvwa.local</code>, add this line:</p>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>192.168.100.10 dvwa.local</code></p>
+<h4 id="step-3-start-everything"><a class="header" href="#step-3-start-everything"><strong>Step 3: Start Everything</strong></a></h4>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>docker-compose up -d</code></p>
+<p>Now, <strong>DVWA is accessible at</strong>:<br />
+👉 <code>http://dvwa.local</code></p>
+<p>Traefik’s dashboard:<br />
+👉 <code>http://localhost:8080</code></p>
+<hr />
+<h3 id="-using-nginx-as-reverse-proxy-static-config"><a class="header" href="#-using-nginx-as-reverse-proxy-static-config"><strong>🔹 Using NGINX as Reverse Proxy (Static Config)</strong></a></h3>
+<p>If you prefer <strong>NGINX</strong>, create an <code>nginx.conf</code>:</p>
+<p>nginx</p>
+<p>CopyEdit</p>
+<p><code>server {     listen 80;     server_name dvwa.local;          location / {         proxy_pass http://192.168.100.10;         proxy_set_header Host $host;         proxy_set_header X-Real-IP $remote_addr;     } }</code></p>
+<p>Run NGINX with:</p>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>docker run -d --name nginx -p 80:80 -v $(pwd)/nginx.conf:/etc/nginx/nginx.conf:ro nginx</code></p>
+<hr />
+<h2 id="2-set-up-logging--monitoring-elk-stack"><a class="header" href="#2-set-up-logging--monitoring-elk-stack"><strong>2️⃣ Set Up Logging &amp; Monitoring (ELK Stack)</strong></a></h2>
+<p>To analyze logs from your cybersecurity lab.</p>
+<h3 id="step-1-define-elk-in-docker-composeyml"><a class="header" href="#step-1-define-elk-in-docker-composeyml"><strong>Step 1: Define ELK in <code>docker-compose.yml</code></strong></a></h3>
+<p>yaml</p>
+<p>CopyEdit</p>
+<p><code>services:   elasticsearch:     image: docker.elastic.co/elasticsearch/elasticsearch:8.5.0     environment:       - discovery.type=single-node     ports:       - "9200:9200"     networks:       cyberlab:         ipv4_address: 192.168.100.20    logstash:     image: docker.elastic.co/logstash/logstash:8.5.0     volumes:       - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf     depends_on:       - elasticsearch     networks:       cyberlab:         ipv4_address: 192.168.100.21    kibana:     image: docker.elastic.co/kibana/kibana:8.5.0     depends_on:       - elasticsearch     ports:       - "5601:5601"     networks:       cyberlab:         ipv4_address: 192.168.100.22</code></p>
+<h3 id="step-2-configure-logstash-logstashconf"><a class="header" href="#step-2-configure-logstash-logstashconf"><strong>Step 2: Configure Logstash (<code>logstash.conf</code>)</strong></a></h3>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>input {   file {     path =&gt; "/var/log/nginx/access.log"     start_position =&gt; "beginning"   } }  output {   elasticsearch {     hosts =&gt; ["http://192.168.100.20:9200"]   } }</code></p>
+<h3 id="step-3-start-elk"><a class="header" href="#step-3-start-elk"><strong>Step 3: Start ELK</strong></a></h3>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>docker-compose up -d</code></p>
+<h3 id="step-4-access-kibana"><a class="header" href="#step-4-access-kibana"><strong>Step 4: Access Kibana</strong></a></h3>
+<p>👉 <code>http://localhost:5601</code><br />
+Create an index pattern for <code>logstash-*</code> to visualize logs.</p>
+<hr />
+<h2 id="3-set-up-a-dedicated-subnet-192168100x"><a class="header" href="#3-set-up-a-dedicated-subnet-192168100x"><strong>3️⃣ Set Up a Dedicated Subnet (192.168.100.x)</strong></a></h2>
+<p>To make your network setup <strong>realistic</strong>, define a <strong>custom Docker network</strong>.</p>
+<h3 id="-create-a-custom-network"><a class="header" href="#-create-a-custom-network"><strong>🔹 Create a Custom Network</strong></a></h3>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>docker network create \   --subnet=192.168.100.0/24 \   cyberlab</code></p>
+<h3 id="-assign-static-ips-in-docker-composeyml"><a class="header" href="#-assign-static-ips-in-docker-composeyml"><strong>🔹 Assign Static IPs in <code>docker-compose.yml</code></strong></a></h3>
+<p>Modify each service:</p>
+<p>yaml</p>
+<p>CopyEdit</p>
+<p><code>networks:   cyberlab:     ipv4_address: 192.168.100.10</code></p>
+<p>Now, all containers are in <code>192.168.100.x</code>.</p>
+<hr />
+<h2 id="final-setup"><a class="header" href="#final-setup"><strong>Final Setup</strong></a></h2>
+<p>✅ Reverse Proxy (Traefik/NGINX) ✅<br />
+✅ Logging with ELK Stack ✅<br />
+✅ Dedicated <code>192.168.100.x</code> Subnet ✅</p>
+<p>Would you like an <strong>Ansible playbook</strong> to automate this setup? 🚀</p>
+<hr />
+<h3 id="1-metasploitable-2-vulnerable-linux-server"><a class="header" href="#1-metasploitable-2-vulnerable-linux-server"><strong>1️⃣ Metasploitable 2 (Vulnerable Linux Server)</strong></a></h3>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>docker pull tleemcjr/metasploitable2</code></p>
+<p>Run it:</p>
+<p>sh</p>
+<p><code>docker run -d --name metasploitable -p 2222:22 -p 3306:3306 -p 80:80 tleemcjr/metasploitable2</code></p>
+<p>👉 <strong>SSH Credentials:</strong> <code>msfadmin:msfadmin</code><br />
+👉 <strong>Web Apps:</strong> Open <code>http://localhost:80</code></p>
+<hr />
+<h3 id="2-damn-vulnerable-linux-dvl"><a class="header" href="#2-damn-vulnerable-linux-dvl"><strong>2️⃣ Damn Vulnerable Linux (DVL)</strong></a></h3>
+<p>sh</p>
+<p><code>docker pull nymd/damn-vulnerable-linux docker run -it --rm nymd/damn-vulnerable-linux /bin/bash</code></p>
+<hr />
+<h3 id="3-vulhub-pre-configured-exploitable-services"><a class="header" href="#3-vulhub-pre-configured-exploitable-services"><strong>3️⃣ Vulhub (Pre-configured Exploitable Services)</strong></a></h3>
+<p>Vulhub provides <strong>ready-to-use vulnerable containers</strong>:</p>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>git clone https://github.com/vulhub/vulhub.git cd vulhub/ docker-compose up -d</code></p>
+<p>👉 <a href="https://github.com/vulhub/vulhub">Explore vulnerabilities</a></p>
+<hr />
+<h2 id="-solution-2-manually-create-an-insecure-ubuntu-container"><a class="header" href="#-solution-2-manually-create-an-insecure-ubuntu-container"><strong>🔹 Solution 2: Manually Create an Insecure Ubuntu Container</strong></a></h2>
+<p>If you still want <strong>Ubuntu</strong> but insecure, do this:</p>
+<h3 id="1-pull-a-base-ubuntu-image"><a class="header" href="#1-pull-a-base-ubuntu-image"><strong>1️⃣ Pull a Base Ubuntu Image</strong></a></h3>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>docker pull ubuntu:20.04 docker run -it --name insecure-ubuntu ubuntu:20.04 /bin/bash</code></p>
+<h3 id="2-install-insecure-packages"><a class="header" href="#2-install-insecure-packages"><strong>2️⃣ Install Insecure Packages</strong></a></h3>
+<p>Inside the container:</p>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>apt update &amp;&amp; apt install -y openssh-server netcat python3-pip echo 'root:root' | chpasswd  # Set root password to "root" echo "PermitRootLogin yes" &gt;&gt; /etc/ssh/sshd_config echo "PasswordAuthentication yes" &gt;&gt; /etc/ssh/sshd_config service ssh restart</code></p>
+<p><strong>Expose Ports:</strong></p>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>docker commit insecure-ubuntu insecure-ubuntu docker run -d -p 2222:22 insecure-ubuntu</code></p>
+<p>👉 <strong>SSH Access:</strong> <code>ssh root@localhost -p 2222</code> (Password: <code>root</code>)</p>
+<hr />
+<h3 id="tldr-use-these-instead"><a class="header" href="#tldr-use-these-instead"><strong>TL;DR: Use These Instead</strong></a></h3>
+<ul>
+<li>✅ <strong>Metasploitable2</strong> (<code>tleemcjr/metasploitable2</code>)</li>
+<li>✅ <strong>Damn Vulnerable Linux</strong> (<code>nymd/damn-vulnerable-linux</code>)</li>
+<li>✅ <strong>Vulhub</strong> (Pre-built exploits)</li>
+<li>✅ <strong>Custom Insecure Ubuntu</strong> (Manually configured)</li>
+</ul>
+<h3 id="pulling-creating-and-testing-insecure-containers-for-practice"><a class="header" href="#pulling-creating-and-testing-insecure-containers-for-practice"><strong>Pulling, Creating, and Testing Insecure Containers for Practice</strong></a></h3>
+<p>You can use <strong>pre-built vulnerable containers</strong> or <strong>create your own</strong> for learning and testing.</p>
+<hr />
+<h2 id="1-pull-and-run-well-known-vulnerable-containers"><a class="header" href="#1-pull-and-run-well-known-vulnerable-containers"><strong>1️⃣ Pull and Run Well-Known Vulnerable Containers</strong></a></h2>
+<p>Here’s a list of <strong>well-known</strong> vulnerable containers:</p>
+<div class="table-wrapper"><table><thead><tr><th>Container Name</th><th>Description</th><th>Pull Command</th></tr></thead><tbody>
+<tr><td><strong>Metasploitable 2</strong></td><td>A full Linux system with multiple vulnerabilities</td><td><code>docker pull tleemcjr/metasploitable2</code></td></tr>
+<tr><td><strong>Damn Vulnerable Web App (DVWA)</strong></td><td>Web app with SQL injection, XSS, and authentication flaws</td><td><code>docker pull vulnerables/web-dvwa</code></td></tr>
+<tr><td><strong>OWASP Juice Shop</strong></td><td>Intentionally insecure e-commerce site for web security training</td><td><code>docker pull bkimminich/juice-shop</code></td></tr>
+<tr><td><strong>OWASP Mutillidae II</strong></td><td>A web app with various OWASP vulnerabilities</td><td><code>docker pull citizenstig/nowasp</code></td></tr>
+<tr><td><strong>Vulnerable API (VAmPI)</strong></td><td>A purposely vulnerable API for pentesting practice</td><td><code>docker pull adorsaz/vampi</code></td></tr>
+<tr><td><strong>Bad Docker</strong></td><td>Misconfigured container with exposed secrets &amp; weak security</td><td><code>docker pull qsecure/bad-docker</code></td></tr>
+<tr><td><strong>WebGoat</strong></td><td>OWASP training ground for web security flaws</td><td><code>docker pull webgoat/webgoat</code></td></tr>
+<tr><td><strong>Vulhub</strong></td><td>Pre-built exploits for various vulnerabilities</td><td><code>git clone https://github.com/vulhub/vulhub.git</code></td></tr>
+</tbody></table>
+</div>
+<hr />
+<h2 id="2-running--testing-vulnerable-containers"><a class="header" href="#2-running--testing-vulnerable-containers"><strong>2️⃣ Running &amp; Testing Vulnerable Containers</strong></a></h2>
+<p>Once you’ve pulled a container, you can run it like this:</p>
+<h3 id="-example-running-dvwa"><a class="header" href="#-example-running-dvwa"><strong>🛠 Example: Running DVWA</strong></a></h3>
+<p>sh</p>
+<p><code>docker run -d --name dvwa -p 8080:80 vulnerables/web-dvwa</code></p>
+<p>👉 Access it at: <code>http://localhost:8080</code><br />
+👉 <strong>Login Credentials:</strong> <code>admin:password</code></p>
+<hr />
+<h3 id="-example-running-metasploitable-2"><a class="header" href="#-example-running-metasploitable-2"><strong>🛠 Example: Running Metasploitable 2</strong></a></h3>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>docker run -d --name metasploitable -p 2222:22 -p 80:80 tleemcjr/metasploitable2</code></p>
+<p>👉 <strong>SSH Credentials:</strong> <code>msfadmin:msfadmin</code><br />
+👉 <strong>Web Apps:</strong> <code>http://localhost:80</code></p>
+<hr />
+<h3 id="-example-running-owasp-juice-shop"><a class="header" href="#-example-running-owasp-juice-shop"><strong>🛠 Example: Running OWASP Juice Shop</strong></a></h3>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>docker run -d --name juice-shop -p 3000:3000 bkimminich/juice-shop</code></p>
+<p>👉 <strong>Access it at:</strong> <code>http://localhost:3000</code></p>
+<hr />
+<h2 id="3-creating-your-own-insecure-container"><a class="header" href="#3-creating-your-own-insecure-container"><strong>3️⃣ Creating Your Own Insecure Container</strong></a></h2>
+<p>If you want to <strong>build a custom insecure container</strong>, you can start with Ubuntu and install insecure configurations.</p>
+<h3 id="-example-insecure-ubuntu-with-root-login--open-ports"><a class="header" href="#-example-insecure-ubuntu-with-root-login--open-ports"><strong>🛠 Example: Insecure Ubuntu with Root Login &amp; Open Ports</strong></a></h3>
+<p>Create a <code>Dockerfile</code>:</p>
+<p>dockerfile</p>
+<p>CopyEdit</p>
+<p><code>FROM ubuntu:20.04  RUN apt update &amp;&amp; apt install -y openssh-server netcat python3-pip curl RUN echo 'root:root' | chpasswd  # Weak root password RUN echo "PermitRootLogin yes" &gt;&gt; /etc/ssh/sshd_config RUN echo "PasswordAuthentication yes" &gt;&gt; /etc/ssh/sshd_config  CMD ["/usr/sbin/sshd", "-D"]</code></p>
+<p><strong>Build &amp; Run:</strong></p>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>docker build -t insecure-ubuntu . docker run -d --name insecure-ubuntu -p 2222:22 insecure-ubuntu</code></p>
+<p>👉 <strong>SSH Access:</strong> <code>ssh root@localhost -p 2222</code> (Password: <code>root</code>)</p>
+<hr />
+<h2 id="4-next-steps"><a class="header" href="#4-next-steps"><strong>4️⃣ Next Steps</strong></a></h2>
+<p>✅ Set up <strong>network isolation</strong> for realistic testing<br />
+✅ Use <strong>Docker Compose</strong> to spin up <strong>multiple vulnerable services</strong><br />
+✅ Install <strong>Burp Suite, Metasploit, and Nmap</strong> for active testing</p>
+<p>Would you like a <strong>pre-built <code>docker-compose.yml</code> file</strong> to automate this setup? 🚀</p>
+<h5 id="you-said"><a class="header" href="#you-said">You said:</a></h5>
+<p>root@Archie /home/dante # docker pull qsecure/bad-docker Using default tag: latest Error response from daemon: pull access denied for qsecure/bad-docker, repository does not exist or may require 'docker login': denied: requested access to the resource is denied root@Archie /home/dante #</p>
+<h6 id="chatgpt-said"><a class="header" href="#chatgpt-said">ChatGPT said:</a></h6>
+<p>The error message:</p>
+<p>javascript</p>
+<p>CopyEdit</p>
+<p><code>Error response from daemon: pull access denied for qsecure/bad-docker, repository does not exist or may require 'docker login'</code></p>
+<p>indicates that the image <code>qsecure/bad-docker</code> is either:</p>
+<ol start="18">
+<li><strong>Private</strong> – Requires authentication (<code>docker login</code>) to access.</li>
+<li><strong>Non-existent</strong> – The repository <code>qsecure/bad-docker</code> does not exist on Docker Hub or other registries.</li>
+<li><strong>Restricted</strong> – It may be hosted on a private registry, requiring a different registry URL.</li>
+</ol>
+<hr />
+<h3 id="-how-to-troubleshoot--fix"><a class="header" href="#-how-to-troubleshoot--fix"><strong>🔹 How to Troubleshoot &amp; Fix</strong></a></h3>
+<h4 id="1-check-if-the-image-exists-on-docker-hub"><a class="header" href="#1-check-if-the-image-exists-on-docker-hub"><strong>1️⃣ Check if the image exists on Docker Hub</strong></a></h4>
+<p>Run:</p>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>docker search qsecure/bad-docker</code></p>
+<ul>
+<li>If it does <strong>not</strong> appear, the repository does not exist or is private.</li>
+<li>If it <strong>does</strong> appear, try pulling again.</li>
+</ul>
+<h4 id="2-try-logging-in-if-private"><a class="header" href="#2-try-logging-in-if-private"><strong>2️⃣ Try Logging In (if private)</strong></a></h4>
+<p>If the repository is private, you may need credentials:</p>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>docker login docker pull qsecure/bad-docker</code></p>
+<p>If it is hosted on a <strong>private registry (not Docker Hub)</strong>, use:</p>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>docker login &lt;registry-url&gt; docker pull &lt;registry-url&gt;/qsecure/bad-docker</code></p>
+<h4 id="3-manually-inspect-if-the-image-exists"><a class="header" href="#3-manually-inspect-if-the-image-exists"><strong>3️⃣ Manually Inspect if the Image Exists</strong></a></h4>
+<p>Try visiting <strong>Docker Hub</strong>:<br />
+🔗 https://hub.docker.com/<br />
+Search for <code>qsecure/bad-docker</code>. If it doesn’t exist, it is likely an incorrect name.</p>
+<h5 id="you-said-1"><a class="header" href="#you-said-1">You said:</a></h5>
+<p>CVE Binary Tool: Developed by Intel, this tool scans binaries and system packages to identify known vulnerabilities based on version numbers. It's useful for pinpointing vulnerable software versions that you might want to install in Docker containers for testing purposes. CVEViz: This Python-based tool analyzes vulnerabilities associated with specific products by processing CVE List v5 JSON files. It generates plots that can aid in understanding the distribution and impact of vulnerabilities across different software versions. Explore CVEViz on I HAVE FOLLOWED YOUR ADVICE AND CLONE THESE REPOS .HOW DO I GO AHEAD AND DOWNLAOD NECESSARY DATA FOR VISUALIZAATION</p>
+<h6 id="chatgpt-said-1"><a class="header" href="#chatgpt-said-1">ChatGPT said:</a></h6>
+<p>Great! Now that you've cloned <strong>CVE Binary Tool</strong> and <strong>CVEViz</strong>, you'll need to download the necessary vulnerability data to generate meaningful visualizations. Here’s how you can proceed for both tools:</p>
+<hr />
+<h5 id="you-said-2"><a class="header" href="#you-said-2">You said:</a></h5>
+<p>what are other ways and tools that can help me in this discovery since i dont want to focus on everything but double down on a specific niche</p>
+<h6 id="chatgpt-said-2"><a class="header" href="#chatgpt-said-2">ChatGPT said:</a></h6>
+<p>Memory updated</p>
+<p>To specialize in a specific cybersecurity niche, you need tools tailored to that focus. Here are <strong>some key areas</strong> and tools that can help with vulnerability discovery and analysis:</p>
+<hr />
+<h3 id="1-binary-analysis--reverse-engineering"><a class="header" href="#1-binary-analysis--reverse-engineering"><strong>1️⃣ Binary Analysis &amp; Reverse Engineering</strong></a></h3>
+<p>If you're interested in <strong>analyzing compiled software</strong> for vulnerabilities:</p>
+<ul>
+<li><strong>Ghidra</strong> (NSA’s reverse engineering tool)</li>
+<li><strong>Radare2</strong> (Powerful command-line reverse engineering framework)</li>
+<li><strong>Cutter</strong> (GUI for Radare2)</li>
+<li><strong>Binwalk</strong> (Firmware analysis)</li>
+<li><strong>CVE Binary Tool</strong> (Scans binaries for known CVEs)</li>
+</ul>
+<p>🔹 <strong>Ideal for:</strong> Finding vulnerabilities in software, analyzing malware, embedded systems security.</p>
+<hr />
+<h3 id="2-web-application-security--pentesting"><a class="header" href="#2-web-application-security--pentesting"><strong>2️⃣ Web Application Security &amp; Pentesting</strong></a></h3>
+<p>For <strong>web-focused vulnerability discovery</strong>:</p>
+<ul>
+<li><strong>Burp Suite</strong> (Intercept and modify HTTP requests)</li>
+<li><strong>OWASP ZAP</strong> (Automated and manual web app testing)</li>
+<li><strong>SQLmap</strong> (Automates SQL injection detection)</li>
+<li><strong>Nikto</strong> (Web server vulnerability scanner)</li>
+<li><strong>FFUF</strong> (Fast web fuzzing for directories, subdomains, and parameters)</li>
+</ul>
+<p>🔹 <strong>Ideal for:</strong> Web penetration testing, bug bounty hunting, API security.</p>
+<hr />
+<h3 id="3-exploit-development"><a class="header" href="#3-exploit-development"><strong>3️⃣ Exploit Development</strong></a></h3>
+<p>If you're into <strong>writing and testing exploits</strong>:</p>
+<ul>
+<li><strong>Metasploit Framework</strong> (Exploit database + automation)</li>
+<li><strong>Pwntools</strong> (Python framework for exploit dev)</li>
+<li><strong>ROPgadget</strong> (Return-Oriented Programming gadget finder)</li>
+<li><strong>GDB + PEDA</strong> (Debugger with exploit dev enhancements)</li>
+</ul>
+<p>🔹 <strong>Ideal for:</strong> Buffer overflows, privilege escalation, writing exploits.</p>
+<hr />
+<h3 id="4-network-security--packet-analysis"><a class="header" href="#4-network-security--packet-analysis"><strong>4️⃣ Network Security &amp; Packet Analysis</strong></a></h3>
+<p>If <strong>network-based vulnerabilities</strong> interest you:</p>
+<ul>
+<li><strong>Wireshark</strong> (Packet capture and analysis)</li>
+<li><strong>Tcpdump</strong> (Command-line packet sniffer)</li>
+<li><strong>Nmap</strong> (Network scanner &amp; vulnerability detection)</li>
+<li><strong>Masscan</strong> (Internet-wide port scanning)</li>
+<li><strong>Bettercap</strong> (MITM attacks and network hacking)</li>
+</ul>
+<p>🔹 <strong>Ideal for:</strong> Network penetration testing, traffic analysis, packet sniffing.</p>
+<hr />
+<h3 id="5-vulnerability-intelligence--threat-hunting"><a class="header" href="#5-vulnerability-intelligence--threat-hunting"><strong>5️⃣ Vulnerability Intelligence &amp; Threat Hunting</strong></a></h3>
+<p>For <strong>tracking and visualizing vulnerabilities</strong>:</p>
+<ul>
+<li><strong>CVEViz</strong> (Visualize CVEs and affected software)</li>
+<li><strong>CVE Binary Tool</strong> (Scan software versions for known CVEs)</li>
+<li><strong>Shodan</strong> (Search for vulnerable devices on the internet)</li>
+<li><strong>Elastic Stack (ELK)</strong> (Centralized log analysis)</li>
+<li><strong>MITRE ATT&amp;CK</strong> (Threat intelligence framework)</li>
+</ul>
+<p>🔹 <strong>Ideal for:</strong> Threat intelligence, vulnerability management, monitoring trends.</p>
+<hr />
+<h3 id="6-malware-analysis--threat-research"><a class="header" href="#6-malware-analysis--threat-research"><strong>6️⃣ Malware Analysis &amp; Threat Research</strong></a></h3>
+<p>If <strong>malware research</strong> is your focus:</p>
+<ul>
+<li><strong>Cuckoo Sandbox</strong> (Analyze malware in VMs)</li>
+<li><strong>YARA</strong> (Detect malware patterns)</li>
+<li><strong>Volatility</strong> (Memory forensics framework)</li>
+<li><strong>Hybrid Analysis</strong> (Cloud-based malware sandbox)</li>
+</ul>
+<p>🔹 <strong>Ideal for:</strong> Reverse engineering malware, analyzing threats.</p>
+<hr />
+<h2 id="-choosing-your-niche"><a class="header" href="#-choosing-your-niche"><strong>🔥 Choosing Your Niche</strong></a></h2>
+<p>Now, based on <strong>your interests and goals</strong>, you can <strong>double down</strong> on one of these areas instead of spreading yourself too thin.</p>
+<p>Do any of these categories stand out to you? Or do you need help picking a niche? 🚀</p>
+<p>Try these steps and let me know what happens! 🚀</p>
+<h5 id="you-said-3"><a class="header" href="#you-said-3">You said:</a></h5>
+<p>since the images at /home/data-docker is notfound can i delete everything and install the image from scratch</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../CyberSecurity/wazuh_threat_intel/MITR3ATTACK/APT_GROUPS.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../Docker/docker_storage.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../CyberSecurity/wazuh_threat_intel/MITR3ATTACK/APT_GROUPS.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../Docker/docker_storage.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,470 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Buffers</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h3 id="-what-are-buffers"><a class="header" href="#-what-are-buffers"><strong>🔹 What Are Buffers?</strong></a></h3>
+<p>A <strong>buffer</strong> is a temporary in-memory representation of an open file or unsaved text inside an editor. Think of buffers as <strong>"open documents"</strong> that you can switch between without closing them.</p>
+<h4 id="-buffers-in-vimneovimgvim"><a class="header" href="#-buffers-in-vimneovimgvim"><strong>🛠️ Buffers in Vim/Neovim/GVim</strong></a></h4>
+<ul>
+<li>When you open a file in Vim, it gets loaded into a <strong>buffer</strong>.</li>
+<li>You can open <strong>multiple buffers</strong> at the same time without opening multiple windows or tabs.</li>
+<li>Buffers can hold <strong>files, temporary text, or unsaved changes</strong>.</li>
+<li>Even if a buffer is hidden, it remains in memory and can be switched back to.</li>
+</ul>
+<h4 id="-buffers-in-emacs"><a class="header" href="#-buffers-in-emacs"><strong>🛠️ Buffers in Emacs</strong></a></h4>
+<ul>
+<li><strong>Emacs also uses buffers</strong>, but it treats <strong>everything as a buffer</strong>, including files, help pages, terminal emulators, and interactive shells.</li>
+<li>Unlike Vim, Emacs does not have a strict "tab" system, as all content is just another buffer.</li>
+</ul>
+<hr />
+<p>In <strong>Vim, Neovim, and GVim</strong>, you can <strong>list all open buffers</strong> and <strong>switch between them</strong> using the following commands:</p>
+<h3 id="1-list-all-open-buffers"><a class="header" href="#1-list-all-open-buffers"><strong>1️⃣ List All Open Buffers</strong></a></h3>
+<p>In normal mode, type:</p>
+<pre><code class="language-vim">:ls
+</code></pre>
+<p>or</p>
+<pre><code class="language-vim">:buffers
+</code></pre>
+<p>This will show a list of open buffers with their <strong>buffer numbers</strong>, status, and filenames.</p>
+<ul>
+<li><code>#</code> → Indicates the alternate buffer</li>
+<li><code>+</code> → The currently active buffer</li>
+<li><code>%</code> → The current buffer</li>
+<li><code>-</code> → Previously active buffer</li>
+</ul>
+<hr />
+<h3 id="2-switch-between-buffers"><a class="header" href="#2-switch-between-buffers"><strong>2️⃣ Switch Between Buffers</strong></a></h3>
+<p>You can switch between buffers using their <strong>buffer number</strong> or by cycling through them.</p>
+<h4 id="switch-to-a-specific-buffer-by-number"><a class="header" href="#switch-to-a-specific-buffer-by-number"><strong>Switch to a Specific Buffer by Number</strong></a></h4>
+<p>Use:</p>
+<pre><code class="language-vim">:buffer &lt;buffer_number&gt;
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-vim">:buffer 3
+</code></pre>
+<p>(This will switch to buffer <strong>3</strong>.)</p>
+<h4 id="cycle-through-buffers"><a class="header" href="#cycle-through-buffers"><strong>Cycle Through Buffers</strong></a></h4>
+<ul>
+<li><strong>Next Buffer:</strong></li>
+</ul>
+<pre><code class="language-vim">    :bnext
+</code></pre>
+<pre><code>or simply
+</code></pre>
+<pre><code class="language-vim">    :bn
+</code></pre>
+<ul>
+<li><strong>Previous Buffer:</strong></li>
+</ul>
+<pre><code class="language-vim">    :bprevious
+</code></pre>
+<pre><code>or simply
+</code></pre>
+<pre><code class="language-vim">    :bp
+</code></pre>
+<h4 id="switch-to-last-used-buffer"><a class="header" href="#switch-to-last-used-buffer"><strong>Switch to Last Used Buffer</strong></a></h4>
+<pre><code class="language-vim">:b#
+</code></pre>
+<hr />
+<h3 id="3-closing-buffers"><a class="header" href="#3-closing-buffers"><strong>3️⃣ Closing Buffers</strong></a></h3>
+<ul>
+<li><strong>Close the current buffer without quitting Vim:</strong></li>
+</ul>
+<pre><code class="language-vim">    :bd
+</code></pre>
+<ul>
+<li><strong>Close a specific buffer by number:</strong></li>
+</ul>
+<pre><code class="language-vim">    :bd &lt;buffer_number&gt;
+</code></pre>
+<pre><code>Example:
+</code></pre>
+<pre><code class="language-vim">    :bd 3
+</code></pre>
+<ul>
+<li><strong>Close all buffers except the current one:</strong></li>
+</ul>
+<pre><code>    vim
+    
+    `:bufdo bd`
+</code></pre>
+<pre><code>or
+</code></pre>
+<pre><code class="language-vim">    :%bd|e#
+</code></pre>
+<hr />
+<h3 id="4-optional-fuzzy-buffer-switching"><a class="header" href="#4-optional-fuzzy-buffer-switching"><strong>4️⃣ (Optional) Fuzzy Buffer Switching</strong></a></h3>
+<p>If you're using <strong>Neovim with Telescope</strong>:</p>
+<pre><code class="language-vim">:Telescope buffers
+</code></pre>
+<p>This will open a fuzzy search window for buffers.</p>
+<hr />
+<p> # <strong>custom key mapping</strong> for faster buffer switching? 🚀</p>
+<h2 id="-custom-key-mappings-for-faster-buffer-switching"><a class="header" href="#-custom-key-mappings-for-faster-buffer-switching"><strong>🔹 Custom Key Mappings for Faster Buffer Switching</strong></a></h2>
+<p>Here are some <strong>handy key mappings</strong> for navigating buffers quickly in Vim/Neovim. Add these to your <code>~/.vimrc</code> (Vim/GVim) or <code>~/.config/nvim/init.vim</code> (Neovim):</p>
+<pre><code class="language-sh">" Switch to the next buffer nnoremap &lt;Tab&gt; :bnext&lt;CR&gt;  " Switch to the previous buffer nnoremap &lt;S-Tab&gt; :bprevious&lt;CR&gt;  " Close the current buffer nnoremap &lt;Leader&gt;bd :bd&lt;CR&gt;  " Show buffer list and select one using fzf (if installed) nnoremap &lt;Leader&gt;bl :ls&lt;CR&gt;:buffer&lt;Space&gt;
+</code></pre>
+<h3 id="-explanation-of-key-bindings"><a class="header" href="#-explanation-of-key-bindings"><strong>🔹 Explanation of Key Bindings</strong></a></h3>
+<ul>
+<li><code>&lt;Tab&gt;</code> → Move to the <strong>next buffer</strong>.</li>
+<li><code>&lt;Shift-Tab&gt;</code> → Move to the <strong>previous buffer</strong>.</li>
+<li><code>&lt;Leader&gt;bd</code> → <strong>Delete</strong> (close) the current buffer.</li>
+<li><code>&lt;Leader&gt;bl</code> → <strong>List buffers</strong> and select one by typing its number.</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> The <code>&lt;Leader&gt;</code> key is usually mapped to <code>\</code> (backslash) or <code>&lt;Space&gt;</code> (which you can configure in your Vim settings).</p>
+</blockquote>
+<hr />
+<h2 id="-advanced-buffer-navigation-with-fuzzy-search-neovim"><a class="header" href="#-advanced-buffer-navigation-with-fuzzy-search-neovim"><strong>🔹 Advanced: Buffer Navigation with Fuzzy Search (Neovim)</strong></a></h2>
+<p>If you use <strong>Telescope (Neovim Plugin)</strong>, you can add this key mapping:</p>
+<pre><code class="language-vim">
+`nnoremap &lt;Leader&gt;bb :Telescope buffers&lt;CR&gt;`
+</code></pre>
+<p>Now pressing <code>&lt;Leader&gt;bb</code> will <strong>show a fuzzy search window</strong> to switch between buffers quickly.</p>
+<hr />
+<h2 id="-want-a-tab-like-behavior-with-buffers"><a class="header" href="#-want-a-tab-like-behavior-with-buffers"><strong>🔹 Want a Tab-Like Behavior with Buffers?</strong></a></h2>
+<p>Vim <strong>tabs</strong> and <strong>buffers</strong> are different concepts. If you want buffers to behave like tabs, try:</p>
+<pre><code class="language-vim">set hidden
+</code></pre>
+<p>This allows you to <strong>switch buffers without closing unsaved files</strong>.</p>
+<hr />
+<h3 id="-conclusion"><a class="header" href="#-conclusion"><strong>📌 Conclusion</strong></a></h3>
+<ul>
+<li><strong>Buffers are temporary storage for open files</strong> (like tabs in a browser but more lightweight).</li>
+<li><strong>Both Vim and Emacs use buffers</strong>, but Emacs extends the concept further.</li>
+<li><strong>Key mappings make buffer switching faster</strong> (<code>&lt;Tab&gt;</code>, <code>&lt;S-Tab&gt;</code>, <code>&lt;Leader&gt;bd</code>).</li>
+<li><strong>Telescope (Neovim) makes searching through buffers even smoother</strong>.</li>
+</ul>
+<p>Would you like an <strong>autoclosing buffer manager</strong> (like <code>BufOnly</code> or <code>bufkill.vim</code>) for better control? 🚀</p>
+<p>Here’s the Lua version of your key mappings for Neovim. Add this to your <strong><code>init.lua</code></strong> or inside a <strong><code>lua</code></strong> configuration file like <code>~/.config/nvim/lua/keymaps.lua</code> and source it.</p>
+<h3 id="-lua-key-mappings-for-buffers"><a class="header" href="#-lua-key-mappings-for-buffers"><strong>🔹 Lua Key Mappings for Buffers</strong></a></h3>
+<pre><code class="language-lua">-- Define a shortcut for setting keymaps 
+local keymap = vim.keymap.set local opts = { noremap = true, silent = true }  
+-- Switch to the next buffer 
+keymap("n", "&lt;Tab&gt;", ":bnext&lt;CR&gt;", opts)  -- Switch to the previous buffer 
+keymap("n", "&lt;S-Tab&gt;", ":bprevious&lt;CR&gt;", opts)  
+-- Close the current buffer 
+keymap("n", "&lt;Leader&gt;bd", ":bd&lt;CR&gt;", opts)  
+-- Show buffer list and select one using FZF (if installed) 
+keymap("n", "&lt;Leader&gt;bl", ":ls&lt;CR&gt;:buffer&lt;Space&gt;", opts)  -- Show buffer list using Telescope (if installed) 
+keymap("n", "&lt;Leader&gt;bb", ":Telescope buffers&lt;CR&gt;", opts)
+</code></pre>
+<h3 id="-explanation"><a class="header" href="#-explanation"><strong>🔹 Explanation</strong></a></h3>
+<ul>
+<li><code>vim.keymap.set(mode, key, command, options)</code>
+<ul>
+<li><code>"n"</code> → <strong>Normal mode</strong></li>
+<li><code>"&lt;Tab&gt;"</code> → <strong>Keybinding</strong></li>
+<li><code>":bnext&lt;CR&gt;"</code> → <strong>Command executed</strong></li>
+<li><code>{ noremap = true, silent = true }</code> → <strong>Prevents recursive mapping and suppresses output</strong>
+This format is <strong>more efficient</strong> in Neovim and follows modern Lua-based configurations.</li>
+</ul>
+</li>
+</ul>
+<p>Would you like <strong>buffer closing improvements</strong> (e.g., <code>bdelete</code> vs <code>bwipeout</code>)? 🚀</p>
+<h1 id="replacing-words"><a class="header" href="#replacing-words">Replacing Words</a></h1>
+<p>You can achieve this functionality in <strong>Neovim/Vim</strong> by setting up a <strong>key mapping</strong> that:</p>
+<ol>
+<li><strong>Selects the word under the cursor</strong> or allows you to <strong>visually select</strong> a word.</li>
+<li><strong>Highlights all occurrences of the word in the document</strong>.</li>
+<li><strong>Allows you to replace the word with an alternative easily</strong>.</li>
+</ol>
+<hr />
+<h3 id="-lua-key-mapping-for-neovim"><a class="header" href="#-lua-key-mapping-for-neovim"><strong>🔹 Lua Key Mapping (for Neovim)</strong></a></h3>
+<p>Add this to your <strong><code>init.lua</code></strong> (or <code>keymaps.lua</code> if you separate configs):</p>
+<pre><code class="language-lua">local keymap = vim.keymap.set local opts = { noremap = true, silent = true }  
+-- Search and highlight all occurrences of the selected word 
+keymap("n", "&lt;Leader&gt;h", ":%s/&lt;C-r&gt;&lt;C-w&gt;//g&lt;Left&gt;&lt;Left&gt;", opts)  
+-- Same for visual mode (select a word, then press Leader-h) 
+keymap("v", "&lt;Leader&gt;h", '"hy:%s/&lt;C-r&gt;h//g&lt;Left&gt;&lt;Left&gt;', opts)  
+-- Alternative: Use Ctrl-H instead of Leader-h 
+keymap("n", "&lt;C-h&gt;", ":%s/&lt;C-r&gt;&lt;C-w&gt;//g&lt;Left&gt;&lt;Left&gt;", opts) 
+keymap("v", "&lt;C-h&gt;", '"hy:%s/&lt;C-r&gt;h//g&lt;Left&gt;&lt;Left&gt;', opts)`
+</code></pre>
+<hr />
+<h3 id="-explanation-1"><a class="header" href="#-explanation-1"><strong>🔹 Explanation</strong></a></h3>
+<ul>
+<li><strong><code>&lt;C-r&gt;&lt;C-w&gt;</code></strong> → Inserts the word under the cursor into the command line.</li>
+<li><strong><code>:%s/word//g</code></strong> → Searches (<code>s/</code>) the entire file (<code>%</code>) for occurrences of <code>word</code> and prepares for replacement.</li>
+<li><strong><code>&lt;Left&gt;&lt;Left&gt;</code></strong> → Moves the cursor left twice so you can type the replacement word easily.</li>
+<li><strong>Visual mode (<code>v</code>)</strong>:
+<ul>
+<li><code>h</code> is used as a register to store the selected text (<code>"hy</code>).</li>
+<li>The word is then inserted into the search pattern with <code>&lt;C-r&gt;h</code>.</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h3 id="-how-to-use"><a class="header" href="#-how-to-use"><strong>🔹 How to Use</strong></a></h3>
+<ol start="4">
+<li><strong>Move the cursor to a word</strong> (or visually select a word).</li>
+<li><strong>Press <code>&lt;Leader&gt;h</code></strong> (or <code>&lt;C-h&gt;</code> if you prefer).</li>
+<li><strong>All occurrences of the word will be highlighted</strong>.</li>
+<li><strong>Type the replacement word and press <code>&lt;Enter&gt;</code></strong>.</li>
+</ol>
+<p>If you want to <strong>manually confirm each replacement</strong> instead of replacing all occurrences at once, you can use <strong>Vim’s interactive substitution mode</strong> with the <code>c</code> (confirm) flag.</p>
+<hr />
+<h3 id="-updated-key-mappings-for-manual-confirmation"><a class="header" href="#-updated-key-mappings-for-manual-confirmation"><strong>🔹 Updated Key Mappings for Manual Confirmation</strong></a></h3>
+<p>Modify your <strong>Neovim <code>init.lua</code></strong> (or <code>keymaps.lua</code> file) to use <code>c</code> for <strong>confirming each replacement</strong>:</p>
+<pre><code class="language-lua">local keymap = vim.keymap.set local opts = { noremap = true, silent = true }  
+-- Search and manually replace each instance of the word under the cursor 
+keymap("n", "&lt;Leader&gt;h", ":%s/&lt;C-r&gt;&lt;C-w&gt;//gc&lt;Left&gt;&lt;Left&gt;&lt;Left&gt;", opts)  
+-- Same functionality for visual mode (select a word, then press Leader-h) 
+keymap("v", "&lt;Leader&gt;h", '"hy:%s/&lt;C-r&gt;h//gc&lt;Left&gt;&lt;Left&gt;&lt;Left&gt;', opts)  
+-- Alternative: Use Ctrl-H instead of Leader-h for manual replacements 
+keymap("n", "&lt;C-h&gt;", ":%s/&lt;C-r&gt;&lt;C-w&gt;//gc&lt;Left&gt;&lt;Left&gt;&lt;Left&gt;", opts) 
+keymap("v", "&lt;C-h&gt;", '"hy:%s/&lt;C-r&gt;h//gc&lt;Left&gt;&lt;Left&gt;&lt;Left&gt;', opts)`
+</code></pre>
+<hr />
+<h3 id="-whats-different"><a class="header" href="#-whats-different"><strong>🔹 What’s Different?</strong></a></h3>
+<ul>
+<li><strong>Adding <code>c</code> in <code>:%s/.../gc</code></strong>
+<ul>
+<li>This enables <strong>interactive replacement mode</strong>, so Vim will <strong>prompt you</strong> for each occurrence before replacing.</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h3 id="-how-it-works"><a class="header" href="#-how-it-works"><strong>🔹 How It Works</strong></a></h3>
+<ol start="8">
+<li>
+<p><strong>Move the cursor to a word</strong> (or visually select a word).</p>
+</li>
+<li>
+<p><strong>Press <code>&lt;Leader&gt;h&gt;</code></strong> (or <code>&lt;C-h&gt;</code> if you prefer).</p>
+</li>
+<li>
+<p><strong>Vim will highlight the first match</strong> and prompt:</p>
+<p><code>replace with (y/n/a/q/l/^E/^Y)?</code></p>
+<ul>
+<li><code>y</code> → Replace this occurrence</li>
+<li><code>n</code> → Skip this occurrence</li>
+<li><code>a</code> → Replace <strong>all occurrences</strong> (without asking again)</li>
+<li><code>q</code> → Quit replacement</li>
+<li><code>l</code> → Replace this occurrence and <strong>quit afterward</strong></li>
+<li><code>&lt;Ctrl-E&gt;</code> / <code>&lt;Ctrl-Y&gt;</code> → Scroll the screen while deciding</li>
+</ul>
+</li>
+</ol>
+<hr />
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../posts/TheWindowsKernel.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../Productivity/Symlinks.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../posts/TheWindowsKernel.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../Productivity/Symlinks.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,42 @@
+/* Position the table of contents on the right */
+#toc {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 20%;
+    height: 100%;
+    overflow-y: auto;
+}
+
+/* Position the links from summary.md on the left */
+#summary-links {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 20%;
+    height: 100%;
+    overflow-y: auto;
+}
+
+/* Center the content of the post */
+#post-content {
+    margin-left: 20%;
+    margin-right: 20%;
+    width: 60%;
+}
+
+/* Style the headings */
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+}
+
+/* Ensure the table of contents is generated correctly */
+#toc ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#toc li {
+    margin-bottom: 0.5em;
+}

@@ -1,0 +1,349 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Tmux Windows</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <p>To set up <code>Alacritty,</code> <code>Tmux</code>, and <code>Tmux plugins</code> on Windows to make them look and behave similarly to Konsole, follow the steps below. This process involves configuring both the terminal and the terminal multiplexer to mimic Konsole’s appearance and behavior as closely as possible.</p>
+<h1 id="step-1-install-alacritty-on-windows"><a class="header" href="#step-1-install-alacritty-on-windows">Step 1: Install Alacritty on Windows</a></h1>
+<p>Install Alacritty using either winget or download it from the official site:</p>
+<p>Using winget:</p>
+<pre><code class="language-sh">winget install Alacritty
+</code></pre>
+<p>Install dependencies: You may need to install additional tools to ensure Alacritty works well with tmux and other utilities. On Windows, you might want to use <code>Cygwin</code> or <code>MSYS2</code>for a <code>Unix-like environment</code>, but you can also use the <code>Windows Subsystem for Linux (WSL)</code> for a smoother experience.</p>
+<p>Install <code>MSYS2</code> from MSYS2 official website or install <code>Cygwin</code> from Cygwin website.</p>
+<p>If using WSL, install a suitable Linux distribution via the Microsoft Store.</p>
+<h1 id="step-2-configure-alacritty-for-konsole-like-appearance"><a class="header" href="#step-2-configure-alacritty-for-konsole-like-appearance">Step 2: Configure Alacritty for Konsole-like Appearance</a></h1>
+<p>Create or Edit Alacritty Configuration File: Alacritty uses a YAML or TOML configuration file. Let's create and configure it for a Konsole-like look.</p>
+<p>If you don’t already have a alacritty.yml, run:</p>
+<pre><code class="language-sh">alacritty migrate
+</code></pre>
+<p>Edit the configuration file: You can use a text editor to open and edit the Alacritty config file:</p>
+<pre><code class="language-sh">nano ~/.config/alacritty/alacritty.yml
+</code></pre>
+<p>Set up Konsole-like color scheme: Modify the color scheme to resemble Konsole’s default colors. Here's an example configuration that mimics Konsole’s color palette:</p>
+<h1 id="alacritty-configuration"><a class="header" href="#alacritty-configuration">Alacritty Configuration</a></h1>
+<pre><code class="language-sh"># Colors
+colors:
+  primary:
+    background: '0x1E1E1E'  # Konsole background color
+    foreground: '0xF8F8F2'  # Konsole foreground color
+
+  normal:
+    black:   '0x282A36'  # Konsole black
+    red:     '0xFF5555'  # Konsole red
+    green:   '0x50FA7B'  # Konsole green
+    yellow:  '0xF1FA8C'  # Konsole yellow
+    blue:    '0xBD93F9'  # Konsole blue
+    magenta: '0xFF79C6'  # Konsole magenta
+    cyan:    '0x8BE9FD'  # Konsole cyan
+    white:   '0xF8F8F2'  # Konsole white
+
+  bright:
+    black:   '0x6272A4'  # Konsole bright black
+    red:     '0xFF6E6E'  # Konsole bright red
+    green:   '0x69FF94'  # Konsole bright green
+    yellow:  '0xFFFF00'  # Konsole bright yellow
+    blue:    '0x4F4DFF'  # Konsole bright blue
+    magenta: '0xFF00FF'  # Konsole bright magenta
+    cyan:    '0xA4FFFF'  # Konsole bright cyan
+    white:   '0xFFFFFF'  # Konsole bright white
+</code></pre>
+<p>Save and Close: Save and close the file (Ctrl + X to exit and confirm saving in nano).</p>
+<h1 id="step-3-install-and-configure-tmux"><a class="header" href="#step-3-install-and-configure-tmux">Step 3: Install and Configure Tmux</a></h1>
+<p>Install Tmux: You’ll need a <code>Unix-like</code> environment <code>(like MSYS2 or WSL)</code>for Tmux to work. If you are using WSL, you can install Tmux directly from your Linux distro:</p>
+<pre><code class="language-sh">sudo apt update
+sudo apt install tmux
+</code></pre>
+<p>If using MSYS2, install use pacman:</p>
+<pre><code class="language-sh">pacman -Syu
+pacman -S tmux
+</code></pre>
+<p>Create/Edit ~/.tmux.conf: Configure Tmux to make it behave more like Konsole. Here's a recommended .tmux.conf file to configure tmux with some useful settings:</p>
+<h1 id="fix-for-home-and-end-keys-in-tmux-important-for-navigation"><a class="header" href="#fix-for-home-and-end-keys-in-tmux-important-for-navigation">Fix for Home and End keys in tmux (important for navigation)</a></h1>
+<pre><code>bind -n Home send-keys 'C-a'  # Map Home key to Ctrl+A (beginning of the line)
+bind -n End send-keys 'C-e'   # Map End key to Ctrl+E (end of the line)
+</code></pre>
+<h1 id="enable-mouse-support-for-easier-resizing-etc"><a class="header" href="#enable-mouse-support-for-easier-resizing-etc">Enable mouse support (for easier resizing, etc.)</a></h1>
+<pre><code>set -g mouse on
+</code></pre>
+<h1 id="set-status-bar-style-to-match-konsole-like-appearance"><a class="header" href="#set-status-bar-style-to-match-konsole-like-appearance">Set status bar style to match Konsole-like appearance</a></h1>
+<pre><code>set -g status-bg colour235  # Dark background for status bar
+set -g status-fg colour136  # Yellow foreground for status bar
+</code></pre>
+<h1 id="set-window-split-behavior-to-be-like-konsole"><a class="header" href="#set-window-split-behavior-to-be-like-konsole">Set window split behavior to be like Konsole</a></h1>
+<pre><code>bind | split-window -h
+bind - split-window -v
+</code></pre>
+<h1 id="customize-pane-border-colors"><a class="header" href="#customize-pane-border-colors">Customize pane border colors</a></h1>
+<pre><code>set -g pane-border-fg colour235
+set -g pane-active-border-fg colour136
+</code></pre>
+<h1 id="set-prefix-key-to-ctrl--a-konsole-like-behavior"><a class="header" href="#set-prefix-key-to-ctrl--a-konsole-like-behavior">Set prefix key to Ctrl + A (Konsole-like behavior)</a></h1>
+<pre><code>unbind C-b
+set -g prefix C-a
+bind C-a send-prefix
+</code></pre>
+<h1 id="enable-vi-mode-for-better-navigation"><a class="header" href="#enable-vi-mode-for-better-navigation">Enable vi mode (for better navigation)</a></h1>
+<pre><code>setw -g mode-keys vi
+</code></pre>
+<h1 id="adjust-split-window-size"><a class="header" href="#adjust-split-window-size">Adjust split window size</a></h1>
+<pre><code>setw -g aggressive-resize on
+</code></pre>
+<p>Install Tmux Plugins: To enhance the functionality of tmux, you can install a few useful plugins. A great way to do this is with Tmux Plugin Manager (TPM).</p>
+<p>Install TPM by cloning the repository:</p>
+<pre><code>git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+</code></pre>
+<p>Add these lines to your ~/.tmux.conf to load TPM and some useful plugins:</p>
+<h1 id="tpm-tmux-plugin-manager"><a class="header" href="#tpm-tmux-plugin-manager">TPM (Tmux Plugin Manager)</a></h1>
+<pre><code>run -b '~/.tmux/plugins/tpm/tpm'
+</code></pre>
+<h1 id="plugins"><a class="header" href="#plugins">Plugins</a></h1>
+<pre><code>set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+</code></pre>
+<h1 id="initialize-tpm"><a class="header" href="#initialize-tpm">Initialize TPM</a></h1>
+<pre><code>run '~/.tmux/plugins/tpm/tpm'
+</code></pre>
+<p>Press Ctrl + b then I to install the plugins once you've saved the changes.</p>
+<p>Step 4: Additional Tweaks to Achieve Konsole-like Behavior
+Konsole-like Keybindings:</p>
+<p>As mentioned earlier, you can remap the Home and End keys in tmux with the following in your ~/.tmux.conf file:
+bind -n Home send-keys 'C-a'
+bind -n End send-keys 'C-e'
+Tmux Status Bar: You can further tweak the tmux status bar to resemble Konsole by modifying colors, and adding information like the current window, time, or battery status.</p>
+<p>Font and Window Settings: Alacritty allows you to set a custom font, which can be made closer to Konsole's default font.</p>
+<p>In your Alacritty ~/.config/alacritty/alacritty.yml file, change the font settings:</p>
+<p>font:
+normal:
+family: "Fira Code"  # Replace with your favorite programming font
+style: Regular
+size: 12.0
+Step 5: Testing the Setup
+Launch Alacritty: Run alacritty and open a new session.</p>
+<p>Start Tmux: Once inside Alacritty, start tmux by typing:</p>
+<p>tmux
+Test Plugins: Test the functionality of installed plugins, such as session restoration or window splitting, by using Ctrl + b shortcuts.</p>
+<p>Check Navigation Keys: Test the Home and End keys to ensure they move the cursor to the beginning and end of the line, respectively.</p>
+<p><code>Conclusion</code>
+By following the above steps, you should be able to replicate the Konsole-like appearance and functionality within Alacritty and Tmux on Windows, with Cygwin, MSYS2, or WSL providing the Unix-like environment. This setup will give you the flexibility of Tmux combined with the fast, modern rendering of Alacritty, all while looking and behaving like Konsole.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../OperatingSystems/Windows/Bypass_login.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../OperatingSystems/Windows/Windows_bypass_login.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../OperatingSystems/Windows/Bypass_login.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../OperatingSystems/Windows/Windows_bypass_login.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

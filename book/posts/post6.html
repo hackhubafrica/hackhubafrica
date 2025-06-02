@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>x86_x64 Architecture Overview</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="../assets/images/avatar.ico">
+</head>
+<body>
+    <header>
+        <a href="../index.html" class="">
+            <button class="logo" >HackHubAfrica</button>
+        </a>
+        <nav>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <div id="container">
+        <article>
+            <h2>x86_x64 Architecture Overview</h2>
+            <p class="post-meta">October 1, 2024 - Written by: hackhubafrica</p>
+            <img src="../assets/images/post3.jpg" alt="Suricata Logo"> <!-- Update with an appropriate image path -->
+            <p>Suricata is a high-performance Network IDS, IPS, and Network Security Monitoring (NSM) engine. It is open-source and developed by the Open Information Security Foundation (OISF). Suricata is designed to monitor network traffic in real-time and detect security threats such as intrusions, malicious activities, and network anomalies. It uses rules and signatures to analyze network packets and can be configured to take various actions when suspicious or malicious behavior is detected, such as generating alerts or blocking traffic.</p>
+            
+            <h3>Installation</h3>
+            <h4>Linux</h4>
+            <p>Suricata is typically available in the package repositories of major Linux distributions like Ubuntu, Debian, CentOS, and Fedora. You can install it using your package manager. For example, on Ubuntu:</p>
+            <pre><code>sudo apt-get install suricata</code></pre>
+            <p>If you are on a Fedora 40 workstation like I am, you can install it by typing the following command in your terminal window:</p>
+            <pre><code>sudo dnf install suricata</code></pre>
+            <p>Alternatively, you can download and compile Suricata from source available on its official website or GitHub repository.</p>
+            <p>Start and enable the service with these two commands:</p>
+            <pre><code>sudo systemctl enable suricata<br>sudo systemctl start suricata</code></pre>
+
+            <h3>Community Rules</h3>
+            <p>Suricata offers community rules that cover a wide range of threats and network behaviors. These rules are freely available and maintained by the Suricata community.</p>
+            <h4>Downloading Community Rules</h4>
+            <p>You can download the community rules directly from the Suricata website or GitHub repository. The preferred method is typically using a script provided by Suricata to automate the download and installation process. Here are the general steps:</p>
+            <p>Using <code>suricata-update</code> Script:</p>
+            <pre><code>sudo suricata-update update-rules<br>sudo suricata-update enable-source community<br>sudo suricata-update</code></pre>
+
+            <h3>Commercial Rules</h3>
+            <p>In addition to community rules, some organizations opt for commercial rulesets or threat intelligence feeds provided by security vendors. These often offer more comprehensive coverage and timely updates for emerging threats.</p>
+            <h4>Subscribing to Commercial Feeds</h4>
+            <p>If you have subscribed to a commercial service, follow their specific instructions for downloading and integrating their rules into Suricata. They typically provide scripts or tools for downloading and updating rules, similar to <code>suricata-update</code> for community rules.</p>
+
+            <h3>Custom Rules</h3>
+            <p>Sometimes organizations require custom rules tailored to their specific network environment, applications, or security policies.</p>
+            <h4>Creating Custom Rules</h4>
+            <p>You can create custom rules using the Suricata rule syntax, which is similar to SNORT’s signature language. Ensure that custom rules are tested in a controlled environment before deployment to minimize false positives.</p>
+
+            <h3>Windows</h3>
+            <p>Suricata also supports Windows, and you can download the installer from the official Suricata website or GitHub releases page. Follow the installation instructions provided with the installer.</p>
+
+            <h3>Configuration</h3>
+            <p>Once installed, the main configuration file for Suricata is typically located at <code>/etc/suricata/suricata.yaml</code> on Linux systems. This file allows you to configure interfaces to monitor, rulesets to use, logging options, and more. Customize the configuration based on your network environment and security requirements. Ensure to review and modify the rulesets (<code>suricata.rules</code>) to match your organization’s policies and threat landscape.</p>
+
+            <h3>Starting Suricata</h3>
+            <p>On Linux, you can start Suricata using:</p>
+            <pre><code>sudo suricata -c /etc/suricata/suricata.yaml -i eth0</code></pre>
+            <p>Replace <code>eth0</code> with the network interface you want Suricata to monitor.</p>
+            <p>On Windows, launch Suricata using the installed application or command line, depending on your installation method.</p>
+
+            <h3>Monitoring and Alerts</h3>
+            <p>Suricata monitors network traffic in real-time based on the configured rules and signatures. When suspicious activity is detected, Suricata generates alerts that can be logged to files (<code>eve.json</code>, <code>fast.log</code>, etc.) and/or sent to a SIEM or logging system for further analysis. Review the generated alerts regularly to investigate potential security incidents and take appropriate action.</p>
+
+            <h3>Conclusion</h3>
+            <p>By leveraging Suricata in your network security setup, you enhance your ability to detect and respond to potential threats in real-time, thereby strengthening your overall cybersecurity posture. Adjust configurations and explore advanced features to maximize Suricata’s effectiveness in safeguarding your network infrastructure.</p>
+        </article>
+
+        <div class="share">
+            <h3>Share this:</h3>
+            <a href="#">Twitter</a> |
+            <a href="#">Facebook</a>
+        </div>
+
+        <div class="latest-articles">
+            <h2>Latest Articles</h2>
+            <article>
+                <h3><a href="#">Enhancing System Security with Auditd on Kali Linux</a></h3>
+                <p>June 18, 2024</p>
+            </article>
+            <article>
+                <h3><a href="#">Wazuh-Docker Deployment</a></h3>
+                <p>June 16, 2024</p>
+            </article>
+        </div>
+    </div>
+
+   <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 HackHubAfrica</p>
+        <div class="social-media">
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://x.com/@HackHubAfrica" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-youtube"></i></a>
+            <a href="https://github.com/HackHubAfrica" aria-label="Instagram"><i class="fab fa-github"></i></a>
+        </div>
+
+    </footer>
+</body>
+</html>

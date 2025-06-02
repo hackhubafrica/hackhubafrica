@@ -1,0 +1,423 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Swig</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="swig-simplified-wrapper-and-interface-generator"><a class="header" href="#swig-simplified-wrapper-and-interface-generator">SWIG (Simplified Wrapper and Interface Generator)</a></h1>
+<p><strong><code>Swig</code></strong> is a tool that connects C/C++ code with other programming languages (like Python, Java, etc.), enabling <code>cross-language interaction.</code></p>
+<h2 id="packaging"><a class="header" href="#packaging">Packaging</a></h2>
+<ul>
+<li><code>Various bindings</code>: There are packages like <code>python-swig</code>, <code>python-swiglpk</code>, and <code>python-cgal</code>, which are Python <code>bindings or wrappers</code> created using SWIG to connect C++ libraries to Python.</li>
+<li><code>swig-cli</code>: A command-line interface to interact with <code>SWIG</code> (though it might be a different tool by name).</li>
+<li><code>swig2</code> and <code>swig3</code>: Older versions of <code>SWIG</code> (version 2.x and 3.x).</li>
+<li><code>Other packages</code>: Many packages that use SWIG for creating bindings for C++ libraries to other languages (like Python, NodeJS, etc.).</li>
+</ul>
+<p><code>S.W.I.G (Simplified Wrapper and Interface Generator)</code> is a tool that simplifies the process of integrating C and C++ code with <code>high-level programming</code> languages such as Python, Java, Ruby, and many others. Here's how it can help in the development, production, and shipping of software:</p>
+<h2 id="cross-language-integration"><a class="header" href="#cross-language-integration">Cross-Language Integration:</a></h2>
+<p>SWIG's primary role is to <code>generate bindings</code> between C/C++ and other programming languages. This means that it helps C/C++ code to be <code>accessed from high-level languages</code> like Python or Java.
+This is particularly useful when you want to write <code>performance-critical code in C/C++ but want to interact with it using the </code>simplicity and flexibility` of languages like Python.</p>
+<blockquote>
+<h2 id="how-swig-helps-in-development"><a class="header" href="#how-swig-helps-in-development">How SWIG Helps in Development:</a></h2>
+</blockquote>
+<ul>
+<li><em><code>Rapid Prototyping</code></em>: Developers can build <code>performance-intensive</code> parts of their application in C/C++ while still working in a higher-level language for the majority of the code. For example, a <code>complex algorithm or computation can be written in C++</code>, and then Python can be used to call this code for <code>quick testing or prototyping.</code></li>
+<li><code>Simplifying Integration</code>*: Instead of manually writing code to interact between C/C++ and another language, SWIG automatically generates the wrapper code. This reduces the burden of integration and minimizes human error.</li>
+<li><code>Reduced Code Duplication</code>*: When developing a project that needs to support multiple languages, instead of writing separate interfaces for each language, SWIG allows you to write the interface once and generate bindings for all target languages.</li>
+</ul>
+<blockquote>
+<h1 id="how-swig-helps-in-production"><a class="header" href="#how-swig-helps-in-production">How SWIG Helps in Production:</a></h1>
+</blockquote>
+<ul>
+<li><em><code>Optimized Code Execution:</code></em> SWIG enables <code>high-performance execution</code> for computationally heavy tasks. You can leverage the speed of C/C++ while keeping the rest of your application flexible with high-level languages.</li>
+<li><em><code>Scalability:</code></em> SWIG makes it easier to <code>scale projects across different languages and environments</code>, since you can write the <code>core logic in C++</code> and interact with it in multiple languages.</li>
+<li><em><code>Simplified Maintenance:</code></em> By using SWIG to <code>generate bindings</code>, you avoid the need for custom code maintenance. This leads to easier long-term maintenance of both the C/C++ code and the interfaces between languages.</li>
+</ul>
+<blockquote>
+<h1 id="how-swig-helps-in-shipping-software"><a class="header" href="#how-swig-helps-in-shipping-software">How SWIG Helps in Shipping Software:</a></h1>
+</blockquote>
+<ul>
+<li><em><code>Cross-Platform Support:</code></em> With SWIG, you can <code>generate bindings for multiple languages </code>on different platforms. This allows you to <code>write a core library once (in C/C++)</code> and ship it across different environments without needing to rewrite language-specific interfaces.</li>
+<li><em><code>Faster Development Cycles:</code></em> Since SWIG <code>automates the process of creating language bindings,</code> you spend less time on <code>low-level integration</code> and more time on building features, which shortens release cycles and speeds up shipping.</li>
+<li><em><code>Easier Packaging:</code></em> For packaging software, especially in open-source projects, <code>SWIG-generated wrappersS</code>make it much easier to distribute and integrate the core functionality into various ecosystems without needing to manually package language-specific bindings.</li>
+</ul>
+<h2 id="real-world-use-cases"><a class="header" href="#real-world-use-cases">Real-World Use Cases:</a></h2>
+<ul>
+<li><em><code>Scientific Computing:</code></em> In fields like <code>data science or machine learning,</code> developers often write performance-critical components in C/C++ and use Python to interface with them. SWIG can automate the generation of bindings between the Python code and the C++ libraries.</li>
+<li><em><code>Game Development:</code></em> Many <code>game engines (like Unreal Engine) </code>or physics engines are written in C/C++ for performance reasons. SWIG allows game developers to use high-level languages like Python or Lua to script behavior without sacrificing performance.</li>
+<li><em><code>Embedded Systems:</code></em> In embedded systems development, SWIG can help bridge low-level hardware control written in C with higher-level user interfaces or control systems written in Python or JavaScript.</li>
+</ul>
+<h2 id="--advantages-of-using-swig"><a class="header" href="#--advantages-of-using-swig">✅  Advantages of Using SWIG:</a></h2>
+<ul>
+<li><em><code>Automation:</code></em> It automates the process of <code>creating wrappers for multiple languages, </code>reducing the manual work and complexity.</li>
+<li>*`Consistency: Ensures that the integration between C/C++ and the high-level language is consistent and doesn’t require duplicate maintenance.</li>
+<li><em><code>Efficiency:</code></em> Enables efficient cross-language calls without needing to manually write binding code.</li>
+<li><em><code>Extensibility:</code></em> SWIG can generate bindings for many programming languages, making it a versatile tool in multi-language development environments.</li>
+</ul>
+<h2 id="-limitations"><a class="header" href="#-limitations">❌ Limitations:</a></h2>
+<ul>
+<li><em><code>Learning Curve:</code></em> There is a learning curve to understand how to use <code>SWIG</code> and how to structure the interface files properly.</li>
+<li>*<code>Complex C++ Features:</code>*Some advanced C++ features (like templates or multiple inheritance) can be tricky to bind with <code>SWIG</code>, and might require special handling.</li>
+<li><em><code>Overhead:</code></em> While <code>SWIG</code> reduces integration effort, there may still be some performance overhead when crossing language boundaries, especially for very frequent or deep function calls.</li>
+</ul>
+<h1 id="getting-started"><a class="header" href="#getting-started">Getting started</a></h1>
+<p>To get started with a workflow where you program in <code>higher-level languages (e.g., Python, Java)</code> and then convert your code into lower-level code (e.g., C, C++), there are a few approaches depending on the tools you want to use. Here's how you can set this up using a combination of SWIG, C/C++, and a higher-level language:</p>
+<h2 id="step-1-plan-your-project-structure"><a class="header" href="#step-1-plan-your-project-structure">Step 1: Plan Your Project Structure</a></h2>
+<p><code>High-level language:</code> Start by identifying the high-level language you want to use (e.g., Python, Java). This is where most of your application logic will be written.
+<code>Low-level language:</code> Identify the performance-critical parts of your application that need to be written in C/C++.</p>
+<h2 id="step-2-write-your-cc-code"><a class="header" href="#step-2-write-your-cc-code">Step 2: Write Your C/C++ Code</a></h2>
+<p><code>Core Logic in C/C++:</code> Write the core computational parts of your application in C/C++. These could be functions or classes that are performance-sensitive or need access to system resources.
+<code>Functionality:</code> Make sure the C/C++ code is <code>modular and exposes</code> functions that can be easily called from another language. For example, you might write a set of mathematical or data processing functions in C++.</p>
+<p>Example C++ Code:</p>
+<pre><code class="language-C++">// mymath.cpp
+# include &lt;iostream&gt;
+
+extern "C" {
+    // A simple C++ function
+    int add(int a, int b) {
+        return a + b;
+    }
+}
+</code></pre>
+<p>The` extern "C" block ensures that the C++ code is callable from C``, making it easier for SWIG or other tools to generate wrappers.</p>
+<h2 id="step-3-generate-bindings-with-swig"><a class="header" href="#step-3-generate-bindings-with-swig">Step 3: Generate Bindings with SWIG</a></h2>
+<p><code>Create an Interface File:</code> SWIG uses an interface file (.i file) to know how to connect your C/C++ code with the target high-level language. In the interface file, you will define the functions or classes from C/C++ that you want to expose to your high-level language..</p>
+<p>Example SWIG Interface File (mymath.i):</p>
+<pre><code class="language-C++">%module mymath
+
+%{
+#include "mymath.cpp"
+%}
+
+%include "mymath.cpp"
+
+</code></pre>
+<p>This tells SWIG to include mymath.cpp and generate bindings for it.</p>
+<ul>
+<li>In the <code>%module</code> directive, you define the <code>module name</code>, which will be used by the high-level language (e.g., Python will use import complex_math).</li>
+<li>The <code>%{ ... %}</code> block is where you include the necessary header files.</li>
+</ul>
+<p>Run SWIG to Generate the Wrapper Code: Run SWIG on the interface file to generate wrapper code that can be used in your target language.</p>
+<pre><code class="language-zsh">swig -python -c++ mymath.i
+</code></pre>
+<p>This command tells SWIG to generate Python bindings for your C++ code. It will produce:</p>
+<ul>
+<li><code>mymath_wrap.cxx</code>: The C++ file containing the<code> wrapper code.</code></li>
+<li><code>mymath.py</code>: The Python interface to the C++ code./A Python module that contains the bindings to the C++ code.</li>
+</ul>
+<p>If you are targeting <code>another language,</code> replace <em>-python</em>with the corresponding language (e.g., -java for Java).</p>
+<h2 id="handle-exceptions-and-errors"><a class="header" href="#handle-exceptions-and-errors">Handle Exceptions and Errors:</a></h2>
+<p><code>SWIG</code> automatically wraps C++ exceptions for some languages (e.g., Python), but you <code>should manually handle exceptions</code> in the interface file if necessary.
+Example (complex_math.i with exception handling):</p>
+<pre><code class="language-c++">
+%exception {
+    try {
+        $action
+    } catch (const std::exception &amp;e) {
+        PyErr_SetString(PyExc_RuntimeError, e.what());
+        return NULL;
+    }
+}
+</code></pre>
+<h2 id="step-4-compile-the-cc-code-and-bindings"><a class="header" href="#step-4-compile-the-cc-code-and-bindings">Step 4: Compile the C/C++ Code and Bindings</a></h2>
+<p>Once SWIG <code>generates the wrapper</code>, you need to compile the C/C++ code along with the wrapper into a <code>shared library</code> that your <code>high-level language can load.</code> The specifics of this depend on the platform and the target language.</p>
+<ul>
+<li>Python (Linux Example)</li>
+</ul>
+<pre><code class="language-zsh">g++ -shared -o _mymath.so -fPIC mymath_wrap.cxx -I/usr/include/python3.x -lpython3.x
+</code></pre>
+<p>This compiles the C++ code and the SWIG-generated wrapper into a <code>shared object (.so file)</code> that Python can load and links it to the Python interpreter..</p>
+<ul>
+<li>For Java (JNI Example):</li>
+</ul>
+<p>Use the <code>Java Native Interface (JNI)</code> to integrate C/C++ with Java. JNI is more complex than SWIG but provides deeper integration with Java.</p>
+<p>Example command for creating a Java-native shared library:</p>
+<pre><code class="language-bash">javac ComplexMath.java  # Compiles Java code
+javah ComplexMath       # Generates JNI header file
+gcc -shared -o libcomplexmath.so -I/usr/lib/jvm/java-11-openjdk/include complex_math.cpp
+</code></pre>
+<h2 id="step-5-write-high-level-code"><a class="header" href="#step-5-write-high-level-code">Step 5: Write High-Level Code</a></h2>
+<p>Use the Generated Bindings in the High-Level Language: Once you have the shared library (_mymath.so), you can use it directly in your high-level language like Python.
+Example Python Code:</p>
+<pre><code class="language-python">import mymath
+
+#Use the C++ function through Python
+result = mymath.add(5, 3)
+print(f"Result from C++ code: {result}")
+
+</code></pre>
+<p>Java Example (JNI):</p>
+<pre><code class="language-java">public class ComplexMath {
+    static {
+        System.loadLibrary("mymath");
+    }
+
+    public native double computeSqrt(double x);
+}
+
+MyMath cm = new MyMath();
+double result = cm.computeSqrt(16);
+System.out.println("Result from C++: " + result);
+</code></pre>
+<h2 id="advanced-techniques"><a class="header" href="#advanced-techniques">Advanced Techniques</a></h2>
+<p>To refine your workflow further, consider these advanced techniques:</p>
+<p><code>Static vs. Dynamic Linking:</code>
+Static Linking: Embeds C++ code into the executable, reducing the need for shared libraries.
+Dynamic Linking: Creates shared libraries (.so, .dll, .dylib) that are loaded at runtime. This allows for updates without recompiling the entire project.</p>
+<p><code>Cross-Platform Development:</code>
+Use CMake to automate the build process, handle cross-platform compilation, and ensure compatibility with different OSes.
+CMake Example:</p>
+<pre><code class="language-python">cmake_minimum_required(VERSION 3.0)
+project(ComplexMath)
+
+find_package(Python3 REQUIRED)
+include_directories(${Python3_INCLUDE_DIRS})
+
+add_library(complex_math MODULE complex_math_wrap.cxx complex_math.cpp)
+target_link_libraries(complex_math ${Python3_LIBRARIES})
+</code></pre>
+<p><code>Testing &amp; Benchmarking:</code>
+Test the performance of your system with tools like Google Benchmark for C++, or use Python's timeit for timing the function calls.
+For more advanced benchmarking, compare the <code>execution time</code> between Python and the C++ code to ensure the performance improvements are significant.</p>
+<h2 id="shipping-and-deployment"><a class="header" href="#shipping-and-deployment">Shipping and Deployment</a></h2>
+<p>When preparing to ship your software:
+<code>Package the Shared Libraries: </code>For Linux, package the .so files in a distribution like <code>.deb</code> or <code>.rpm.</code> On macOS, use <code>.dylib</code>, and on Windows, <code>.dll.</code>
+Include a Setup Script: For Python, you can create a setup.py script to simplify installation:</p>
+<pre><code class="language-python">from setuptools import setup, Extension
+
+module = Extension('mymath', sources=['mymath_wrap.cxx', 'mymath.cpp'])
+
+setup(name='ComplexMath',
+      version='1.0',
+      description='Complex math operations',
+      ext_modules=[module])
+</code></pre>
+<p>By following this detailed and precise approach, you can create a clean workflow that integrates high-level languages with low-level C/C++ code, ensuring performance and maintainability throughout the development lifecycle.</p>
+<p>Additional Tools and Approaches</p>
+<h3 id="cython-for-python"><a class="header" href="#cython-for-python">Cython (for Python):</a></h3>
+<p>If you are working with Python, you can use Cython to write Python code that <code>gets compiled into C code.</code> This can provide performance improvements without needing to write low-level C++ code.</p>
+<h3 id="pybind11"><a class="header" href="#pybind11">Pybind11:</a></h3>
+<p>For modern C++ code, <code>Pybind11</code> is a popular alternative to SWIG for generating Python bindings. It's<code> more lightweight and easier</code> to integrate with C++11 and newer features.</p>
+<h3 id="jython-for-java"><a class="header" href="#jython-for-java">Jython (for Java):</a></h3>
+<p>If you're targeting Java, <code>Jython allows you to write Java extensions in Python,</code> but you can also create Java bindings for C++ through tools like JNI (Java Native Interface) or SWIG.</p>
+<p>Other Bindings Generators:
+If you're working with other languages, there are similar tools (e.g., SWIG for Java, Node.js C++ Addons, Ruby FFI, etc.) that allow you to call C/C++ code from higher-level languages.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../SoftwareDevelopment/PKGBUILD.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../SoftwareDevelopment/WindowsUIFrameworks.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../SoftwareDevelopment/PKGBUILD.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../SoftwareDevelopment/WindowsUIFrameworks.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

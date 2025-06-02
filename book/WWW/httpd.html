@@ -1,0 +1,784 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Httpd</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <ol>
+<li>
+<p><strong>Enable and Start Apache and MariaDB</strong> After installation, you need to start <strong>Apache</strong> and <strong>MariaDB</strong> services:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl start httpd sudo systemctl enable httpd  sudo systemctl start mariadb sudo systemctl enable mariadb</code></p>
+</li>
+<li>
+<p><strong>Edit the Apache Configuration File (<code>httpd.conf</code>) to Enable PHP</strong></p>
+<ul>
+<li>Open the Apache configuration file:</li>
+</ul>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo nano /etc/httpd/conf/httpd.conf</code></p>
+<ul>
+<li>
+<p>Look for the line that loads the <strong>PHP module</strong>. You'll want to make sure <strong>PHP is enabled</strong> in Apache.</p>
+<p>Search for this line and <strong>uncomment</strong> it (remove the <code>#</code> at the beginning of the line):</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>LoadModule php_module modules/libphp.so</code></p>
+</li>
+<li>
+<p>Next, tell Apache how to handle PHP files. Scroll to the end of the file and add the following line (if it’s not already there):</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>AddHandler application/x-httpd-php .php</code></p>
+</li>
+<li>
+<p>Then, ensure the <strong>PHP directory</strong> is configured correctly by adding this line (if it’s missing):</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>Include conf/extra/php_module.conf</code></p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Create a <code>phpinfo()</code> File to Test PHP</strong></p>
+<p>To verify that PHP is working correctly, you can create a test PHP file. This will help you confirm that Apache is serving PHP files.</p>
+<ul>
+<li>Create a test file in the web directory (usually <code>/srv/http/</code> for Arch Linux):</li>
+</ul>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo nano /srv/http/info.php</code></p>
+<ul>
+<li>Add the following content to this file:</li>
+</ul>
+<p>php</p>
+<p>Copy</p>
+<p><code>&lt;?php phpinfo(); ?&gt;</code></p>
+<ul>
+<li>Save and close the file.</li>
+</ul>
+</li>
+<li>
+<p><strong>Restart Apache</strong></p>
+<p>After making these changes, restart <strong>Apache</strong> to apply the configuration:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl restart httpd</code></p>
+</li>
+<li>
+<p><strong>Test PHP in Your Browser</strong></p>
+<p>Now, open your browser and go to:</p>
+<p>arduino</p>
+<p>Copy</p>
+<p><code>http://localhost/info.php</code></p>
+<p>If everything is set up correctly, you should see the <strong>PHP info</strong> page, which provides information about the PHP version and installed modules.</p>
+</li>
+<li>
+<p><strong>Secure Your PHP Setup</strong> (Optional but recommended)</p>
+<p>After testing, delete the <code>info.php</code> file to prevent others from accessing it:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo rm /srv/http/info.php</code></p>
+</li>
+</ol>
+<hr />
+<h3 id="step-by-step-troubleshooting-and-configuration"><a class="header" href="#step-by-step-troubleshooting-and-configuration">Step-by-Step Troubleshooting and Configuration</a></h3>
+<h4 id="1-check-apache-configuration"><a class="header" href="#1-check-apache-configuration">1. <strong>Check Apache Configuration</strong></a></h4>
+<p>Make sure Apache is properly configured to serve files from <code>/srv/http/</code>.</p>
+<ol>
+<li>
+<p><strong>Edit the Apache configuration file</strong> (<code>httpd.conf</code>):</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo nano /etc/httpd/conf/httpd.conf</code></p>
+</li>
+<li>
+<p><strong>Ensure that the <code>DocumentRoot</code> points to the correct directory</strong> (<code>/srv/http</code>):</p>
+<p>Look for the following line:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>DocumentRoot "/srv/http"</code></p>
+<p>This tells Apache to serve files from <code>/srv/http/</code>. If this line is missing or incorrect, update it to point to <code>/srv/http</code>.</p>
+</li>
+<li>
+<p><strong>Ensure <code>Directory</code> settings are correct for <code>/srv/http</code></strong>:</p>
+<p>You should have a <code>&lt;Directory&gt;</code> block that looks like this (it tells Apache how to handle files in the <code>/srv/http</code> directory):</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>&lt;Directory "/srv/http"&gt;     AllowOverride None     Options Indexes FollowSymLinks     Require all granted &lt;/Directory&gt;</code></p>
+<p>This allows Apache to serve files from <code>/srv/http</code> and grants appropriate permissions.</p>
+</li>
+<li>
+<p><strong>Save and exit</strong> (<code>Ctrl + X</code>, then <code>Y</code> to confirm changes).</p>
+</li>
+</ol>
+<h4 id="2-ensure-php-module-is-loaded"><a class="header" href="#2-ensure-php-module-is-loaded">2. <strong>Ensure PHP Module is Loaded</strong></a></h4>
+<p>You need to make sure the PHP module is correctly loaded in Apache:</p>
+<ol start="5">
+<li>
+<p><strong>Open the Apache configuration file</strong> (<code>httpd.conf</code>) again:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo nano /etc/httpd/conf/httpd.conf</code></p>
+</li>
+<li>
+<p><strong>Search for and uncomment the line that loads the PHP module</strong>. Look for this line:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>#LoadModule php_module modules/libphp.so</code></p>
+<p>If it's commented out (i.e., starts with a <code>#</code>), remove the <code>#</code> to enable it:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>LoadModule php_module modules/libphp.so</code></p>
+</li>
+<li>
+<p><strong>Ensure PHP is set to handle <code>.php</code> files</strong>. You should have this directive (if not, add it at the end of the file):</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>AddHandler application/x-httpd-php .php</code></p>
+</li>
+<li>
+<p><strong>Save and exit</strong> the configuration file.</p>
+</li>
+</ol>
+<h4 id="3-test-php-configuration"><a class="header" href="#3-test-php-configuration">3. <strong>Test PHP Configuration</strong></a></h4>
+<ol start="9">
+<li>
+<p><strong>Create a test PHP file</strong> (if not already done) inside <code>/srv/http</code>:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo nano /srv/http/info.php</code></p>
+</li>
+<li>
+<p>Add the following PHP code:</p>
+<p>php</p>
+<p>Copy</p>
+<p><code>&lt;?php phpinfo(); ?&gt;</code></p>
+</li>
+<li>
+<p><strong>Set correct permissions</strong> for the <code>info.php</code> file to make sure Apache can read it:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo chown http:http /srv/http/info.php</code></p>
+</li>
+</ol>
+<h4 id="4-check-if-php-is-installed"><a class="header" href="#4-check-if-php-is-installed">4. <strong>Check if PHP is Installed</strong></a></h4>
+<p>Make sure PHP is installed correctly by running the following command:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>php -v</code></p>
+<p>If PHP is installed correctly, you should see the PHP version displayed. If PHP is not installed or misconfigured, you will need to install or reinstall it:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo pacman -S php php-apache</code></p>
+<h4 id="5-restart-apache"><a class="header" href="#5-restart-apache">5. <strong>Restart Apache</strong></a></h4>
+<p>After making all the changes, restart Apache for the configuration to take effect:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl restart httpd</code></p>
+<h4 id="6-check-apache-status"><a class="header" href="#6-check-apache-status">6. <strong>Check Apache Status</strong></a></h4>
+<p>Make sure that Apache is running without issues:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl status httpd</code></p>
+<p>If Apache isn't running, check the logs for errors by running:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo journalctl -u httpd</code></p>
+<h4 id="7-check-apache-error-logs"><a class="header" href="#7-check-apache-error-logs">7. <strong>Check Apache Error Logs</strong></a></h4>
+<p>If PHP still isn't working, check the Apache error logs for any specific errors:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo tail -f /var/log/httpd/error_log</code></p>
+<p>Look for any error messages related to PHP or file permissions that might help you diagnose the issue.</p>
+<h4 id="8-test-in-the-browser"><a class="header" href="#8-test-in-the-browser">8. <strong>Test in the Browser</strong></a></h4>
+<p>Finally, open your web browser and go to:</p>
+<p>arduino</p>
+<p>Copy</p>
+<p><code>http://localhost/info.php</code></p>
+<p>You should see the <strong>PHP info page</strong>, which shows information about your PHP configuration.</p>
+<h3 id="if-it-still-doesnt-work"><a class="header" href="#if-it-still-doesnt-work">If It Still Doesn't Work:</a></h3>
+<p>If PHP still isn't working after following the steps above, it might be due to missing <strong>PHP extensions</strong> or an incorrect <strong>Apache module configuration</strong>.</p>
+<ol start="12">
+<li>
+<p><strong>Ensure you have the <code>php-apache</code> package installed</strong>:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo pacman -S php-apache</code></p>
+</li>
+<li>
+<p><strong>Check if Apache’s PHP module is loaded</strong> correctly:</p>
+<p>After running <code>php -v</code> to confirm that PHP is installed, make sure that Apache is loading the correct PHP module:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo nano /etc/httpd/conf/extra/php_module.conf</code></p>
+<p>Ensure this line exists:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>LoadModule php7_module modules/libphp7.so</code></p>
+<p>(The exact module might be <code>php_module</code>, <code>php5_module</code>, or <code>php7_module</code>, depending on your PHP version.)</p>
+</li>
+</ol>
+<hr />
+<p>By following these steps, you should be able to troubleshoot why your <code>info.php</code> file isn't showing up and get it working. Let me know if you need further assistance!</p>
+<h5 id="you-said"><a class="header" href="#you-said">You said:</a></h5>
+<p>root@Archie ~ # httpd -k start AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using fe80::879:a6e4:aa37:15ad%enp0s20u3. Set the 'ServerName' directive globally to suppress this message</p>
+<h6 id="chatgpt-said"><a class="header" href="#chatgpt-said">ChatGPT said:</a></h6>
+<p>The error message you're seeing:</p>
+<p>vbnet</p>
+<p>Copy</p>
+<p><code>AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using fe80::879:a6e4:aa37:15ad%enp0s20u3. Set the 'ServerName' directive globally to suppress this message</code></p>
+<p>This message occurs because Apache is unable to automatically determine the fully qualified domain name (FQDN) of the server. While this isn't typically critical for local or development environments, it can be resolved by setting the <code>ServerName</code> directive.</p>
+<h3 id="to-resolve-the-issue-follow-these-steps"><a class="header" href="#to-resolve-the-issue-follow-these-steps">To resolve the issue, follow these steps:</a></h3>
+<h4 id="1-set-the-servername-directive"><a class="header" href="#1-set-the-servername-directive">1. <strong>Set the ServerName Directive</strong></a></h4>
+<ol>
+<li>
+<p>Open the Apache configuration file:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo nano /etc/httpd/conf/httpd.conf</code></p>
+</li>
+<li>
+<p><strong>Add the <code>ServerName</code> directive</strong>. You can set it to the server's IP address or a domain name if you have one. If you don't have a domain, you can simply use <code>localhost</code> or your local network IP address.</p>
+<p>Add the following line at the <strong>top</strong> of the file or in the <code>httpd.conf</code> section where other global settings are located:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>ServerName localhost</code></p>
+<p>If you are using a specific domain or IP address, you can replace <code>localhost</code> with that:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>ServerName your-domain.com</code></p>
+<p>Or, if you're testing locally:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>ServerName 127.0.0.1</code></p>
+</li>
+<li>
+<p><strong>Save</strong> and <strong>close</strong> the file (in nano, press <code>Ctrl + X</code>, then <code>Y</code>, and hit <code>Enter</code>).</p>
+</li>
+</ol>
+<h4 id="2-restart-apache"><a class="header" href="#2-restart-apache">2. <strong>Restart Apache</strong></a></h4>
+<p>Once you have added the <code>ServerName</code> directive, restart Apache to apply the changes:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl restart httpd</code></p>
+<h4 id="3-verify-the-status"><a class="header" href="#3-verify-the-status">3. <strong>Verify the Status</strong></a></h4>
+<p>Check if Apache starts without issues:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl status httpd</code></p>
+<p>If everything is configured correctly, the error should no longer appear, and Apache should be running without issues.</p>
+<hr />
+<h3 id="additional-notes"><a class="header" href="#additional-notes">Additional Notes:</a></h3>
+<ul>
+<li>This error does not prevent Apache from running, it is just a warning. Setting the <code>ServerName</code> helps prevent it.</li>
+<li>The <code>ServerName</code> directive is important if you're running Apache in a production environment with multiple virtual hosts or SSL configurations. In a development environment, setting it to <code>localhost</code> is generally sufficient.</li>
+</ul>
+<h5 id="you-said-1"><a class="header" href="#you-said-1">You said:</a></h5>
+<p>i have successfully created the cocket at socket=/run/mysqld/mysqld.sock ......how do i procedd from her to acces my wordpress site</p>
+<h6 id="chatgpt-said-1"><a class="header" href="#chatgpt-said-1">ChatGPT said:</a></h6>
+<p>Great! Now that you've successfully configured the socket, let's proceed with the steps to access your WordPress site locally.</p>
+<h3 id="1-check-mariadbmysql-connection"><a class="header" href="#1-check-mariadbmysql-connection">1. <strong>Check MariaDB/MySQL Connection</strong></a></h3>
+<p>Now that the socket issue is resolved, first confirm that MariaDB is running properly and can be accessed.</p>
+<p>Run the following command to check the MariaDB status:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl status mariadb</code></p>
+<p>Then try to log into MariaDB (using <code>mariadb</code> instead of <code>mysql</code>):</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>mariadb -u root</code></p>
+<p>If successful, you should be able to see the MariaDB prompt.</p>
+<h3 id="2-create-a-database-for-wordpress-if-needed"><a class="header" href="#2-create-a-database-for-wordpress-if-needed">2. <strong>Create a Database for WordPress (if needed)</strong></a></h3>
+<p>If you haven't already created a database for WordPress, you can do so now. Once inside the MariaDB prompt, create a database and a user for WordPress.</p>
+<p>sql</p>
+<p>Copy</p>
+<p><code>CREATE DATABASE wordpress; CREATE USER 'wp_user'@'localhost' IDENTIFIED BY 'your_password'; GRANT ALL PRIVILEGES ON wordpress.* TO 'wp_user'@'localhost'; FLUSH PRIVILEGES; EXIT;</code></p>
+<p>Make sure to replace <code>'your_password'</code> with a strong password.</p>
+<h3 id="3-edit-wp-configphp-for-database-connection"><a class="header" href="#3-edit-wp-configphp-for-database-connection">3. <strong>Edit <code>wp-config.php</code> for Database Connection</strong></a></h3>
+<p>Now, you'll need to edit the WordPress configuration file <code>wp-config.php</code> to point to the database you just created.</p>
+<p>Open the <code>wp-config.php</code> file located in the root of your WordPress installation:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>nano /var/www/html/wordpress/wp-config.php</code></p>
+<p>Find and update these lines to match your MariaDB settings:</p>
+<p>php</p>
+<p>Copy</p>
+<p><code>/** The name of the database for WordPress */ define( 'DB_NAME', 'wordpress' );  /** MySQL database username */ define( 'DB_USER', 'wp_user' );  /** MySQL database password */ define( 'DB_PASSWORD', 'your_password' );  /** MySQL hostname */ define( 'DB_HOST', 'localhost' );</code></p>
+<h3 id="4-make-sure-apache-and-php-are-installed"><a class="header" href="#4-make-sure-apache-and-php-are-installed">4. <strong>Make Sure Apache and PHP Are Installed</strong></a></h3>
+<p>Make sure that you have Apache and PHP installed to serve the WordPress site. Check if Apache is running:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl status apache2</code></p>
+<p>If it’s not installed, you can install it with:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo apt install apache2 php php-mysqli libapache2-mod-php</code></p>
+<p>Additionally, make sure you have PHP extensions installed for WordPress (like <code>mysqli</code>, <code>gd</code>, and <code>curl</code>):</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo apt install php-mysqli php-gd php-curl php-xml php-mbstring</code></p>
+<p>Restart Apache after installing:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl restart apache2</code></p>
+<h3 id="5-place-wordpress-files-in-web-directory"><a class="header" href="#5-place-wordpress-files-in-web-directory">5. <strong>Place WordPress Files in Web Directory</strong></a></h3>
+<p>If you haven't already done so, make sure the WordPress files are located in your web root directory (<code>/var/www/html</code>).</p>
+<p>If they aren't there, move the files to the correct location:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo mv /path/to/wordpress/* /var/www/html/</code></p>
+<p>Ensure the correct file permissions:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo chown -R www-data:www-data /var/www/html/ sudo chmod -R 755 /var/www/html/</code></p>
+<h3 id="6-access-wordpress-in-browser"><a class="header" href="#6-access-wordpress-in-browser">6. <strong>Access WordPress in Browser</strong></a></h3>
+<p>At this point, your WordPress site should be accessible via your web browser.</p>
+<ol>
+<li>Open a web browser and go to <code>http://localhost</code> or <code>http://127.0.0.1</code>.</li>
+<li>You should see the WordPress setup page.</li>
+<li>Follow the setup wizard to finish configuring WordPress, including providing the database details (DB_NAME, DB_USER, DB_PASSWORD, DB_HOST) when prompted.</li>
+</ol>
+<h3 id="7-optional-set-up-apache-virtual-hosts"><a class="header" href="#7-optional-set-up-apache-virtual-hosts">7. <strong>(Optional) Set up Apache Virtual Hosts</strong></a></h3>
+<p>If you want to use a custom domain (like <code>http://wordpress.local</code>), you can configure Apache virtual hosts. Edit the Apache configuration:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo nano /etc/apache2/sites-available/wordpress.local.conf</code></p>
+<p>Add this configuration (adjust if needed):</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>&lt;VirtualHost *:80&gt;     ServerAdmin webmaster@localhost     DocumentRoot /var/www/html     ServerName wordpress.local     ErrorLog ${APACHE_LOG_DIR}/error.log     CustomLog ${APACHE_LOG_DIR}/access.log combined &lt;/VirtualHost&gt;</code></p>
+<p>Enable the site and restart Apache:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo a2ensite wordpress.local.conf sudo systemctl restart apache2</code></p>
+<p>To make the domain work, you’ll need to add <code>127.0.0.1 wordpress.local</code> to your <code>/etc/hosts</code> file:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo nano /etc/hosts</code></p>
+<p>Add the line:</p>
+<p>lua</p>
+<p>Copy</p>
+<p><code>127.0.0.1 wordpress.local</code></p>
+<p>Now, you should be able to visit <code>http://wordpress.local</code> in your browser.</p>
+<h3 id="conclusion"><a class="header" href="#conclusion">Conclusion</a></h3>
+<p>With these steps, you should have WordPress up and running locally without requiring the MySQL extension or a live database. The next step is to complete the WordPress installation by following the wizard to set up your site.</p>
+<p>Let me know if you encounter any issues!</p>
+<h5 id="you-said-2"><a class="header" href="#you-said-2">You said:</a></h5>
+<p>define('DB_NAME', 'wordpress'); define('DB_USER', 'wpuser'); define('DB_PASSWORD', 'password'); define('DB_HOST', 'localhost'); AND AM USINH /SRV/HTTP REMEBER THIS PLAESE</p>
+<h6 id="chatgpt-said-2"><a class="header" href="#chatgpt-said-2">ChatGPT said:</a></h6>
+<p>Got it! Since you're using <code>/srv/http</code> as the root directory for your web server, you'll need to adjust a few things accordingly. Let's go over the steps with this specific setup.</p>
+<h3 id="1-update-wp-configphp"><a class="header" href="#1-update-wp-configphp">1. <strong>Update <code>wp-config.php</code></strong></a></h3>
+<p>Open your <code>wp-config.php</code> file in the WordPress installation directory (<code>/srv/http/wordpress</code>):</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo nano /srv/http/wordpress/wp-config.php</code></p>
+<p>Make sure the database connection details in <code>wp-config.php</code> are set to:</p>
+<p>php</p>
+<p>Copy</p>
+<p><code>/** The name of the database for WordPress */ define( 'DB_NAME', 'wordpress' );  /** MySQL database username */ define( 'DB_USER', 'wpuser' );  /** MySQL database password */ define( 'DB_PASSWORD', 'password' );  /** MySQL hostname */ define( 'DB_HOST', 'localhost' );</code></p>
+<h3 id="2-make-sure-wordpress-files-are-in-srvhttp"><a class="header" href="#2-make-sure-wordpress-files-are-in-srvhttp">2. <strong>Make Sure WordPress Files Are in <code>/srv/http</code></strong></a></h3>
+<p>Ensure that your WordPress files are actually located in <code>/srv/http</code>. You can do this by checking the directory:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>ls /srv/http/wordpress</code></p>
+<p>If the files are not there yet, move them to the correct directory:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo mv /path/to/wordpress/* /srv/http/wordpress/</code></p>
+<h3 id="3-set-correct-permissions-for-wordpress-directory"><a class="header" href="#3-set-correct-permissions-for-wordpress-directory">3. <strong>Set Correct Permissions for WordPress Directory</strong></a></h3>
+<p>Make sure the correct permissions are set for your WordPress directory (<code>/srv/http</code>), so the web server can access and modify the files as needed. Run the following:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo chown -R www-data:www-data /srv/http/wordpress sudo chmod -R 755 /srv/http/wordpress</code></p>
+<h3 id="4-check-apache-configuration"><a class="header" href="#4-check-apache-configuration">4. <strong>Check Apache Configuration</strong></a></h3>
+<p>You mentioned using <code>/srv/http</code>, so you need to ensure that Apache is correctly configured to serve files from <code>/srv/http</code>.</p>
+<h4 id="edit-apache-configuration-if-required"><a class="header" href="#edit-apache-configuration-if-required">Edit Apache Configuration (If Required)</a></h4>
+<p>Check the Apache configuration file (<code>/etc/httpd/conf/httpd.conf</code> or <code>/etc/apache2/sites-available/000-default.conf</code>, depending on your system) and ensure the <code>DocumentRoot</code> is set to <code>/srv/http</code>:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo nano /etc/httpd/conf/httpd.conf</code></p>
+<p>or</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo nano /etc/apache2/sites-available/000-default.conf</code></p>
+<p>Ensure that <code>DocumentRoot</code> points to <code>/srv/http/wordpress</code>:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>DocumentRoot /srv/http/wordpress</code></p>
+<p>If you make any changes, restart Apache:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl restart apache2</code></p>
+<h3 id="5-enable-and-start-apache-and-mariadb-if-not-already-done"><a class="header" href="#5-enable-and-start-apache-and-mariadb-if-not-already-done">5. <strong>Enable and Start Apache and MariaDB (if not already done)</strong></a></h3>
+<p>To ensure Apache and MariaDB are running, use the following commands:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl start apache2 sudo systemctl start mariadb</code></p>
+<p>Make sure they are enabled at boot:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl enable apache2 sudo systemctl enable mariadb</code></p>
+<h3 id="6-check-database-connection"><a class="header" href="#6-check-database-connection">6. <strong>Check Database Connection</strong></a></h3>
+<p>To check if you can connect to the MariaDB database, try to log in to MariaDB as the root user:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>mariadb -u root</code></p>
+<p>Then create the database and user if needed:</p>
+<p>sql</p>
+<p>Copy</p>
+<p><code>CREATE DATABASE wordpress; CREATE USER 'wpuser'@'localhost' IDENTIFIED BY 'password'; GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'localhost'; FLUSH PRIVILEGES; EXIT;</code></p>
+<h3 id="7-access-wordpress-in-browser"><a class="header" href="#7-access-wordpress-in-browser">7. <strong>Access WordPress in Browser</strong></a></h3>
+<p>Finally, you should be able to access WordPress in your browser by visiting <code>http://localhost/wordpress</code> or <code>http://127.0.0.1/wordpress</code>. If you configured a custom domain like <code>wordpress.local</code>, use that.</p>
+<h3 id="conclusion-1"><a class="header" href="#conclusion-1">Conclusion</a></h3>
+<p>By following these steps, you should be able to run WordPress locally from <code>/srv/http</code> and connect it to the MariaDB database. If you encounter any issues, feel free to reach out!</p>
+<h5 id="you-said-3"><a class="header" href="#you-said-3">You said:</a></h5>
+<p>root@Archie ~ # ls /srv/http/ index.php wp-blog-header.php wp-includes wp-signup.php info.php wp-comments-post.php wp-links-opml.php wp-trackback.php license.txt wp-config.php wp-load.php xmlrpc.php readme.html wp-config-sample.php wp-login.php wp-activate.php wp-content wp-mail.php wp-admin wp-cron.php wp-settings.php</p>
+<h6 id="chatgpt-said-3"><a class="header" href="#chatgpt-said-3">ChatGPT said:</a></h6>
+<p>It looks like your WordPress files are correctly placed under <code>/srv/http/</code>, which is great!</p>
+<p>Now that the WordPress files are in place, let's make sure everything is properly set up so you can access your site locally.</p>
+<h3 id="steps-to-follow-next"><a class="header" href="#steps-to-follow-next">Steps to Follow Next:</a></h3>
+<ol start="4">
+<li>
+<p><strong>Check Apache Configuration:</strong></p>
+<ul>
+<li>Make sure that your Apache configuration is pointing to <code>/srv/http</code> as the document root. You need to verify the Apache configuration as described earlier:</li>
+</ul>
+<p>Edit the Apache config file:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo nano /etc/httpd/conf/httpd.conf</code></p>
+<p>Ensure the following line is set:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>DocumentRoot "/srv/http"</code></p>
+<p>If it is already set, make sure to also adjust the <code>&lt;Directory&gt;</code> directive to match:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>&lt;Directory "/srv/http"&gt;     AllowOverride All     Require all granted &lt;/Directory&gt;</code></p>
+</li>
+<li>
+<p><strong>Enable .htaccess:</strong> WordPress uses <code>.htaccess</code> files for things like permalinks, so you need to ensure that <code>.htaccess</code> files are allowed to override settings. If you added the line for <code>AllowOverride All</code> in the previous step, then it should be good to go.</p>
+</li>
+<li>
+<p><strong>Restart Apache:</strong> After updating the Apache config file, restart Apache to apply the changes:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl restart apache2</code></p>
+</li>
+<li>
+<p><strong>Verify MySQL/MariaDB Connection:</strong> Ensure that your database is created and accessible. If you haven't already created the database, do so with these commands:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>mariadb -u root</code></p>
+<p>Inside the MariaDB shell, create the database and user:</p>
+<p>sql</p>
+<p>Copy</p>
+<p><code>CREATE DATABASE wordpress; CREATE USER 'wpuser'@'localhost' IDENTIFIED BY 'password'; GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'localhost'; FLUSH PRIVILEGES; EXIT;</code></p>
+<p>If the database and user are already created, you can skip this step.</p>
+</li>
+<li>
+<p><strong>Check <code>wp-config.php</code>:</strong> Double-check your <code>wp-config.php</code> file to ensure the correct database credentials are there:</p>
+<p>php</p>
+<p>Copy</p>
+<p><code>/** The name of the database for WordPress */ define( 'DB_NAME', 'wordpress' );  /** MySQL database username */ define( 'DB_USER', 'wpuser' );  /** MySQL database password */ define( 'DB_PASSWORD', 'password' );  /** MySQL hostname */ define( 'DB_HOST', 'localhost' );</code></p>
+</li>
+<li>
+<p><strong>Access WordPress in Browser:</strong> Open your web browser and visit:</p>
+<p>arduino</p>
+<p>Copy</p>
+<p><code>http://localhost/wordpress</code></p>
+<p>If you're not redirected to the WordPress installation page, it might be an issue with the <code>.htaccess</code> file. In that case, you can try clearing your browser cache or ensuring that <code>.htaccess</code> is configured correctly.</p>
+</li>
+</ol>
+<hr />
+<h3 id="final-check"><a class="header" href="#final-check">Final Check:</a></h3>
+<p>If everything is set up correctly, you should now see the WordPress setup page, where you can finish the installation process by selecting a language and setting up the admin account.</p>
+<p>Let me know if you run into any issues during these steps!</p>
+<h5 id="you-said-4"><a class="header" href="#you-said-4">You said:</a></h5>
+<p>define('DB_NAME', 'wordpress'); define('DB_USER', 'wpuser'); define('DB_PASSWORD', 'password'); define('DB_HOST', 'localhost');Object not found! The requested URL was not found on this server. If you entered the URL manually please check your spelling and try again. If you think this is a server error, please contact the webmaster. Error 404 localhost Apache/2.4.62 (Unix) PHP/8.4.3</p>
+<h6 id="chatgpt-said-4"><a class="header" href="#chatgpt-said-4">ChatGPT said:</a></h6>
+<p>It seems like you're encountering a 404 error, meaning that Apache can't find the requested WordPress page. Let's troubleshoot this step-by-step.</p>
+<h3 id="things-to-check"><a class="header" href="#things-to-check">Things to Check:</a></h3>
+<ol start="10">
+<li>
+<p><strong>Verify WordPress Directory Location:</strong> Ensure your WordPress files are indeed in the <code>/srv/http/</code> directory. From your previous output, it looks like they are, but let's confirm.</p>
+<p>Run the following command to list the files in <code>/srv/http/</code>:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>ls /srv/http/</code></p>
+<p>The list should include files like <code>index.php</code>, <code>wp-config.php</code>, <code>wp-content/</code>, etc. If they're missing, then WordPress might not be installed correctly in that directory.</p>
+</li>
+<li>
+<p><strong>Check Apache Configuration:</strong> Double-check the Apache configuration to ensure the <code>DocumentRoot</code> is pointing to <code>/srv/http/</code>. Run:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo nano /etc/httpd/conf/httpd.conf</code></p>
+<p>Ensure the <code>DocumentRoot</code> is set correctly:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>DocumentRoot "/srv/http"</code></p>
+<p>And the <code>&lt;Directory&gt;</code> directive should be:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code>&lt;Directory "/srv/http"&gt;     AllowOverride All     Require all granted &lt;/Directory&gt;</code></p>
+<p>After making any changes, restart Apache to apply the configuration:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl restart httpd</code></p>
+</li>
+<li>
+<p><strong>Check for Index File:</strong> Apache is looking for an index file by default (like <code>index.php</code> or <code>index.html</code>). Make sure that <code>index.php</code> exists in <code>/srv/http/</code> and is not renamed or missing.</p>
+<p>If you see <code>index.php</code> in <code>/srv/http/</code> already, this is good.</p>
+</li>
+<li>
+<p><strong>Ensure <code>.htaccess</code> Exists and is Configured:</strong> WordPress uses <code>.htaccess</code> to handle things like pretty permalinks. Ensure that <code>.htaccess</code> is in place and properly configured.</p>
+<p>If the file is missing, you can create it in the <code>/srv/http/</code> directory. Create a new file called <code>.htaccess</code> and add this content:</p>
+<p>apache</p>
+<p>Copy</p>
+<p><code># BEGIN WordPress &lt;IfModule mod_rewrite.c&gt;     RewriteEngine On     RewriteBase /     RewriteRule ^index\.php$ - [L]     RewriteCond %{REQUEST_FILENAME} !-f     RewriteCond %{REQUEST_FILENAME} !-d     RewriteRule . /index.php [L] &lt;/IfModule&gt; # END WordPress</code></p>
+<p>After that, restart Apache:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo systemctl restart httpd</code></p>
+</li>
+<li>
+<p><strong>Ensure Apache Has Proper Permissions:</strong> Ensure that Apache has permission to access the WordPress directory and files. You can adjust permissions with:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>sudo chown -R apache:apache /srv/http/ sudo chmod -R 755 /srv/http/</code></p>
+</li>
+<li>
+<p><strong>Access WordPress:</strong> After following these steps, open your web browser and try accessing the WordPress site again by going to:</p>
+<p>arduino</p>
+<p>Copy</p>
+<p><code>http://localhost</code></p>
+</li>
+</ol>
+<h3 id="if-you-still-see-the-404-error"><a class="header" href="#if-you-still-see-the-404-error">If You Still See the 404 Error:</a></h3>
+<ul>
+<li><strong>Clear your browser cache</strong> and refresh the page.</li>
+<li>Try accessing the WordPress site via <code>http://localhost/wordpress</code> if your WordPress files are within a subfolder like <code>wordpress</code>.</li>
+</ul>
+<p>Let me know how this goes!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../Telecomms/engineering.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../WWW/mariadb-mysql.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../Telecomms/engineering.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../WWW/mariadb-mysql.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

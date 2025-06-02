@@ -1,0 +1,369 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>About</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="hello-im-hackhubafrica-"><a class="header" href="#hello-im-hackhubafrica-">Hello, I'm HackHubAfrica 👋</a></h2>
+<h1 align="center">Hi there, I'm HackHubAfrica</h1>
+<h3 align="center">A passionate Electrical & Telecommunications Engineer with a deep interest in Cybersecurity.</h3>
+<p align="left">
+  <img src="https://komarev.com/ghpvc/?username=hackhubafrica&label=Profile%20views&color=0e75b6&style=flat" alt="hackhubafrica" />
+</p>
+<h4 id="-about-me"><a class="header" href="#-about-me">👨‍💻 About Me:</a></h4>
+<p>I am an experienced and driven engineer with expertise in <strong>Network Security</strong> and <strong>Penetration Testing</strong>. My focus lies in securing digital infrastructures and developing advanced protocols to defend against evolving cyber threats. I’m continually learning and adapting to the latest trends in both <strong>AI</strong> and <strong>Cybersecurity</strong> to enhance my skillset and stay ahead of emerging risks.</p>
+<ul>
+<li>🔭 <strong>Currently working on</strong>: Developing robust cybersecurity systems for the Internet of Things (IoT) and performing vulnerability assessments.</li>
+<li>🌱 <strong>Currently learning</strong>: Exploring how Artificial Intelligence can optimize security threat detection and mitigation.</li>
+<li>👯 <strong>Collaborating on</strong>: Open-source cybersecurity projects and building innovative network security tools with fellow engineers.</li>
+<li>🤝 <strong>Looking to help with</strong>: Designing and integrating machine learning models into real-time security monitoring systems.</li>
+</ul>
+<h4 id="-achievements--interests"><a class="header" href="#-achievements--interests">📈 Achievements &amp; Interests:</a></h4>
+<ul>
+<li><strong>Cybersecurity Certifications</strong>: Actively pursuing certifications in <strong>Certified Ethical Hacker (CEH)</strong>, <strong>CompTIA Security+</strong>, and <strong>CISSP</strong>.</li>
+<li><strong>Security Researcher</strong>: Conducted several penetration tests and security audits on enterprise-level infrastructures.</li>
+<li><strong>Competitive Edge</strong>: Engaged in Capture the Flag (CTF) challenges with a strong record of solving complex cybersecurity puzzles.</li>
+</ul>
+<h4 id="-tools--technologies"><a class="header" href="#-tools--technologies">🛠️ Tools &amp; Technologies:</a></h4>
+<p>As a developer and cybersecurity engineer, I work with a wide variety of tools and technologies. Here's a snapshot of my technical skills:</p>
+<table>
+  <tr>
+    <td><a href="LINK1"><img src="assets/python.svg" width="100"/></a></td>
+    <td><a href="LINK2"><img src="assets/docker.svg" width="100"/></a></td>
+    <td><a href="LINK3"><img src="assets/arduino.svg" width="100"/></a></td>
+    <td><a href="LINK4"><img src="assets/bash.svg" width="100"/></a></td>
+  </tr>
+</table>
+<h4 id="-connect-with-me"><a class="header" href="#-connect-with-me">🌐 Connect with me:</a></h4>
+<p>I believe in collaboration and knowledge sharing. Feel free to reach out via the following platforms:</p>
+<table>
+  <tr>
+    <td><a href="https://github.com/hackhubafrica"><img src="assets/github.png" width="100"/></a></td>
+    <td><a href="LINK2"><img src="assets/htb.jpg" width="100"/></a></td>
+    <td><a href="LINK3"><img src="assets/medium.png" width="100"/></a></td>
+    <td><a href="https://twitter.com/hackhubafrica"><img src="assets/x.jpg" width="100"/></a></td>
+  </tr>
+  <tr>
+    <td><a href="LINK5"><img src="assets/hackerone.png" width="100"/></a></td>
+    <td><a href="LINK6"><img src="assets/proton.jpg" width="100"/></a></td>
+    <td><a href="https://linkedin.com/in/brian-muthoni"><img src="assets/linkedin.svg" width="100"/></a></td>
+    <td><a href="https://dev.to/hackhubafrica"><img src="assets/devto.svg" width="100"/></a></td>
+  </tr>
+</table>
+<h1 id="mywebsites"><a class="header" href="#mywebsites">MyWebsites</a></h1>
+<ul>
+<li><a href="https://telecom-1.gitbook.io/telecom/">Telecom</a></li>
+<li><a href="https://hackhubafricas-organization-1.gitbook.io/ctf/">HackHubAfrica</a></li>
+<li><a href="https://hackhubafricas-organization-1.gitbook.io/index/">CTF</a></li>
+<li><a href="https://ck3r.gitbook.io/ck3r/">#ack3r</a></li>
+</ul>
+<h1 id="important-websites-i-use"><a class="header" href="#important-websites-i-use">IMPORTANT WEBSITES I USE</a></h1>
+<ul>
+<li>
+<p><a href="https://www.falstad.com/circuit/">Eletrical</a></p>
+</li>
+<li>
+<p><strong><a href="https://www.falstad.com/lissajous">Lissajous Lab</a></strong><br />
+based on a Java applet by Ed Hobbs</p>
+</li>
+<li>
+<p><strong><a href="https://www.falstad.com/complexviewer/">A Complex Mapping Viewer</a></strong><br />
+another converted Java applet</p>
+</li>
+<li>
+<p><strong><a href="https://harryhatchard.com/hydrogen/index.html">Another Hydrogen Orbital Applet</a></strong><br />
+WebGL-based.</p>
+</li>
+<li>
+<p><strong><a href="https://www.falstad.com/nw/slit.html">Another Slit Diffraction Applet</a></strong><br />
+Also here are <a href="https://www.falstad.com/nw/">more applets from Northwestern University</a>.</p>
+</li>
+<li>
+<p><strong><a href="https://www.allaboutcircuits.com/">All About Circuits</a></strong></p>
+</li>
+<li>
+<p><strong><a href="http://www.myphysicslab.com/">MyPhysicsLab Simulations</a></strong></p>
+</li>
+<li>
+<p><strong><a href="https://www.compadre.org/physlets/">Physlets</a></strong></p>
+</li>
+<li>
+<p><strong><a href="https://mafghani.com/atoms.html">3-D Molecular Dynamics</a></strong></p>
+</li>
+<li>
+<p><strong><a href="http://oolong.co.uk/resonata.htm">Resonata - A Wave Machine</a></strong></p>
+</li>
+<li>
+<p><strong><a href="http://phet.colorado.edu/index.php">PhET Interactive Simulations</a></strong></p>
+</li>
+<li>
+<p><strong><a href="http://richiecarmichael.github.io/sat/index.html#">All Satellites Currently Orbiting</a></strong></p>
+</li>
+<li>
+<p><strong><a href="http://www.circuit-diagram.org/">a Circuit Diagram maker</a></strong></p>
+</li>
+<li>
+<p><strong><a href="http://capturedlightning.com/">Captured Lightning</a></strong></p>
+</li>
+<li>
+<p><strong><a href="http://www.wondermagnet.com/">Wondermagnet.com</a></strong></p>
+</li>
+<li>
+<p><strong><a href="http://micro.magnet.fsu.edu/primer/java/scienceopticsu/powersof10/index.html">Powers of 10 Applet</a></strong></p>
+</li>
+<li>
+<p><strong><a href="http://www.geocities.com/piratord/Difra/difra.html">Another Fresnel Diffraction Applet</a></strong></p>
+</li>
+<li>
+<p><strong><a href="https://www.acs.psu.edu/drussell/demos.html">Acoustics and Vibration Animations</a></strong></p>
+</li>
+<li>
+<p><strong><a href="http://www.traipse.com/earth_and_moon/index.html">Earth-Moon Distance</a></strong></p>
+</li>
+<li>
+<p><strong><a href="http://www.physics.umd.edu/ripe/icpe/newsletters/n34/marshmal.htm">Finding the Speed of Light with Marshmallows</a></strong></p>
+</li>
+<li>
+<p><strong><a href="http://www.fourmilab.to/yoursky/">Sky Chart</a></strong></p>
+</li>
+<li>
+<p><strong><a href="http://amasci.com/miscon/miscon.html">Errors and Misconceptions</a></strong></p>
+</li>
+<li>
+<p><strong><a href="http://www.cs.ubc.ca/spider/kvdoel/sound_demo6.html">Sound Lab</a></strong></p>
+</li>
+</ul>
+<p>And when you get tired of learning, here is some fun stuff:</p>
+<ul>
+<li>
+<p><strong><a href="https://www.falstad.com/pong/">Pong Simulation</a></strong><br />
+Circuit-level simulation of original 1972 Pong.</p>
+</li>
+<li>
+<p><strong><a href="https://www.falstad.com/maze/">Java Maze Applet</a></strong><br />
+3d perspective maze.</p>
+</li>
+<li>
+<p><strong><a href="https://www.falstad.com/envelope/">Acorn Envelope Applet</a></strong><br />
+Cool videogame sounds.</p>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../About/math.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../About/traceroute.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../About/math.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../About/traceroute.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

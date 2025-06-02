@@ -1,0 +1,549 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Mdbook</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h6 id="chatgpt-said"><a class="header" href="#chatgpt-said">ChatGPT said:</a></h6>
+<p>To create a website with a similar look and feel to the <strong>Docker Get Started page</strong> using <strong>Obsidian</strong> and <strong>mdBook</strong>, you'll need to focus on both design and functionality. Here’s a step-by-step approach to achieve a similar layout and style:</p>
+<h3 id="1-using-mdbook-for-building-the-website"><a class="header" href="#1-using-mdbook-for-building-the-website">1. <strong>Using mdBook for Building the Website</strong></a></h3>
+<p><strong>mdBook</strong> is a great tool for building documentation sites from Markdown files, and it's widely used for creating book-like websites. To make your mdBook site look like the Docker documentation, you’ll need to focus on customizing the theme and the structure.</p>
+<h4 id="setting-up-mdbook"><a class="header" href="#setting-up-mdbook">Setting up mdBook</a></h4>
+<p>First, you need to have <strong>mdBook</strong> installed on your system:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>cargo install mdbook</code></p>
+<h4 id="basic-steps"><a class="header" href="#basic-steps">Basic Steps:</a></h4>
+<ol>
+<li>
+<p><strong>Create a New mdBook Project</strong>: Create a new folder for your project and initialize an mdBook project:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>mdbook init my-website</code></p>
+</li>
+<li>
+<p><strong>Create Markdown Files</strong>: In the <code>src</code> folder, create your Markdown files (e.g., <code>index.md</code>, <code>getting-started.md</code>, etc.) that will be displayed in your website.</p>
+</li>
+<li>
+<p><strong>Customize the <code>book.toml</code> file</strong>: In the <code>book.toml</code> file, you can configure various settings like the title, description, and more.</p>
+</li>
+<li>
+<p><strong>Build Your Book</strong>: After adding content, run:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>mdbook build</code></p>
+</li>
+<li>
+<p><strong>Preview the Book</strong>: You can also preview your site locally with:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>mdbook serve</code></p>
+<p>This will allow you to see the site at <code>http://localhost:3000</code>.</p>
+</li>
+</ol>
+<hr />
+<h3 id="2-customizing-the-theme-to-look-like-docker-docs"><a class="header" href="#2-customizing-the-theme-to-look-like-docker-docs">2. <strong>Customizing the Theme to Look Like Docker Docs</strong></a></h3>
+<p>Docker’s documentation has a clean and professional layout with features like a sidebar, navigation bar, and a clear separation between the content sections. To achieve a similar look, you’ll need to customize the mdBook theme.</p>
+<h4 id="customize-the-mdbook-theme"><a class="header" href="#customize-the-mdbook-theme">Customize the mdBook Theme</a></h4>
+<ol start="6">
+<li>
+<p><strong>Use a Custom CSS</strong>: You can override the default mdBook theme by providing a custom CSS file. This CSS can be placed in the <code>book.toml</code> file and can make your site look more like the Docker docs.</p>
+<ul>
+<li>Create a <code>theme.css</code> file with styles that resemble Docker's layout. For example:</li>
+</ul>
+<p>css</p>
+<p>Copy</p>
+<p><code>/* Custom CSS to match Docker Docs */ body {     font-family: "Arial", sans-serif;     background-color: #f7f7f7; }  h1, h2, h3 {     color: #333; }  /* Add specific styles for the sidebar */ .sidebar {     background-color: #1b1b1b;     color: white; }  .sidebar a {     color: white; }  /* Styling for the top bar */ .topbar {     background-color: #333;     color: white; }  /* Style the footer */ footer {     background-color: #333;     color: white; }</code></p>
+<ul>
+<li>Place the <code>theme.css</code> file in the <code>src</code> folder or a custom folder, and then link it in your <code>book.toml</code>:</li>
+</ul>
+<p>toml</p>
+<p>Copy</p>
+<p><code>[output.html] additional_css = ["src/theme.css"]</code></p>
+</li>
+<li>
+<p><strong>Customize the Sidebar</strong>:</p>
+<ul>
+<li>Docker’s website features a prominent sidebar with links to various sections. You can customize the sidebar in mdBook by modifying the <code>SUMMARY.md</code> file. The <code>SUMMARY.md</code> file controls the structure of your sidebar (table of contents).</li>
+</ul>
+<p>Example <code>SUMMARY.md</code>:</p>
+<p>markdown</p>
+<p>Copy</p>
+<p><code># Summary  - [Introduction](./introduction.md) - [Get Started](./getting-started.md) - [Advanced Guides](./advanced-guides.md) - [Reference](./reference.md)</code></p>
+<p>This will ensure that your sidebar has links to your pages, just like Docker’s documentation.</p>
+</li>
+</ol>
+<hr />
+<h3 id="3-additional-customization-options"><a class="header" href="#3-additional-customization-options">3. <strong>Additional Customization Options</strong></a></h3>
+<ul>
+<li>
+<p><strong>Add a Navbar</strong>: You can add a top navigation bar (similar to Docker’s docs) by modifying the HTML structure of the page. You can inject a custom navbar in <code>book.toml</code> and use JavaScript to add interactivity if needed.</p>
+</li>
+<li>
+<p><strong>JavaScript for Interactivity</strong>: If you need advanced features like smooth scrolling or interactive elements, you can add custom JavaScript files. You can inject custom JS in <code>book.toml</code> like so:</p>
+<p>toml</p>
+<p>Copy</p>
+<p><code>[output.html] additional_js = ["src/custom.js"]</code></p>
+<p>The <code>custom.js</code> file could contain interactions like collapsible sections or dropdowns for more dynamic user experience.</p>
+</li>
+<li>
+<p><strong>Fonts and Icons</strong>: Docker uses custom fonts and icons to make its documentation stylish. You can include external resources like Google Fonts or FontAwesome for the same effect.</p>
+<p>Example of adding Google Fonts:</p>
+<p>html</p>
+<p>Copy</p>
+<p><code>&lt;link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"&gt;</code></p>
+<p>You can add the link in the <code>header.html</code> template that you can modify under the <code>src/templates</code> folder.</p>
+</li>
+</ul>
+<hr />
+<h3 id="4-hosting-your-mdbook-site"><a class="header" href="#4-hosting-your-mdbook-site">4. <strong>Hosting Your mdBook Site</strong></a></h3>
+<p>Once you have customized your mdBook site, you can easily deploy it on platforms like GitHub Pages or Netlify.</p>
+<ul>
+<li>
+<p><strong>GitHub Pages</strong>: Commit your files to a GitHub repository and enable GitHub Pages under the repository settings.</p>
+</li>
+<li>
+<p><strong>Netlify</strong>: Simply connect your GitHub repo to Netlify, and it will automatically build and deploy the site for you.</p>
+</li>
+</ul>
+<hr />
+<h3 id="5-additional-tools"><a class="header" href="#5-additional-tools">5. <strong>Additional Tools</strong></a></h3>
+<ul>
+<li>
+<p><strong>Obsidian Integration</strong>: If you are writing your content in Obsidian and want to use it for mdBook, you can easily export your Obsidian notes to Markdown files and use them in your mdBook project.</p>
+</li>
+<li>
+<p><strong>mdBook Plugins</strong>: You can extend the functionality of your site by using mdBook plugins. Look into the <strong>mdBook themes</strong> and <strong>plugins</strong> that offer extended features for customization.</p>
+</li>
+</ul>
+<hr />
+<h3 id="conclusion"><a class="header" href="#conclusion">Conclusion</a></h3>
+<p>By following the above steps, you can create a documentation site using <strong>mdBook</strong> that has a layout and style similar to Docker's documentation. The key steps are:</p>
+<ol start="8">
+<li><strong>Set up mdBook</strong> and add your content.</li>
+<li><strong>Customize the theme</strong> using CSS to match Docker's design.</li>
+<li><strong>Modify the sidebar</strong> and navigation to structure the content in a user-friendly way.</li>
+<li><strong>Host your site</strong> on GitHub Pages, Netlify, or other platforms.</li>
+</ol>
+<p>Let me know if you need further help with any of the steps or have questions about specific customizations!</p>
+<h5 id="you-said"><a class="header" href="#you-said">You said:</a></h5>
+<p>:!mdbook serve 2025-02-15 02:36:26 [ERROR] (mdbook::utils): Error: Couldn't open SUMMARY.md in "/home/dante/Documents/Obsidian Vault/src" directory 2025-02-15 02:36:26 [ERROR] (mdbook::utils): Caused By: No such file or directory (os error 2) shell returned 101 Press ENTER or type command to continue</p>
+<h6 id="chatgpt-said-1"><a class="header" href="#chatgpt-said-1">ChatGPT said:</a></h6>
+<p>The error you're seeing indicates that the <strong><code>SUMMARY.md</code></strong> file, which is crucial for defining the structure of the mdBook (including the sidebar and table of contents), is missing or located in the wrong directory.</p>
+<h3 id="how-to-resolve-the-issue"><a class="header" href="#how-to-resolve-the-issue">How to Resolve the Issue:</a></h3>
+<ol start="12">
+<li>
+<p><strong>Check the File Location</strong>: Ensure that the <code>SUMMARY.md</code> file is located in the correct directory. By default, the <code>SUMMARY.md</code> file should be in the root of the <code>src</code> folder of your mdBook project.</p>
+<p>In your case, the error suggests that mdBook is looking for <code>SUMMARY.md</code> in the <code>"/home/dante/Documents/Obsidian Vault/src"</code> directory but couldn't find it.</p>
+</li>
+<li>
+<p><strong>Create or Move the <code>SUMMARY.md</code> File</strong>:</p>
+<ul>
+<li>If the <code>SUMMARY.md</code> file doesn't exist, create it manually in the <code>src</code> directory.</li>
+<li>The structure of the <code>SUMMARY.md</code> file typically defines the main navigation and the pages available in the documentation.</li>
+</ul>
+<p>Example <code>SUMMARY.md</code>:</p>
+<p>markdown</p>
+<p>Copy</p>
+<p><code># Summary  - [Introduction](./introduction.md) - [Getting Started](./getting-started.md) - [Advanced Guides](./advanced-guides.md) - [Reference](./reference.md)</code></p>
+<p>In this case:</p>
+<ul>
+<li>Make sure that <code>introduction.md</code>, <code>getting-started.md</code>, <code>advanced-guides.md</code>, and <code>reference.md</code> exist in the same directory as the <code>SUMMARY.md</code> file or modify the paths accordingly.</li>
+</ul>
+</li>
+<li>
+<p><strong>Check Your Directory Structure</strong>: Ensure that your directory structure looks something like this:</p>
+<p>plaintext</p>
+<p>Copy</p>
+<p><code>/home/dante/Documents/Obsidian Vault/ └── src/     ├── SUMMARY.md     ├── introduction.md     ├── getting-started.md     ├── advanced-guides.md     └── reference.md</code></p>
+<ul>
+<li>If your project is set up in a different way, you can move or copy the <code>SUMMARY.md</code> file into the correct directory.</li>
+</ul>
+</li>
+<li>
+<p><strong>Run <code>mdbook serve</code> Again</strong>: After ensuring the <code>SUMMARY.md</code> file exists in the <code>src</code> directory, run:</p>
+<p>bash</p>
+<p>Copy</p>
+<p><code>mdbook serve</code></p>
+<p>This will start a local server, and you should be able to access the documentation at <code>http://localhost:3000</code>.</p>
+</li>
+</ol>
+<hr />
+<h3 id="additional-notes"><a class="header" href="#additional-notes">Additional Notes:</a></h3>
+<ul>
+<li><strong>File Path</strong>: If you're using Obsidian or any other system where your files are structured in a specific way, make sure that the paths in <code>SUMMARY.md</code> correctly reference the Markdown files.</li>
+<li><strong>Permissions</strong>: Double-check if there are any permission issues preventing mdBook from reading the <code>SUMMARY.md</code> file.</li>
+</ul>
+<p>Let me know if this resolves the issue or if you need further assistance!</p>
+<pre><code>##### You said:
+
+how do i add plugins for markdown editing ,code editing and math ajax plugins
+
+###### ChatGPT said:
+
+To enhance your Markdown editing, code editing, and math rendering experience while using **mdBook** (or any other Markdown-based workflow), you’ll need to incorporate the appropriate plugins or features that provide such functionality. I'll walk you through setting up **Markdown editing**, **code editing**, and **Math rendering** plugins for a **local Markdown environment** (like the one you're using with `mdBook`).
+
+### 1. **Markdown Editing Plugins**
+
+For Markdown editing itself, `mdBook` uses **markdown-it** under the hood to render the Markdown files. If you want better editing support (syntax highlighting, previews, etc.), you’ll typically rely on your **IDE** or **editor**.
+
+#### Recommended Markdown Editing Plugins for Text Editors:
+
+- **Visual Studio Code**:
+    - **Markdown All in One**: Provides a comprehensive suite of tools for editing Markdown, including live previews, table of contents, auto-preview, etc.
+        - Install via the VS Code extensions marketplace.
+    - **Markdown Preview Enhanced**: Provides a live preview for Markdown files with support for LaTeX math, diagrams, and more.
+- **Vim**:
+    - **vim-markdown**: Provides syntax highlighting and folding for Markdown files.
+    - **vim-pandoc**: Extends Vim’s functionality with Pandoc for converting Markdown to other formats.
+- **Obsidian** (Markdown-based, can be used to manage and write your docs):
+    - It has a built-in preview and rendering system for Markdown.
+
+If you're editing in **mdBook**, you can just edit the raw `.md` files directly using any of the above tools, and the Markdown is then compiled into HTML when you build the book.
+
+---
+
+### 2. **Code Editing / Syntax Highlighting Plugins**
+
+For adding **syntax highlighting** and a better experience for code blocks in your Markdown files, `mdBook` relies on **highlight.js** by default. However, you can extend or configure this further.
+
+#### Enabling Code Syntax Highlighting in `mdBook`:
+
+`mdBook` uses **highlight.js** by default for syntax highlighting. Here's how to ensure it’s working or customize it:
+
+1. **Install mdBook** (if you haven't already):
+    
+    bash
+    
+    Copy
+    
+    `cargo install mdbook`
+    
+2. **Check `book.toml`**: In your `book.toml` configuration file, ensure you have the syntax highlighting options set. You can customize themes and how highlighting works by adjusting the `mdbook` configuration.
+    
+    toml
+    
+    Copy
+    
+    `[output.html] highlight-theme = "solarized-dark"  # You can change this to your preferred theme`
+    
+3. **Customizing the Syntax Highlighting Theme**: You can select different themes for code syntax highlighting by setting `highlight-theme`. Themes available by default include:
+    
+    - `github`
+    - `solarized-light`
+    - `solarized-dark`
+    - `monokai`
+    
+    Example of setting this in `book.toml`:
+    
+    toml
+    
+    Copy
+    
+    `[output.html] highlight-theme = "monokai"`
+    
+4. **Add Syntax Highlighting Support** (Optional): If you want extra customization or language support, you can extend the **highlight.js** library used by `mdBook`. You can add or change themes by modifying `mdBook`'s JavaScript and CSS files or using custom templates.
+    
+
+---
+
+### 3. **Math Rendering with MathJax**
+
+To add **MathJax** support for rendering LaTeX math in Markdown files (for inline or block equations), you'll need to integrate **MathJax** into your `mdBook` setup.
+
+#### Enabling MathJax in `mdBook`:
+
+1. **Install MathJax**: `mdBook` supports MathJax for rendering LaTeX math, but you’ll need to ensure it's configured in the `book.toml` file.
+    
+2. **Configure MathJax** in `book.toml`: In the `book.toml` file, ensure that you enable **MathJax** for rendering LaTeX math.
+    
+    toml
+    
+    Copy
+    
+    `[output.html] mathjax = true  # Enable MathJax rendering`
+    
+    This will allow you to write inline LaTeX math with `$...$` for inline math or `$$...$$` for block math, and MathJax will render it correctly in the HTML output.
+    
+3. **Write Math in Markdown**: Use the typical LaTeX syntax for math expressions in your `.md` files. For example:
+    
+    - **Inline math**:
+        
+        markdown
+        
+        Copy
+        
+        `This is an inline math formula: $E = mc^2$.`
+        
+    - **Block math**:
+        
+        markdown
+        
+        Copy
+        
+        `$$  E = mc^2  $$`
+        
+    
+    After running `mdBook` and generating the HTML output, your math will be rendered properly in the browser.
+    
+
+---
+
+### 4. **Testing and Building Your Book with `mdBook`**
+
+Once you’ve configured your Markdown, code, and math settings, you can build your book to view the changes. Run the following command:
+
+bash
+
+Copy
+
+`mdbook serve`
+
+This command will generate your book locally and serve it on `http://localhost:3000`. Check the rendered output to ensure that:
+
+- **Markdown** renders properly.
+- **Code blocks** are highlighted as expected.
+- **Math equations** are rendered correctly via MathJax.
+
+---
+
+### Optional Advanced Customizations
+
+If you want even more control over the appearance or behavior, you can modify the `mdBook` template by copying the default template files and editing them:
+
+4. **Create a Custom Theme**: You can override the default HTML/CSS templates used by `mdBook` to fully customize the rendering of your site, including the appearance of math equations and code blocks. You’ll find documentation on customizing the theme in the mdBook documentation.
+    
+5. **JavaScript and CSS Customizations**: If you're comfortable with front-end development, you can add custom JavaScript (e.g., to modify the behavior of MathJax or highlight.js) or CSS styles to match your preferred look.
+    
+
+---
+
+### Conclusion
+
+To add plugins for Markdown editing, code editing, and math rendering to your local `mdBook` setup:
+
+6. **Markdown Editing**: Use plugins like **Markdown All in One** for VS Code or **vim-markdown** for Vim.
+7. **Code Editing**: `mdBook` supports **syntax highlighting** via **highlight.js**, and you can configure this in `book.toml`.
+8. **Math Rendering**: Enable **MathJax** in `book.toml` to render LaTeX math.
+
+Once configured, run `mdBook serve` to generate and preview your static site locally. Let me know if you need further assistance!
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../WWW/mariadb-mysql.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../WWW/WORDPRES.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../WWW/mariadb-mysql.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../WWW/WORDPRES.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

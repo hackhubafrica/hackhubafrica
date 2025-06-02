@@ -1,0 +1,640 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Op-Amps</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <p>For an <strong>analog electronics exam</strong>, you'll need formulas covering key topics like circuit analysis, semiconductor devices, amplifiers, filters, and feedback systems. Below is a categorized list of essential formulas, their applications, and derivations where useful.</p>
+<hr />
+<h2 id="1-basic-circuit-analysis"><a class="header" href="#1-basic-circuit-analysis"><strong>1. Basic Circuit Analysis</strong></a></h2>
+<h3 id="ohms-law"><a class="header" href="#ohms-law"><strong>Ohm’s Law:</strong></a></h3>
+<p>$$
+V=IR
+$$</p>
+<ul>
+<li><strong>Application:</strong> Used for solving simple resistor networks.</li>
+</ul>
+<h3 id="kirchhoffs-laws"><a class="header" href="#kirchhoffs-laws"><strong>Kirchhoff’s Laws:</strong></a></h3>
+<ul>
+<li><strong>KVL (Kirchhoff’s Voltage Law):</strong> The sum of voltages in a closed loop is zero.
+$$
+∑V=0
+$$</li>
+<li><strong>KCL (Kirchhoff’s Current Law):</strong> The sum of currents entering a node equals the sum of currents leaving.</li>
+</ul>
+<p>$$</p>
+<p>∑I=0
+$$</p>
+<ul>
+<li><strong>Application:</strong> Used for analyzing circuits with multiple loops and nodes.</li>
+</ul>
+<h3 id="thevenins--nortons-theorems"><a class="header" href="#thevenins--nortons-theorems"><strong>Thevenin’s &amp; Norton’s Theorems:</strong></a></h3>
+<ul>
+<li><strong>Thevenin Equivalent Resistance:</strong>
+$$
+Rth=VocIscR_{\text{th}} = \frac{V_{\text{oc}}}{I_{\text{sc}}}Rth​=Isc​Voc​​
+$$</li>
+<li><strong>Norton Equivalent Current:</strong></li>
+</ul>
+<p>IN=VocRthI_{\text{N}} = \frac{V_{\text{oc}}}{R_{\text{th}}}IN​=Rth​Voc​​</p>
+<ul>
+<li><strong>Application:</strong> Simplifies complex circuits into a single voltage or current source with equivalent resistance.</li>
+</ul>
+<hr />
+<h2 id="2-diodes-and-rectifiers"><a class="header" href="#2-diodes-and-rectifiers"><strong>2. Diodes and Rectifiers</strong></a></h2>
+<h3 id="diode-current-equation-shockley-equation"><a class="header" href="#diode-current-equation-shockley-equation"><strong>Diode Current Equation (Shockley Equation):</strong></a></h3>
+<p>$$
+ID=IS(eVDnVT−1)I_D = I_S \left( e^{\frac{V_D}{nV_T}} -1 \right)ID​=IS​(enVT​VD​​−1)
+$$
+Where:</p>
+<ul>
+<li>ISI_SIS​ = Reverse saturation current
+$$V_T​ = Thermal voltage (≈25mV at 300K)$$</li>
+<li>nnn = Ideality factor (1 for Si, 2 for Ge)</li>
+<li><strong>Application:</strong> Determines the current flowing through a diode for a given voltage.</li>
+</ul>
+<h3 id="rectifier-circuits"><a class="header" href="#rectifier-circuits"><strong>Rectifier Circuits:</strong></a></h3>
+<ul>
+<li><strong>Half-wave rectifier output voltage (ideal):</strong>
+$$
+Vdc=VmπV_{\text{dc}} = \frac{V_m}{\pi}Vdc​=πVm​​
+$$</li>
+<li><strong>Full-wave rectifier output voltage (ideal):</strong>
+$$
+Vdc=2VmπV_{\text{dc}} = \frac{2V_m}{\pi}Vdc​=π2Vm​​
+$$</li>
+<li><strong>Ripple voltage for capacitor filter:</strong>
+$$
+Vripple=IfCV_{\text{ripple}} = \frac{I}{fC}Vripple​=fCI​
+$$</li>
+<li><strong>Application:</strong> Used for AC-to-DC conversion.</li>
+</ul>
+<hr />
+<h2 id="3-bipolar-junction-transistor-bjt"><a class="header" href="#3-bipolar-junction-transistor-bjt"><strong>3. Bipolar Junction Transistor (BJT)</strong></a></h2>
+<h3 id="dc-analysis-of-bjt"><a class="header" href="#dc-analysis-of-bjt"><strong>DC Analysis of BJT:</strong></a></h3>
+<ul>
+<li><strong>Base current:</strong>
+$$
+IB=VB−VBERBI_B = \frac{V_B - V_{BE}}{R_B}IB​=RB​VB​−VBE​​
+$$</li>
+<li><strong>Collector current (active region):</strong>
+$$
+IC=βIBI_C = \beta I_BIC​=βIB​
+$$</li>
+<li><strong>Emitter current:</strong>
+$$
+IE=IC+IB=ICαI_E = I_C + I_B = \frac{I_C}{\alpha}IE​=IC​+IB​=αIC​​
+$$
+Where:
+$$
+α=ββ+1\alpha = \frac{\beta}{\beta +1}α=β+1β​
+$$</li>
+<li><strong>Application:</strong> Determines operating point in amplifier design.</li>
+</ul>
+<h3 id="ac-analysis-small-signal-model"><a class="header" href="#ac-analysis-small-signal-model"><strong>AC Analysis (Small-Signal Model):</strong></a></h3>
+<ul>
+<li><strong>Transconductance:</strong>
+$$
+gm=ICVTg_m = \frac{I_C}{V_T}gm​=VT​IC​​
+$$</li>
+<li><strong>Input resistance (common emitter amplifier):</strong>
+$$
+rπ=βgmr_\pi = \frac{\beta}{g_m}rπ​=gm​β​
+$$</li>
+<li><strong>Voltage gain (CE amplifier):</strong>
+$$
+Av=−βRCrπA_v = -\beta \frac{R_C}{r_\pi}Av​=−βrπ​RC​​
+$$</li>
+<li><strong>Application:</strong> Used for designing BJT amplifiers.</li>
+</ul>
+<hr />
+<h2 id="4-field-effect-transistor-fet--mosfet"><a class="header" href="#4-field-effect-transistor-fet--mosfet"><strong>4. Field Effect Transistor (FET &amp; MOSFET)</strong></a></h2>
+<h3 id="dc-analysis-of-mosfet-saturation-region"><a class="header" href="#dc-analysis-of-mosfet-saturation-region"><strong>DC Analysis of MOSFET (Saturation Region):</strong></a></h3>
+<p>$$
+ID=12μnCoxWL(VGS−Vth)2I_D = \frac{1}{2} \mu_n C_{ox} \frac{W}{L} (V_{GS} - V_{th})^2ID​=21​μn​Cox​LW​(VGS​−Vth​)2
+$$</p>
+<ul>
+<li><strong>Application:</strong> Determines MOSFET operating point.</li>
+</ul>
+<h3 id="small-signal-model-of-mosfet"><a class="header" href="#small-signal-model-of-mosfet"><strong>Small-Signal Model of MOSFET:</strong></a></h3>
+<ul>
+<li><strong>Transconductance:</strong></li>
+</ul>
+<p>gm=2IDVGS−Vthg_m = \frac{2I_D}{V_{GS} - V_{th}}gm​=VGS​−Vth​2ID​​</p>
+<ul>
+<li><strong>Voltage gain:</strong></li>
+</ul>
+<p>Av=−gmRDA_v = -g_m R_DAv​=−gm​RD​</p>
+<ul>
+<li><strong>Application:</strong> Used in MOSFET amplifier design.</li>
+</ul>
+<hr />
+<h2 id="5-amplifiers"><a class="header" href="#5-amplifiers"><strong>5. Amplifiers</strong></a></h2>
+<h3 id="common-emitter-voltage-gain"><a class="header" href="#common-emitter-voltage-gain"><strong>Common-Emitter Voltage Gain:</strong></a></h3>
+<p>Av=−βRCrπA_v = -\beta \frac{R_C}{r_\pi}Av​=−βrπ​RC​​</p>
+<ul>
+<li><strong>Derivation:</strong> Using small-signal model, Vout=−ICRCV_{\text{out}} = -I_C R_CVout​=−IC​RC​, and IC=βIBI_C = \beta I_BIC​=βIB​, substituting IB=Vin/rπI_B = V_{\text{in}}/r_\piIB​=Vin​/rπ​ gives:</li>
+</ul>
+<p>Av=−βRCrπA_v = -\beta \frac{R_C}{r_\pi}Av​=−βrπ​RC​​</p>
+<h3 id="gain-bandwidth-product-for-op-amps"><a class="header" href="#gain-bandwidth-product-for-op-amps"><strong>Gain-Bandwidth Product (for Op-Amps):</strong></a></h3>
+<p>Gain×Bandwidth=constant\text{Gain} \times \text{Bandwidth} = \text{constant}Gain×Bandwidth=constant</p>
+<ul>
+<li><strong>Application:</strong> Used to determine op-amp stability and bandwidth.</li>
+</ul>
+<hr />
+<h2 id="6-feedback-and-stability"><a class="header" href="#6-feedback-and-stability"><strong>6. Feedback and Stability</strong></a></h2>
+<h3 id="closed-loop-gain-negative-feedback"><a class="header" href="#closed-loop-gain-negative-feedback"><strong>Closed-Loop Gain (Negative Feedback):</strong></a></h3>
+<p>Af=A1+AβA_f = \frac{A}{1 + A \beta}Af​=1+AβA​</p>
+<p>Where:</p>
+<ul>
+<li>
+<p>AAA = Open-loop gain</p>
+</li>
+<li>
+<p>β\betaβ = Feedback factor</p>
+</li>
+<li>
+<p><strong>Application:</strong> Controls amplifier gain and bandwidth.</p>
+</li>
+</ul>
+<h3 id="bode-stability-criterion"><a class="header" href="#bode-stability-criterion"><strong>Bode Stability Criterion:</strong></a></h3>
+<ul>
+<li>Phase margin:</li>
+</ul>
+<p>PM=180∘+∠Loop Gain\text{PM} = 180^\circ + \angle \text{Loop Gain}PM=180∘+∠Loop Gain</p>
+<ul>
+<li><strong>Application:</strong> Ensures amplifier stability.</li>
+</ul>
+<hr />
+<h2 id="7-filters-and-frequency-response"><a class="header" href="#7-filters-and-frequency-response"><strong>7. Filters and Frequency Response</strong></a></h2>
+<h3 id="first-order-low-pass-filter"><a class="header" href="#first-order-low-pass-filter"><strong>First-Order Low-Pass Filter:</strong></a></h3>
+<p>H(jω)=11+jωωcH(j\omega) = \frac{1}{1 + j\frac{\omega}{\omega_c}}H(jω)=1+jωc​ω​1​</p>
+<ul>
+<li><strong>Cutoff frequency:</strong></li>
+</ul>
+<p>ωc=1RC\omega_c = \frac{1}{RC}ωc​=RC1​</p>
+<h3 id="first-order-high-pass-filter"><a class="header" href="#first-order-high-pass-filter"><strong>First-Order High-Pass Filter:</strong></a></h3>
+<p>H(jω)=jωωc1+jωωcH(j\omega) = \frac{j\frac{\omega}{\omega_c}}{1 + j\frac{\omega}{\omega_c}}H(jω)=1+jωc​ω​jωc​ω​​</p>
+<ul>
+<li><strong>Application:</strong> Designs active/passive filters.</li>
+</ul>
+<hr />
+<h2 id="8-oscillators"><a class="header" href="#8-oscillators"><strong>8. Oscillators</strong></a></h2>
+<h3 id="barkhausen-criterion"><a class="header" href="#barkhausen-criterion"><strong>Barkhausen Criterion:</strong></a></h3>
+<p>Aβ=1,∠Aβ=0∘ or 360∘A \beta = 1, \quad \angle A\beta = 0^\circ \text{ or } 360^\circAβ=1,∠Aβ=0∘ or 360∘</p>
+<ul>
+<li><strong>Application:</strong> Ensures sustained oscillations in circuits.</li>
+</ul>
+<h3 id="wien-bridge-oscillator-frequency"><a class="header" href="#wien-bridge-oscillator-frequency"><strong>Wien Bridge Oscillator Frequency:</strong></a></h3>
+<p>f=12πRCf = \frac{1}{2\pi RC}f=2πRC1​</p>
+<ul>
+<li><strong>Application:</strong> Used for sine wave generation.</li>
+</ul>
+<hr />
+<h2 id="9-power-electronics"><a class="header" href="#9-power-electronics"><strong>9. Power Electronics</strong></a></h2>
+<h3 id="dc-dc-converter-efficiency"><a class="header" href="#dc-dc-converter-efficiency"><strong>DC-DC Converter Efficiency:</strong></a></h3>
+<p>η=PoutPin×100%\eta = \frac{P_{\text{out}}}{P_{\text{in}}} \times 100%η=Pin​Pout​​×100%</p>
+<ul>
+<li><strong>Application:</strong> Analyzes power conversion efficiency.</li>
+</ul>
+<h3 id="buck-converter-output-voltage"><a class="header" href="#buck-converter-output-voltage"><strong>Buck Converter Output Voltage:</strong></a></h3>
+<p>Vout=DVinV_{\text{out}} = D V_{\text{in}}Vout​=DVin​</p>
+<ul>
+<li><strong>Application:</strong> Designs step-down regulators.</li>
+</ul>
+<hr />
+<h2 id="final-tips-for-application"><a class="header" href="#final-tips-for-application"><strong>Final Tips for Application:</strong></a></h2>
+<ol>
+<li><strong>Understand Derivations</strong> – Many formulas come from circuit laws and small-signal models.</li>
+<li><strong>Use SPICE/LTspice Simulations</strong> – Verify results for circuit performance.</li>
+<li><strong>Memorize Key Expressions</strong> – Focus on amplifier gains, filter cutoffs, and transistor models.</li>
+<li><strong>Practice Complex Problems</strong> – Solve past exam questions to solidify concepts.</li>
+</ol>
+<p>Would you like step-by-step derivations for any specific formula?</p>
+<p>4o</p>
+<h5 id="you-said"><a class="header" href="#you-said">You said:</a></h5>
+<p>Are all these the formules i need??if there are more please provide them</p>
+<p>3/3</p>
+<h6 id="chatgpt-said"><a class="header" href="#chatgpt-said">ChatGPT said:</a></h6>
+<p>The formulas I provided cover the core topics in analog electronics, but depending on the depth of your exam, you may need more advanced or specific formulas. Below, I expand on additional topics and provide more formulas that could be useful.</p>
+<hr />
+<h2 id="10-resonance-and-frequency-response"><a class="header" href="#10-resonance-and-frequency-response"><strong>10. Resonance and Frequency Response</strong></a></h2>
+<h3 id="series-rlc-circuit"><a class="header" href="#series-rlc-circuit"><strong>Series RLC Circuit:</strong></a></h3>
+<ul>
+<li>Resonant Frequency:</li>
+</ul>
+<p>fr=12πLCf_r = \frac{1}{2\pi \sqrt{LC}}fr​=2πLC​1​</p>
+<ul>
+<li>Quality Factor:</li>
+</ul>
+<p>Q=1RLCQ = \frac{1}{R} \sqrt{\frac{L}{C}}Q=R1​CL​​</p>
+<ul>
+<li>Bandwidth:</li>
+</ul>
+<p>BW=frQBW = \frac{f_r}{Q}BW=Qfr​​</p>
+<ul>
+<li><strong>Application:</strong> Used in tuned amplifiers and oscillators.</li>
+</ul>
+<hr />
+<h2 id="11-operational-amplifiers-op-amps"><a class="header" href="#11-operational-amplifiers-op-amps"><strong>11. Operational Amplifiers (Op-Amps)</strong></a></h2>
+<h3 id="ideal-op-amp-characteristics"><a class="header" href="#ideal-op-amp-characteristics"><strong>Ideal Op-Amp Characteristics:</strong></a></h3>
+<ol>
+<li><strong>Infinite open-loop gain</strong> (A→∞A \to \inftyA→∞)</li>
+<li><strong>Infinite input impedance</strong> (Rin→∞R_{\text{in}} \to \inftyRin​→∞)</li>
+<li><strong>Zero output impedance</strong> (Rout=0R_{\text{out}} = 0Rout​=0)</li>
+</ol>
+<h3 id="common-op-amp-configurations"><a class="header" href="#common-op-amp-configurations"><strong>Common Op-Amp Configurations:</strong></a></h3>
+<ul>
+<li><strong>Inverting Amplifier:</strong></li>
+</ul>
+<p>Av=−RfRinA_v = -\frac{R_f}{R_{in}}Av​=−Rin​Rf​​</p>
+<ul>
+<li><strong>Non-Inverting Amplifier:</strong></li>
+</ul>
+<p>Av=1+RfRinA_v = 1 + \frac{R_f}{R_{in}}Av​=1+Rin​Rf​​</p>
+<ul>
+<li><strong>Voltage Follower (Buffer):</strong></li>
+</ul>
+<p>Av=1A_v = 1Av​=1</p>
+<ul>
+<li><strong>Differentiator:</strong></li>
+</ul>
+<p>Vout=−RCdVindtV_{\text{out}} = -RC \frac{dV_{\text{in}}}{dt}Vout​=−RCdtdVin​​</p>
+<ul>
+<li><strong>Integrator:</strong></li>
+</ul>
+<p>Vout=−1RC∫VindtV_{\text{out}} = -\frac{1}{RC} \int V_{\text{in}} dtVout​=−RC1​∫Vin​dt</p>
+<ul>
+<li><strong>Application:</strong> Used in signal processing, active filters, and control systems.</li>
+</ul>
+<hr />
+<h2 id="12-feedback-in-amplifiers"><a class="header" href="#12-feedback-in-amplifiers"><strong>12. Feedback in Amplifiers</strong></a></h2>
+<h3 id="general-negative-feedback-gain-equation"><a class="header" href="#general-negative-feedback-gain-equation"><strong>General Negative Feedback Gain Equation:</strong></a></h3>
+<p>Af=A1+AβA_f = \frac{A}{1 + A\beta}Af​=1+AβA​</p>
+<ul>
+<li>
+<p><strong>Effect of Negative Feedback:</strong></p>
+<ul>
+<li>Reduces gain variation</li>
+<li>Increases bandwidth</li>
+<li>Improves linearity</li>
+<li>Reduces distortion</li>
+</ul>
+</li>
+<li>
+<p><strong>Application:</strong> Essential in designing stable amplifiers.</p>
+</li>
+</ul>
+<hr />
+<h2 id="13-power-amplifiers"><a class="header" href="#13-power-amplifiers"><strong>13. Power Amplifiers</strong></a></h2>
+<h3 id="efficiency-of-power-amplifiers"><a class="header" href="#efficiency-of-power-amplifiers"><strong>Efficiency of Power Amplifiers:</strong></a></h3>
+<ul>
+<li><strong>Class A:</strong></li>
+</ul>
+<p>ηmax=25%\eta_{\text{max}} = 25%ηmax​=25%</p>
+<ul>
+<li><strong>Class B:</strong></li>
+</ul>
+<p>ηmax=78.5%\eta_{\text{max}} = 78.5%ηmax​=78.5%</p>
+<ul>
+<li><strong>Class AB:</strong> η\etaη is between Class A and B</li>
+<li><strong>Class C:</strong></li>
+</ul>
+<p>ηmax&gt;80%\eta_{\text{max}} &gt; 80%ηmax​&gt;80%</p>
+<ul>
+<li><strong>Application:</strong> Determines power efficiency in audio and RF applications.</li>
+</ul>
+<hr />
+<h2 id="14-noise-in-electronic-circuits"><a class="header" href="#14-noise-in-electronic-circuits"><strong>14. Noise in Electronic Circuits</strong></a></h2>
+<h3 id="thermal-noise-johnson-nyquist-noise"><a class="header" href="#thermal-noise-johnson-nyquist-noise"><strong>Thermal Noise (Johnson-Nyquist Noise):</strong></a></h3>
+<p>Vn=4kBTRBV_n = \sqrt{4 k_B T R B}Vn​=4kB​TRB​</p>
+<p>Where:</p>
+<ul>
+<li>
+<p>kBk_BkB​ = Boltzmann’s constant (1.38×10−23J/K1.38 \times 10^{-23} J/K1.38×10−23J/K)</p>
+</li>
+<li>
+<p>TTT = Temperature in Kelvin</p>
+</li>
+<li>
+<p>RRR = Resistance (Ω\OmegaΩ)</p>
+</li>
+<li>
+<p>BBB = Bandwidth (Hz)</p>
+</li>
+<li>
+<p><strong>Application:</strong> Important in low-noise amplifier design.</p>
+</li>
+</ul>
+<hr />
+<h2 id="15-voltage-regulation"><a class="header" href="#15-voltage-regulation"><strong>15. Voltage Regulation</strong></a></h2>
+<h3 id="zener-diode-regulation"><a class="header" href="#zener-diode-regulation"><strong>Zener Diode Regulation:</strong></a></h3>
+<p>$$
+Vout=VZV_{\text{out}} = V_ZVout​=VZ​
+$$</p>
+<h3 id="linear-regulator-basic-series-regulator"><a class="header" href="#linear-regulator-basic-series-regulator"><strong>Linear Regulator (Basic Series Regulator):</strong></a></h3>
+<p>$$
+Vout=Vin−VdropV_{\text{out}} = V_{\text{in}} - V_{\text{drop}}Vout​=Vin​−Vdrop​
+$$</p>
+<ul>
+<li><strong>Application:</strong> Provides stable DC voltage for circuits.</li>
+</ul>
+<hr />
+<h2 id="16-schmitt-triggers-and-comparators"><a class="header" href="#16-schmitt-triggers-and-comparators"><strong>16. Schmitt Triggers and Comparators</strong></a></h2>
+<h3 id="threshold-voltages-for-a-schmitt-trigger-hysteresis-effect"><a class="header" href="#threshold-voltages-for-a-schmitt-trigger-hysteresis-effect"><strong>Threshold Voltages for a Schmitt Trigger (Hysteresis Effect):</strong></a></h3>
+<ul>
+<li>Upper threshold:
+$$
+VTH+=R2R1+R2VccV_{TH+} = \frac{R_2}{R_1 + R_2} V_{\text{cc}}VTH+​=R1​+R2​R2​​Vcc​
+$$</li>
+<li>Lower threshold:
+$$
+VTH−=R2R1+R2VeeV_{TH-} = \frac{R_2}{R_1 + R_2} V_{\text{ee}}VTH−​=R1​+R2​R2​​Vee​
+$$</li>
+<li><strong>Application:</strong> Used to eliminate noise in digital circuits.</li>
+</ul>
+<hr />
+<h2 id="17-analog-filters-higher-order"><a class="header" href="#17-analog-filters-higher-order"><strong>17. Analog Filters (Higher Order)</strong></a></h2>
+<h3 id="second-order-low-pass-filter-sallen-key"><a class="header" href="#second-order-low-pass-filter-sallen-key"><strong>Second-Order Low-Pass Filter (Sallen-Key):</strong></a></h3>
+<p>$$
+H(s)=1s2+sQ+1H(s) = \frac{1}{s^2 + \frac{s}{Q} + 1}H(s)=s2+Qs​+11​
+$$
+Where:
+$$
+Q=12Q = \frac{1}{\sqrt{2}}Q=2​1​
+$$
+For Butterworth filter (maximally flat response).</p>
+<ul>
+<li><strong>Application:</strong> Used in audio processing and signal conditioning.</li>
+</ul>
+<hr />
+<h2 id="18-phase-locked-loops-pll"><a class="header" href="#18-phase-locked-loops-pll"><strong>18. Phase-Locked Loops (PLL)</strong></a></h2>
+<h3 id="basic-pll-equation"><a class="header" href="#basic-pll-equation"><strong>Basic PLL Equation:</strong></a></h3>
+<p>$$
+fout=Nfreff_{\text{out}} = N f_{\text{ref}}fout​=Nfref​
+$$</p>
+<ul>
+<li><strong>Application:</strong> Used in frequency synthesis and clock recovery.</li>
+</ul>
+<hr />
+<h2 id="19-transmission-line-effects-rf-circuits"><a class="header" href="#19-transmission-line-effects-rf-circuits"><strong>19. Transmission Line Effects (RF Circuits)</strong></a></h2>
+<h3 id="characteristic-impedance-of-a-transmission-line"><a class="header" href="#characteristic-impedance-of-a-transmission-line"><strong>Characteristic Impedance of a Transmission Line:</strong></a></h3>
+<p>$$
+Z0=LCZ_0 = \sqrt{\frac{L}{C}}Z0​=CL​​
+$$</p>
+<h3 id="voltage-standing-wave-ratio-vswr"><a class="header" href="#voltage-standing-wave-ratio-vswr"><strong>Voltage Standing Wave Ratio (VSWR):</strong></a></h3>
+<p>$$
+VSWR=1+∣Γ∣1−∣Γ∣VSWR = \frac{1 + |\Gamma|}{1 - |\Gamma|}VSWR=1−∣Γ∣1+∣Γ∣​
+$$
+Where:
+$$
+Γ=ZL−Z0ZL+Z0\Gamma = \frac{Z_L - Z_0}{Z_L + Z_0}Γ=ZL​+Z0​ZL​−Z0​​
+$$</p>
+<ul>
+<li><strong>Application:</strong> Used in RF and microwave engineering.</li>
+</ul>
+<hr />
+<h2 id="20-miscellaneous-formulas"><a class="header" href="#20-miscellaneous-formulas"><strong>20. Miscellaneous Formulas</strong></a></h2>
+<h3 id="decibel-db-calculations"><a class="header" href="#decibel-db-calculations"><strong>Decibel (dB) Calculations:</strong></a></h3>
+<ul>
+<li><strong>Voltage gain in dB:</strong>
+$$
+Av(dB)=20log⁡(VoutVin)A_v (dB) = 20 \log \left( \frac{V_{\text{out}}}{V_{\text{in}}} \right)Av​(dB)=20log(Vin​Vout​​)
+$$</li>
+<li><strong>Power gain in dB:</strong>
+$$
+Ap(dB)=10log⁡(PoutPin)A_p (dB) = 10 \log \left( \frac{P_{\text{out}}}{P_{\text{in}}} \right)Ap​(dB)=10log(Pin​Pout​​)
+$$</li>
+<li><strong>Noise Figure:</strong>
+$$
+NF(dB)=10log⁡(SNRinSNRout)NF (dB) = 10 \log \left( \frac{\text{SNR}<em>{\text{in}}}{\text{SNR}</em>{\text{out}}} \right)NF(dB)=10log(SNRout​SNRin​​)
+$$</li>
+<li><strong>Application:</strong> Used in communication and audio systems.</li>
+</ul>
+<hr />
+<h2 id="final-notes"><a class="header" href="#final-notes"><strong>Final Notes</strong></a></h2>
+<p>These formulas <strong>cover most topics</strong> you are likely to encounter in an analog electronics exam. However, some exams may focus on particular areas like:</p>
+<ul>
+<li><strong>RF design</strong> (Smith charts, impedance matching)</li>
+<li><strong>Control systems</strong> (Bode plots, Nyquist stability)</li>
+<li><strong>Power electronics</strong> (SMPS, inverter design)</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../math/math.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../OperatingSystems/Linux/git_commands.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../math/math.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../OperatingSystems/Linux/git_commands.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

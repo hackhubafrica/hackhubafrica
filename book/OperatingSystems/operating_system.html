@@ -1,0 +1,360 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Operating System</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="1-installing-kali-linux"><a class="header" href="#1-installing-kali-linux"><strong>1️⃣ Installing Kali Linux</strong></a></h2>
+<h3 id="option-1-install-kali-linux-as-a-virtual-machine-recommended"><a class="header" href="#option-1-install-kali-linux-as-a-virtual-machine-recommended"><strong>Option 1: Install Kali Linux as a Virtual Machine (Recommended)</strong></a></h3>
+<h4 id="step-1-download-kali-iso-or-prebuilt-vm-image"><a class="header" href="#step-1-download-kali-iso-or-prebuilt-vm-image"><strong>Step 1: Download Kali ISO or Prebuilt VM Image</strong></a></h4>
+<ul>
+<li>Download the <strong>Kali ISO</strong>: https://www.kali.org/get-kali/#kali-bare-metal</li>
+<li>Prebuilt <strong>VM Image</strong> (for VirtualBox/VMware): https://www.kali.org/get-kali/#kali-virtual-machines</li>
+</ul>
+<h4 id="step-2-install-kali-on-virtualbox-or-vmware"><a class="header" href="#step-2-install-kali-on-virtualbox-or-vmware"><strong>Step 2: Install Kali on VirtualBox or VMware</strong></a></h4>
+<ul>
+<li>Create a new VM with <strong>at least</strong>:
+<ul>
+<li><strong>4 GB RAM</strong> (8 GB+ preferred)</li>
+<li><strong>2 CPU cores</strong> (4+ recommended)</li>
+<li><strong>30 GB+ Disk Space</strong></li>
+</ul>
+</li>
+<li>Attach the Kali ISO and boot into the installer.</li>
+</ul>
+<hr />
+<h3 id="option-2-install-kali-linux-as-a-bare-metal-os"><a class="header" href="#option-2-install-kali-linux-as-a-bare-metal-os"><strong>Option 2: Install Kali Linux as a Bare Metal OS</strong></a></h3>
+<ol>
+<li>
+<p>Download Kali ISO from kali.org.</p>
+</li>
+<li>
+<p>Create a <strong>bootable USB</strong> using:</p>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>sudo dd if=kali-linux.iso of=/dev/sdX bs=4M status=progress</code></p>
+<p>Replace <code>/dev/sdX</code> with your USB device (use <code>lsblk</code> to check).</p>
+</li>
+<li>
+<p>Boot from USB and follow the GUI installer.</p>
+</li>
+</ol>
+<hr />
+<h3 id="option-3-run-kali-as-a-docker-container-quick--lightweight"><a class="header" href="#option-3-run-kali-as-a-docker-container-quick--lightweight"><strong>Option 3: Run Kali as a Docker Container (Quick &amp; Lightweight)</strong></a></h3>
+<p>If you want a <strong>quick</strong> Kali setup without installing it natively:</p>
+<p>sh
+<code>docker pull kalilinux/kali-rolling docker run -it --rm kalilinux/kali-rolling /bin/bash</code></p>
+<p>To install tools inside the container:</p>
+<p>sh</p>
+<p><code>apt update &amp;&amp; apt install -y kali-linux-default</code></p>
+<hr />
+<h2 id="2-installing-arch-linux-for-pentesting"><a class="header" href="#2-installing-arch-linux-for-pentesting"><strong>2️⃣ Installing Arch Linux for Pentesting</strong></a></h2>
+<h3 id="option-1-install-arch-linux-manual-process"><a class="header" href="#option-1-install-arch-linux-manual-process"><strong>Option 1: Install Arch Linux (Manual Process)</strong></a></h3>
+<h4 id="step-1-download-arch-iso"><a class="header" href="#step-1-download-arch-iso"><strong>Step 1: Download Arch ISO</strong></a></h4>
+<p>Download from: https://archlinux.org/download/</p>
+<h4 id="step-2-create-a-bootable-usb"><a class="header" href="#step-2-create-a-bootable-usb"><strong>Step 2: Create a Bootable USB</strong></a></h4>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>sudo dd if=archlinux.iso of=/dev/sdX bs=4M status=progress</code></p>
+<h4 id="step-3-boot-into-arch-iso-and-install"><a class="header" href="#step-3-boot-into-arch-iso-and-install"><strong>Step 3: Boot into Arch ISO and Install</strong></a></h4>
+<ol start="4">
+<li>
+<p>Set up networking:</p>
+<p>sh</p>
+<p><code>ip link</code></p>
+<p>If using WiFi:</p>
+<p>sh</p>
+<p><code>iwctl station wlan0 connect &lt;SSID&gt;</code></p>
+</li>
+<li>
+<p>Partition Disk (use <code>fdisk</code> or <code>cfdisk</code>).</p>
+</li>
+<li>
+<p>Mount filesystems and install base system:</p>
+<p>sh</p>
+<p><code>mount /dev/sdX1 /mnt pacstrap /mnt base linux linux-firmware</code></p>
+</li>
+<li>
+<p>Configure system (hostname, bootloader, users).</p>
+</li>
+</ol>
+<hr />
+<h3 id="option-2-use-blackarch-arch-based-pentesting-os"><a class="header" href="#option-2-use-blackarch-arch-based-pentesting-os"><strong>Option 2: Use BlackArch (Arch-Based Pentesting OS)</strong></a></h3>
+<p>Instead of setting up tools manually, you can use <strong>BlackArch</strong> (Arch Linux preloaded with pentesting tools).</p>
+<p>Install BlackArch on top of an existing Arch system:</p>
+<p>sh</p>
+<p><code>curl -O https://blackarch.org/strap.sh chmod +x strap.sh sudo ./strap.sh</code></p>
+<p>Then install all tools:</p>
+<p>sh</p>
+<p><code>sudo pacman -S blackarch</code></p>
+<hr />
+<h2 id="3-installing-penetration-testing-tools"><a class="header" href="#3-installing-penetration-testing-tools"><strong>3️⃣ Installing Penetration Testing Tools</strong></a></h2>
+<h3 id="on-kali-linux"><a class="header" href="#on-kali-linux"><strong>On Kali Linux</strong></a></h3>
+<p>Kali has tool meta-packages for easy installation:</p>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>sudo apt update &amp;&amp; sudo apt upgrade -y sudo apt install -y kali-linux-default kali-linux-top10 kali-linux-full</code></p>
+<h3 id="on-arch-linux--blackarch"><a class="header" href="#on-arch-linux--blackarch"><strong>On Arch Linux / BlackArch</strong></a></h3>
+<p>sh</p>
+<p><code>sudo pacman -S blackarch</code></p>
+<p>Or install specific tool categories:</p>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>sudo pacman -S blackarch-exploitation blackarch-forensics</code></p>
+<h3 id="manually-installing-popular-pentesting-tools"><a class="header" href="#manually-installing-popular-pentesting-tools"><strong>Manually Installing Popular Pentesting Tools</strong></a></h3>
+<h4 id="metasploit"><a class="header" href="#metasploit"><strong>Metasploit</strong></a></h4>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>sudo apt install -y metasploit-framework  # Kali sudo pacman -S metasploit  # Arch</code></p>
+<h4 id="nmap-network-scanning"><a class="header" href="#nmap-network-scanning"><strong>Nmap (Network Scanning)</strong></a></h4>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>sudo apt install -y nmap sudo pacman -S nmap</code></p>
+<h4 id="burp-suite-web-hacking"><a class="header" href="#burp-suite-web-hacking"><strong>Burp Suite (Web Hacking)</strong></a></h4>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>sudo apt install -y burpsuite sudo pacman -S burpsuite</code></p>
+<h4 id="wireshark-packet-sniffing"><a class="header" href="#wireshark-packet-sniffing"><strong>Wireshark (Packet Sniffing)</strong></a></h4>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>sudo apt install -y wireshark sudo pacman -S wireshark-qt</code></p>
+<h4 id="aircrack-ng-wifi-hacking"><a class="header" href="#aircrack-ng-wifi-hacking"><strong>Aircrack-ng (WiFi Hacking)</strong></a></h4>
+<p>sh</p>
+<p>CopyEdit</p>
+<p><code>sudo apt install -y aircrack-ng sudo pacman -S aircrack-ng</code></p>
+<hr />
+<h2 id="4-recommended-setup-for-pentesting"><a class="header" href="#4-recommended-setup-for-pentesting"><strong>4️⃣ Recommended Setup for Pentesting</strong></a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Component</th><th>Recommended Setup</th></tr></thead><tbody>
+<tr><td><strong>OS</strong></td><td>Kali Linux or BlackArch</td></tr>
+<tr><td><strong>Virtualization</strong></td><td>VirtualBox or VMware for isolation</td></tr>
+<tr><td><strong>Networking</strong></td><td>VPNs, Proxies, and Custom Routing</td></tr>
+<tr><td><strong>Tools</strong></td><td>Metasploit, Nmap, Burp Suite, Wireshark</td></tr>
+<tr><td><strong>Hardware</strong></td><td>USB WiFi Adapter (for wireless hacking)</td></tr>
+<tr><td><strong>Containers</strong></td><td>Run vulnerable web apps in Docker</td></tr>
+</tbody></table>
+</div>
+<hr />
+<h3 id="5-next-steps"><a class="header" href="#5-next-steps"><strong>5️⃣ Next Steps</strong></a></h3>
+<p>✅ <strong>Customize your environment</strong> – Install only the tools you need.<br />
+✅ <strong>Use Docker for testing</strong> – Spin up vulnerable containers (e.g., DVWA, Metasploitable).<br />
+✅ <strong>Practice on TryHackMe, HackTheBox</strong> – Real-world pentesting labs.</p>
+<p>Would you like a <strong>pre-configured script</strong> to automate tool installation? 🚀</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../OperatingSystems/Linux/vim_conf.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../OperatingSystems/Windows/Bypass_login.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../OperatingSystems/Linux/vim_conf.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../OperatingSystems/Windows/Bypass_login.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

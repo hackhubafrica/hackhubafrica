@@ -1,0 +1,32 @@
+/* Custom CSS to match Docker Docs */
+body {
+    font-family: "Arial", sans-serif;
+    background-color: #f7f7f7;
+}
+
+h1, h2, h3 {
+    color: #333;
+}
+
+/* Add specific styles for the sidebar */
+.sidebar {
+    background-color: #1b1b1b;
+    color: white;
+}
+
+.sidebar a {
+    color: white;
+}
+
+/* Styling for the top bar */
+.topbar {
+    background-color: #333;
+    color: white;
+}
+
+/* Style the footer */
+footer {
+    background-color: #333;
+    color: white;
+}
+

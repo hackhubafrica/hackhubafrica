@@ -1,0 +1,705 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Traceroute</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="traceroute-command"><a class="header" href="#traceroute-command">Traceroute command</a></h1>
+<pre><code class="language-bash">✗ traceroute google.com
+traceroute to google.com (172.217.170.206), 30 hops max, 60 byte packets
+ 1  _gateway (172.20.52.1)  1.229 ms  2.019 ms  1.164 ms
+ 2  197.136.187.85 (197.136.187.85)  1.147 ms  1.125 ms  1.100 ms
+ 3  sgl.pe-moi-main-01.e.kenet.or.ke (41.204.179.49)  2.737 ms  2.990 ms  2.702 ms
+ 4  kl.uon-moi-trunk.kenet.or.ke (41.204.173.37)  11.297 ms  9.899 ms  11.255 ms
+ 5  kl.seacom-cls-02.s.kenet.or.ke (41.204.184.114)  18.269 ms  17.950 ms  17.936 ms
+ 6  72.14.220.40 (72.14.220.40)  18.677 ms  17.560 ms  17.502 ms
+ 7  192.178.251.145 (192.178.251.145)  18.041 ms 192.178.251.165 (192.178.251.165)  16.682 ms  16.387 ms
+ 8  209.85.242.181 (209.85.242.181)  15.484 ms  16.737 ms  16.300 ms
+ 9  mba01s10-in-f14.1e100.net (172.217.170.206)  17.983 ms  23.855 ms  17.585 ms
+</code></pre>
+<p>The output you’ve shared is from the traceroute command, which tracks the path your network traffic takes from your system to google.com. Here's a breakdown of what each part of the output means:</p>
+<p><strong><code>Hop 1</code></strong>: gateway (172.20.52.1) – This is your local gateway or router. It’s the first step in the network path, and the round-trip time is very low (~1 ms), as it’s within your local network.</p>
+<p><strong><code>Hop 2</code></strong>: 197.136.187.85 – This is likely the next router or hop in the internet backbone that handles the traffic between your network and external networks. The response time is also low (~1 ms).</p>
+<p><strong><code>Hop 3</code></strong>: sgl.pe-moi-main-01.e.kenet.or.ke (41.204.179.49) – This hop seems to be related to your local ISP or regional network provider. The response time is slightly higher (~2 ms).</p>
+<p><strong><code>Hop 4</code></strong>: kl.uon-moi-trunk.kenet.or.ke (41.204.173.37) – A further routing hop through your local provider's network.</p>
+<p><strong><code>Hop 5</code></strong>: kl.seacom-cls-02.s.kenet.or.ke (41.204.184.114) – Another hop through the regional network infrastructure, with a response time of around 18 ms.</p>
+<p><strong><code>Hop 6</code></strong>: 72.14.220.40 – This hop marks your traffic moving into a backbone provider (probably an international transit provider like Google or a partner network). The response time is still fairly low (~17 ms).</p>
+<p><strong><code>Hop 7</code></strong>: 192.178.251.145 and 192.178.251.165 – These are intermediate routers that handle traffic closer to Google’s network.</p>
+<p><strong><code>Hop 8</code></strong>: 209.85.242.181 – This hop is likely part of Google's infrastructure, still in the transit towards its data centers.</p>
+<p><strong><code>Hop 9</code></strong>: mba01s10-in-f14.1e100.net (172.217.170.206) – Finally, this is the Google server you're reaching. The response time is around 17 ms, which shows that the packet has reached its destination.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary:</a></h2>
+<p>The traceroute shows that your packets travel through multiple hops within your local ISP network, a regional network, and then various Google infrastructure routers before reaching the final destination (Google's servers). The round-trip times (RTTs) are quite low and stable, indicating a healthy network connection.</p>
+<pre><code>TRACEPATH(8)                                                  iputils                                                 TRACEPATH(8)
+
+NAME
+       tracepath - traces path to a network host discovering MTU along this path
+
+SYNOPSIS
+
+       tracepath [-4] [-6] [-n] [-b] [-l pktlen] [-m max_hops] [-p port] [-V] {destination}
+
+DESCRIPTION
+       It traces the network path to destination discovering MTU along this path. It uses UDP port port or some random port. It is
+       similar to traceroute. However, it does not require superuser privileges and has no fancy options.
+
+       tracepath -6 is a good replacement for traceroute6 and classic example of application of Linux error queues. The situation
+       with IPv4 is worse, because commercial IP routers do not return enough information in ICMP error messages. Probably, it
+       will change, when they are updated. For now it uses Van Jacobson's trick, sweeping a range of UDP ports to maintain trace
+       history.
+
+OPTIONS
+       -4
+           Use IPv4 only.
+
+       -6
+           Use IPv6 only.
+
+       -n
+           Print primarily IP addresses numerically.
+
+       -b
+           Print both: Host names and IP addresses.
+
+       -l
+           Sets the initial packet length to pktlen instead of 65535 for IPv4 or 128000 for IPv6.
+
+       -m
+           Set maximum hops (or maximum TTLs) to max_hops instead of 30.
+
+       -p
+           Sets the initial destination port to use.
+
+       -V
+           Print version and exit.
+
+OUTPUT
+           root@mops:~ # tracepath -6 3ffe:2400:0:109::2
+            1?: [LOCALHOST]                              pmtu 1500
+            1:  dust.inr.ac.ru                   0.411ms
+            2:  dust.inr.ac.ru        asymm  1   0.390ms pmtu 1480
+            2:  3ffe:2400:0:109::2               463.514ms reached
+                Resume: pmtu 1480 hops 2 back 2
+
+       The first column shows the TTL of the probe, followed by colon. Usually the value of TTL is obtained from the reply from
+       the network, but sometimes it does not contain the necessary information and we have to guess it. In this case the number
+       is followed by ?.
+
+       The second column shows the network hop which replied to the probe. It is either the address of the router or the word
+       [LOCALHOST], if the probe was not sent to the network.
+
+       The rest of the line shows miscellaneous information about the path to the corresponding network hop. It contains the value
+       of RTT, and additionally it can show Path MTU when it changes. If the path is asymmetric or the probe finishes before it
+       reaches the prescribed hop, the number of hops in return direction is shown next to the keyword "asymm". This information
+       is not reliable, e.g. the third line shows asymmetry of 1. This is because the first probe with TTL of 2 was rejected at
+       the first hop due to Path MTU Discovery.
+
+       The last line summarizes information about all the paths to the destination. It shows detected Path MTU, amount of hops to
+       the destination and our guess about the number of hops from the destination to us, which can be different when the path is
+       asymmetric.
+
+HANDLING ERRORS
+       In case of errors tracepath prints short error code.
+       ┌─────────────┬──────────────┬──────────────────────────────────┐
+       │ Output      │ Code         │ Meaning                          │
+       ├─────────────┼──────────────┼──────────────────────────────────┤
+       │ !A          │ EACCES       │ Communication administratively   │
+       │             │              │ prohibited                       │
+       ├─────────────┼──────────────┼──────────────────────────────────┤
+       │ !H          │ EHOSTUNREACH │ Destination host unreachable     │
+       ├─────────────┼──────────────┼──────────────────────────────────┤
+       │ !N          │ ENETUNREACH  │ Destination network unreachable  │
+       ├─────────────┼──────────────┼──────────────────────────────────┤
+       │ !P          │ EPROTO       │ Destination protocol unreachable │
+       ├─────────────┼──────────────┼──────────────────────────────────┤
+       │ pmtu N      │ EMSGSIZE     │ Message too long                 │
+       ├─────────────┼──────────────┼──────────────────────────────────┤
+       │ reached     │ ECONNREFUSED │ Connection refused               │
+       ├─────────────┼──────────────┼──────────────────────────────────┤
+       │             │ ETIMEDOUT    │ Connection timed out             │
+       ├─────────────┼──────────────┼──────────────────────────────────┤
+       │ NET ERROR N │              │ Any other error                  │
+       └─────────────┴──────────────┴──────────────────────────────────┘
+
+SEE ALSO
+       traceroute(8), traceroute6(8), ping(8).
+
+AUTHOR
+       tracepath was written by Alexey Kuznetsov &lt;kuznet@ms2.inr.ac.ru&gt;.
+
+SECURITY
+       No security issues.
+
+       This lapidary deserves to be elaborated.  tracepath is not a privileged program, unlike traceroute, ping and other beasts
+       of their kind.  tracepath may be executed by everyone who has enough access to the network to send UDP datagrams to the
+       desired destination using the given port.
+
+AVAILABILITY
+       tracepath is part of iputils package.
+
+iputils 20240905                                                                                                      TRACEPATH(8)
+TRACEROUTE(8)                                          Traceroute For Linux                                          TRACEROUTE(8)
+
+NAME
+       traceroute - print the route packets trace to network host
+
+SYNOPSIS
+       traceroute [-46dFITUnreAV] [-f first_ttl] [-g gate,...]
+               [-i device] [-m max_ttl] [-p port] [-s src_addr]
+               [-q nqueries] [-N squeries] [-t tos]
+               [-l flow_label] [-w waittimes] [-z sendwait] [-UL] [-D]
+               [-P proto] [--sport=port] [-M method] [-O mod_options]
+               [--mtu] [--back]
+               host [packet_len]
+       traceroute6  [options]
+
+DESCRIPTION
+       traceroute  tracks  the  route packets taken from an IP network on their way to a given host. It utilizes the IP protocol's
+       time to live (TTL) field and attempts to elicit an ICMP TIME_EXCEEDED response from each gateway  along  the  path  to  the
+       host.
+
+       traceroute6 is equivalent to traceroute -6
+
+       The  only  required parameter is the name or IP address of the destination host .  The optional packet_len‘gth is the total
+       size of the probing packet (default 60 bytes for IPv4 and 80 for IPv6). The specified size can be ignored  in  some  situa‐
+       tions or increased up to a minimal value.
+
+       This  program attempts to trace the route an IP packet would follow to some internet host by launching probe packets with a
+       small ttl (time to live) then listening for an ICMP "time exceeded" reply from a gateway.  We start our probes with  a  ttl
+       of one and increase by one until we get an ICMP "port unreachable" (or TCP reset), which means we got to the "host", or hit
+       a max (which defaults to 30 hops). Three probes (by default) are sent at each ttl setting and a line is printed showing the
+       ttl,  address  of the gateway and round trip time of each probe. The address can be followed by additional information when
+       requested. If the probe answers come from different gateways, the address of each responding system will  be  printed.   If
+       there is no response within a certain timeout, an "*" (asterisk) is printed for that probe.
+
+       After  the  trip time, some additional annotation can be printed: !H, !N, or !P (host, network or protocol unreachable), !S
+       (source route failed), !F (fragmentation needed), !X (communication administratively prohibited), !V (host precedence  vio‐
+       lation),  !C  (precedence  cutoff  in effect), or !&lt;num&gt; (ICMP unreachable code &lt;num&gt;).  If almost all the probes result in
+       some kind of unreachable, traceroute will give up and exit.
+
+       We don't want the destination host to process the UDP probe packets, so the destination port is set to  an  unlikely  value
+       (you  can  change  it  with the -p flag). There is no such a problem for ICMP or TCP tracerouting (for TCP we use half-open
+       technique, which prevents our probes to be seen by applications on the destination host).
+
+       In the modern network environment the traditional traceroute methods can not be always applicable,  because  of  widespread
+       use  of  firewalls.   Such  firewalls filter the "unlikely" UDP ports, or even ICMP echoes.  To solve this, some additional
+       tracerouting methods are implemented (including tcp), see LIST OF AVAILABLE METHODS below. Such methods try to use particu‐
+       lar protocol and source/destination port, in order to bypass firewalls (to be seen by firewalls just as a start of  allowed
+       type of a network session).
+
+OPTIONS
+       --help Print help info and exit.
+
+       -4, -6 Explicitly  force  IPv4 or IPv6 tracerouting. By default, the program will try to resolve the name given, and choose
+              the appropriate protocol automatically. If resolving a host name returns both IPv4 and  IPv6  addresses,  traceroute
+              will use IPv4.
+
+       -I, --icmp
+              Use ICMP ECHO for probes
+
+       -T, --tcp
+              Use TCP SYN for probes
+
+       -d, --debug
+              Enable socket level debugging (when the Linux kernel supports it)
+
+       -F, --dont-fragment
+              Do  not  fragment probe packets. (For IPv4 it also sets DF bit, which tells intermediate routers not to fragment re‐
+              motely as well).
+
+              Varying the size of the probing packet by the packet_len command line parameter, you can manually obtain information
+              about the MTU of individual network hops. The --mtu option (see below) tries to do this automatically.
+
+              Note, that non-fragmented features (like -F or --mtu) work properly since the Linux kernel 2.6.22 only.  Before that
+              version, IPv6 was always fragmented, IPv4 could use the once the discovered final mtu only (from the  route  cache),
+              which can be less than the actual mtu of a device.
+
+       -f first_ttl, --first=first_ttl
+              Specifies with what TTL to start. Defaults to 1.
+
+       -g gateway, --gateway=gateway
+              Tells  traceroute  to  add  an  IP  source routing option to the outgoing packet that tells the network to route the
+              packet through the specified gateway (most routers have disabled source routing for security reasons).  In  general,
+              several  gateway's  is allowed (comma separated). For IPv6, the form of num,addr,addr...  is allowed, where num is a
+              route header type (default is type 2). Note the type 0 route header is now deprecated (rfc5095).
+
+       -i interface, --interface=interface
+              Specifies the interface through which traceroute should send packets. By default, the interface is selected  accord‐
+              ing to the routing table.
+
+       -m max_ttl, --max-hops=max_ttl
+              Specifies the maximum number of hops (max time-to-live value) traceroute will probe. The default is 30.
+
+       -N squeries, --sim-queries=squeries
+              Specifies  the  number  of  probe packets sent out simultaneously.  Sending several probes concurrently can speed up
+              traceroute considerably. The default value is 16.
+              Note that some routers and hosts can use ICMP rate throttling. In such a situation specifying too large  number  can
+              lead to loss of some responses.
+
+       -n     Do not try to map IP addresses to host names when displaying them.
+
+       -p port, --port=port
+              For UDP tracing, specifies the destination port base traceroute will use (the destination port number will be incre‐
+              mented by each probe).
+              For ICMP tracing, specifies the initial ICMP sequence value (incremented by each probe too).
+              For TCP and others specifies just the (constant) destination port to connect.
+
+       -t tos, --tos=tos
+              For  IPv4, set the Type of Service (TOS) and Precedence value. Useful values are 16 (low delay) and 8 (high through‐
+              put). Note that in order to use some TOS precedence values, you have to be super user.
+              For IPv6, set the Traffic Control value.
+
+       -l flow_label, --flowlabel=flow_label
+              Use specified flow_label for IPv6 packets.
+
+       -w max[,here,near], --wait=max[,here,near]
+              Determines how long to wait for a response to a probe.
+
+              There are three (in general) float values separated by a comma (or a slash).  Max specifies  the  maximum  time  (in
+              seconds, default 5.0) to wait, in any case.
+
+              Traditional  traceroute  implementation  always  waited whole max seconds for any probe. But if we already have some
+              replies from the same hop, or even from some next hop, we can use the round trip time of such a reply as a  hint  to
+              determine the actual reasonable amount of time to wait.
+
+              The  optional  here (default 3.0) specifies a factor to multiply the round trip time of an already received response
+              from the same hop. The resulting value is used as a timeout for the probe, instead of (but no more than)  max.   The
+              optional  near  (default 10.0) specifies a similar factor for a response from some next hop.  (The time of the first
+              found result is used in both cases).
+
+              First, we look for the same hop (of the probe which will be printed first from now).  If nothing  found,  then  look
+              for  some  next hop. If nothing found, use max.  If here and/or near have zero values, the corresponding computation
+              is skipped.
+              Here and near are always set to zero if only max is specified (for compatibility with previous versions).
+
+       -q nqueries, --queries=nqueries
+              Sets the number of probe packets per hop. The default is 3.
+
+       -r     Bypass the normal routing tables and send directly to a host on an attached network.  If the host is not  on  a  di‐
+              rectly-attached  network,  an  error is returned.  This option can be used to ping a local host through an interface
+              that has no route through it.
+
+       -s source_addr, --source=source_addr
+              Chooses an alternative source address. Note that you must select the address of one of the interfaces.  By  default,
+              the address of the outgoing interface is used.
+
+       -z sendwait, --sendwait=sendwait
+              Minimal  time interval between probes (default 0).  If the value is more than 10, then it specifies a number in mil‐
+              liseconds, else it is a number of seconds (float point values allowed too).  Useful when some routers use rate-limit
+              for ICMP messages.
+
+       -e, --extensions
+              Show ICMP extensions (rfc4884). The general form is CLASS/TYPE: followed by a hexadecimal dump.  The MPLS  (rfc4950)
+              is  shown  parsed, in a form: MPLS:L=label,E=exp_use,S=stack_bottom,T=TTL (more objects separated by / ). The Inter‐
+              face  Information  (rfc5837)   is   shown   parsed   as   well,   in   a   following   form:   {INC|SUB|OUT|NXT}:in‐
+              dex,IP_addr,"name",mtu=MTU (all four fields may be missing).
+
+       -A, --as-path-lookups
+              Perform AS path lookups in routing registries and print results directly after the corresponding addresses.
+
+       -V, --version
+              Print the version and exit.
+
+       There are additional options intended for advanced usage (such as alternate trace methods etc.):
+
+       --sport=port
+              Chooses the source port to use. Implies -N 1 -w 5 .  Normally source ports (if applicable) are chosen by the system.
+
+       --fwmark=mark
+              Set the firewall mark for outgoing packets (since the Linux kernel 2.6.25).
+
+       -M method, --module=name
+              Use  specified  method for traceroute operations. Default traditional udp method has name default, icmp (-I) and tcp
+              (-T) have names icmp and tcp respectively.
+              Method-specific options can be passed by -O .  Most methods have their simple shortcuts, (-I means -M icmp, etc).
+
+       -O option, --options=options
+              Specifies some method-specific option. Several options are separated by comma (or use several -O on cmdline).   Each
+              method  may  have  its own specific options, or many not have them at all.  To print information about available op‐
+              tions, use -O help.
+
+       -U, --udp
+              Use UDP to particular destination port for tracerouting (instead of increasing the port  per  each  probe).  Default
+              port is 53 (dns).
+
+       -UL    Use UDPLITE for tracerouting (default port is 53).
+
+       -D, --dccp
+              Use DCCP Requests for probes.
+
+       -P protocol, --protocol=protocol
+              Use raw packet of specified protocol for tracerouting. Default protocol is 253 (rfc3692).
+
+       --mtu  Discover  MTU along the path being traced. Implies -F -N 1.  New mtu is printed once in a form of F=NUM at the first
+              probe of a hop which requires such mtu to be reached. (Actually, the correspond "frag needed" icmp message  normally
+              is sent by the previous hop).
+
+              Note, that some routers might cache once the seen information on a fragmentation. Thus you can receive the final mtu
+              from a closer hop.  Try to specify an unusual tos by -t , this can help for one attempt (then it can be cached there
+              as well).
+              See -F option for more info.
+
+       --back Print  the number of backward hops when it seems different with the forward direction. This number is guessed in as‐
+              sumption that remote hops send reply packets with initial ttl set to either 64, or 128 or 255 (which seems a  common
+              practice). It is printed as a negate value in a form of '-NUM' .
+
+LIST OF AVAILABLE METHODS
+       In general, a particular traceroute method may have to be chosen by -M name, but most of the methods have their simple cmd‐
+       line switches (you can see them after the method name, if present).
+
+   default
+       The traditional, ancient method of tracerouting. Used by default.
+
+       Probe  packets  are  udp  datagrams with so-called "unlikely" destination ports.  The "unlikely" port of the first probe is
+       33434, then for each next probe it is incremented by one. Since the ports are expected to be unused, the  destination  host
+       normally  returns  "icmp  unreach  port" as a final response.  (Nobody knows what happens when some application listens for
+       such ports, though).
+
+       This method is allowed for unprivileged users.
+
+   icmp       -I
+       Most usual method for now, which uses icmp echo packets for probes.
+       If you can ping(8) the destination host, icmp tracerouting is applicable as well.
+
+       This method may be allowed for unprivileged users since the kernel 3.0 (IPv4, for IPv6  since  3.11),  which  supports  new
+       dgram  icmp  (or  "ping") sockets. To allow such sockets, sysadmin should provide net/ipv4/ping_group_range sysctl range to
+       match any group of the user.
+       Options:
+
+       raw    Use only raw sockets (the traditional way).
+              This way is tried first by default (for compatibility reasons), then new dgram icmp sockets as fallback.
+
+       dgram  Use only dgram icmp sockets.
+
+   tcp        -T
+       Well-known modern method, intended to bypass firewalls.
+       Uses the constant destination port (default is 80, http).
+
+       If some filters are present in the network path, then most probably any "unlikely" udp ports (as  for  default  method)  or
+       even icmp echoes (as for icmp) are filtered, and whole tracerouting will just stop at such a firewall.  To bypass a network
+       filter,  we have to use only allowed protocol/port combinations. If we trace for some, say, mailserver, then more likely -T
+       -p 25 can reach it, even when -I can not.
+
+       This method uses well-known "half-open technique", which prevents applications on the  destination  host  from  seeing  our
+       probes  at all.  Normally, a tcp syn is sent. For non-listened ports we receive tcp reset, and all is done. For active lis‐
+       tening ports we receive tcp syn+ack, but answer by tcp reset (instead of expected tcp ack), this way the remote tcp session
+       is dropped even without the application ever taking notice.
+
+       There is a couple of options for tcp method:
+
+       syn,ack,fin,rst,psh,urg,ece,cwr
+              Sets specified tcp flags for probe packet, in any combination.
+
+       flags=num
+              Sets the flags field in the tcp header exactly to num.
+
+       ecn    Send syn packet with tcp flags ECE and CWR (for Explicit Congestion Notification, rfc3168).
+
+       sack,timestamps,window_scaling
+              Use the corresponding tcp header option in the outgoing probe packet.
+
+       sysctl Use current sysctl (/proc/sys/net/*) setting for the tcp header options above and ecn.  Always set  by  default,  if
+              nothing else specified.
+
+       fastopen
+              Use fastopen tcp option (when syn), for initial cookie negotiation only.
+
+       mss=[num]
+              Use  value  of  num (or unchanged) for maxseg tcp header option (when syn), and discover its clamping along the path
+              being traced.  New changed mss is printed once in a form of M=NUM at the first  probe  on  which  it  was  detected.
+              Note, some routers may return too short original fragment in the time exceeded message, making the check impossible.
+              Besides  that  the responses may come in a different order.  All this can lead to a later place of the report (using
+              -N 1 can help for the order).
+
+       info   Print tcp flags and supported options of final tcp replies when the target host is  reached.   Allows  to  determine
+              whether  an  application listens the port and other useful things.  Supported tcp options are all that can be set by
+              -T -O, ie.  mss, sack, timestamps, window_scaling and fastopen, with the similar output format (a value for mss  and
+              just presence for others).
+
+       Default options is syn,sysctl.
+
+   tcpconn
+       An initial implementation of tcp method, simple using connect(2) call, which does full tcp session opening. Not recommended
+       for normal use, because a destination application is always affected (and can be confused).
+
+   udp        -U
+       Use udp datagram with constant destination port (default 53, dns).
+       Intended to bypass firewall as well.
+
+       Note,  that unlike in tcp method, the correspond application on the destination host always receive our probes (with random
+       data), and most can easily be confused by them. Most cases it will not respond to our packets though, so we will never  see
+       the final hop in the trace. (Fortunately, it seems that at least dns servers replies with something angry).
+
+       This method is allowed for unprivileged users.
+
+   udplite    -UL
+       Use udplite datagram for probes (with constant destination port, default 53).
+
+       This method is allowed for unprivileged users.
+       Options:
+
+       coverage=num
+              Set udplite send coverage to num.
+
+   dccp    -D
+       Use DCCP Request packets for probes (rfc4340).
+
+       This method uses the same "half-open technique" as used for TCP.  The default destination port is 33434.
+
+       Options:
+
+       service=num
+              Set DCCP service code to num (default is 1885957735).
+
+   raw        -P proto
+       Send raw packet of protocol proto.
+       No protocol-specific headers are used, just IP header only.
+       Implies -N 1 -w 5 .
+       Options:
+
+       protocol=proto
+              Use IP protocol proto (default 253).
+
+NOTES
+       To  speed  up  work, normally several probes are sent simultaneously.  On the other hand, it creates a "storm of packages",
+       especially in the reply direction. Routers can throttle the rate of icmp responses, and some of replies  can  be  lost.  To
+       avoid  this,  decrease  the number of simultaneous probes, or even set it to 1 (like in initial traceroute implementation),
+       i.e.  -N 1
+
+       The final (target) host can drop some of the simultaneous probes, and might even answer only the latest ones. It  can  lead
+       to  extra "looks like expired" hops near the final hop. We use a smart algorithm to auto-detect such a situation, but if it
+       cannot help in your case, just use -N 1 too.
+
+       For even greater stability you can slow down the program's work by -z option, for example use -z 0.5 for half-second  pause
+       between probes.
+
+       To  avoid  an extra waiting, we use adaptive algorithm for timeouts (see -w option for more info). It can lead to premature
+       expiry (especially when response times differ at times) and printing "*" instead of a time. In such a case, switch this al‐
+       gorithm off, by specifying -w with the desired timeout only (for example, -w 5).
+
+       If some hops report nothing for every method, the last chance to obtain something is to use ping -R command (IPv4, and  for
+       nearest 8 hops only).
+
+SEE ALSO
+       ping(8), ping6(8), tcpdump(8), netstat(8)
+
+Traceroute                                                11 October 2006                                            TRACEROUTE(8)
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../OperatingSystems/Linux/tmux_cheat.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../OperatingSystems/Linux/vim_conf.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../OperatingSystems/Linux/tmux_cheat.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../OperatingSystems/Linux/vim_conf.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

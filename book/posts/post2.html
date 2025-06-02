@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditd</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="../assets/images/avatar.ico">
+</head>
+<body>
+    <header>
+        <a href="../index.html" class="">
+            <button class="logo" >HackHubAfrica</button>
+        </a>
+        <nav>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <div id="container">
+        <article>
+            <h2>What is auditd?</h2>
+            <p class="post-meta">October 1, 2024 - Written by: hackhubafrica</p>
+            <img src="../assets/images/post2.jpg" alt="Network Manager on Linux">
+            <p>In today’s interconnected digital landscape, ensuring robust security measures is paramount for both individuals and organizations.</p>
+
+            <p>auditd is a Linux auditing framework that provides detailed logging of system events. It allows administrators to track and review activities on their systems, helping to detect potential security breaches, unauthorized access attempts, and other suspicious activities. By enabling auditd, users gain visibility into critical system events, empowering them to maintain the integrity and security of their systems.</p>
+
+            <h2>Installing auditd on Kali Linux</h2>
+            <p>Before getting started with auditd, it’s important to ensure it is installed on your Kali Linux system. You can do this by opening a terminal and running the following commands:</p>
+            <pre><code>
+            sudo apt update
+            sudo apt install auditd
+            </code></pre>
+            <p>This will update your package list and install auditd if it's not already installed. Once installed, auditd is ready to be enabled and configured.</p>
+
+            <h2>Enabling auditd</h2>
+            <p>Enabling auditd ensures that it starts automatically at boot time. To enable auditd, run the following command:</p>
+            <pre><code>sudo systemctl enable auditd</code></pre>
+
+            <h2>Starting auditd</h2>
+            <p>To start auditd and begin monitoring system events immediately, use the following command:</p>
+            <pre><code>sudo systemctl start auditd</code></pre>
+
+            <h2>Verifying auditd Status</h2>
+            <p>To confirm that auditd is running without errors, check its status with:</p>
+            <pre><code>sudo systemctl status auditd</code></pre>
+            <p>This command provides real-time information about the auditd service, including its current status and any relevant logs or error messages.</p>
+            <h2>Customizing auditd Rules (Optional)</h2>
+            <p>While auditd starts with a default configuration, you can customize its behavior by defining specific audit rules. These rules dictate which events are logged and under what conditions. To configure audit rules, you’ll need to edit the auditd configuration files and specify your desired rules.</p>
+
+            <h2>Monitoring auditd Logs</h2>
+            <p>auditd logs events to <code>/var/log/audit/audit.log</code> by default. Monitoring this log file allows administrators to review recorded events, analyze system activity, and identify potential security incidents. Regularly reviewing audit logs is crucial for maintaining the security posture of your Kali Linux system.</p>
+
+            <h2>Conclusion</h2>
+            <p>Enabling auditd on your Kali Linux system enhances security by providing detailed auditing and monitoring capabilities. By recording system events and activities, auditd helps administrators detect and respond to security breaches effectively. It aligns with security best practices recommended by organizations like CIS Controls and CSC, ensuring proactive protection against threats.</p>
+            <p>In conclusion, incorporating auditd into your security strategy empowers you to stay vigilant and proactive in safeguarding your systems against evolving cyber threats. By leveraging auditd‘s capabilities, you strengthen your defense against unauthorized access and potential vulnerabilities, thereby enhancing the overall security posture of your Kali Linux environment.</p>
+        </article>
+
+        <div class="share">
+            <h3>Share this:</h3>
+            <a href="#">Twitter</a> |
+            <a href="#">Facebook</a>
+        </div>
+
+        <div class="latest-articles">
+            <h2>Latest Articles</h2>
+            <article>
+                <h3><a href="#">Enhancing System Security with Auditd on Kali Linux</a></h3>
+                <p>June 18, 2024</p>
+            </article>
+            <article>
+                <h3><a href="#">Wazuh-Docker Deployment</a></h3>
+                <p>June 16, 2024</p>
+            </article>
+        </div>
+    </div>
+<!-- Footer -->
+    <footer>
+        <p>&copy; 2024 HackHubAfrica</p>
+        <div class="social-media">
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://x.com/@HackHubAfrica" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-youtube"></i></a>
+            <a href="https://github.com/HackHubAfrica" aria-label="Instagram"><i class="fab fa-github"></i></a>
+        </div>
+
+    </footer>
+</body>
+</html>

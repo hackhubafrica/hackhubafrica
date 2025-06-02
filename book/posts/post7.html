@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Windows Kernel</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="../assets/images/avatar.ico">
+</head>
+<body>
+    <header>
+        <a href="../index.html" class="">
+            <button class="logo" >HackHubAfrica</button>
+        </a>
+        <nav>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="container">
+        <article>
+            <h2>The Windows Kernel: Analyzing Kernel-Mode Driver Code</h2>
+            <p class="post-meta">October 4, 2024 - Written by: seraphim</p>
+            <img src="../assets/images/windows.jpg" alt="Windows Kernel">
+            <p>This chapter discusses the principles and techniques necessary for analyzing kernel-mode driver code, such as rootkits, on the Windows platform. Because drivers interact with the OS through well-defined interfaces, the analytical task can be decomposed into the following general objectives:</p>
+            <ul>
+                <li>Understand how core OS components are implemented.</li>
+                <li>Understand the structure of a driver.</li>
+                <li>Understand the user-driver and driver-OS interfaces and how Windows implements them.</li>
+                <li>Understand how certain driver software constructs are manifested in binary form.</li>
+                <li>Systematically apply knowledge from the previous steps in the general reverse engineering process.</li>
+            </ul>
+            <p>If the process of reverse engineering Windows drivers could be modeled as a discrete task, 90% would be understanding how Windows works and 10% would be understanding assembly code.</p>
+
+            <h3>Understanding User-Kernel Interfaces</h3>
+            <p>It begins with a discussion of the user-kernel interfaces and their implementation. Next, it discusses linked lists and how they are used in Windows. Then it explains concepts such as threads, processes, memory, interrupts, and how they are used in the kernel and drivers. After that, it goes into the architecture of a kernel-mode driver and the driver kernel programming interface. It concludes by applying these concepts to the reverse engineering of a rootkit.</p>
+
+            <h3>Analogy: The City and Its Workers</h3>
+            <p>Imagine your computer as a big city, where lots of workers (programs) do their jobs to keep everything running smoothly. There are two types of workers:</p>
+            <ul>
+                <li>Normal workers doing regular tasks.</li>
+                <li>Special workers (drivers) operating deep inside the city’s control center.</li>
+            </ul>
+            <p>Sometimes, there are sneaky workers, called rootkits, who hide and try to mess things up without getting caught. To understand how these sneaky rootkits work, you need to know:</p>
+            <ul>
+                <li>How the city (computer) is built.</li>
+                <li>How the special workers (drivers) do their jobs.</li>
+                <li>How the regular workers communicate with the special workers.</li>
+                <li>How to analyze the tasks of these workers using assembly code.</li>
+            </ul>
+            <p>Once you grasp this, you can start investigating and figuring out what the rootkit is up to, like a detective in the city!</p>
+
+            <h3>Windows Fundamentals</h3>
+            <p>We begin with a discussion of core Windows kernel concepts, including fundamental data structures and kernel objects relevant to driver programming and reverse engineering.</p>
+
+            <h3>Memory Layout</h3>
+            <p>Windows divides the virtual address space into two portions: kernel and user space. On x86 and ARM, the upper 2GB is reserved for the kernel and the bottom 2GB is for user processes.</p>
+            <p>When a thread in a process is scheduled for execution, the OS changes a processor-specific register to point to the page directory for that process, allowing each process to have its own virtual memory space.</p>
+
+            <h3>Analogy: The Toy Box</h3>
+            <p>Imagine your computer as a big toy box shared with friends. The top half is for grown-ups (the kernel) and the bottom half for you and your friends (user space). The computer uses special labels (like CR3 or TTBR) to keep track of whose toys (memory) belong to whom.</p>
+
+            <h3>Processor Initialization</h3>
+            <p>When the kernel boots up, it initializes each processor and sets up structures like the Processor Control Region (PCR) and Processor Region Control Block (PRCB), which hold vital CPU information and state.</p>
+
+            <h3>Analogy: Robots and Control Panels</h3>
+            <p>Imagine your computer as a team of robots, each with its own control panel (PCR) that keeps track of tasks and performance. The PRCB is a mini control box with specific details about each robot's operations.</p>
+
+            <h3>System Calls</h3>
+            <p>System calls are how users request services from the kernel. These requests are processed transparently, with the kernel handling permissions and resource management.</p>
+
+            <h3>Analogy: The Restaurant Kitchen</h3>
+            <p>The OS is the head chef, and system calls are like customer orders. When you want to save a file, the waiter (system call) takes your request to the kitchen (kernel) for processing.</p>
+
+            <div class="section">
+                <h1>Processor Initialization</h1>
+                <p>When the kernel boots up, it performs basic initialization for each processor. One critical structure involved in this process is the <strong>Processor Control Region (PCR)</strong>. This is a per-processor structure that holds vital CPU information such as the base address of the IDT and the current IRQL. Inside the PCR is the <strong>Processor Region Control Block (PRCB)</strong>, which contains detailed information about the processor, including:</p>
+                <ul>
+                    <li>CPU type and model</li>
+                    <li>Current and next threads</li>
+                    <li>Queue of Deferred Procedure Calls (DPCs)</li>
+                </ul>
+                <p>The PCR is always accessible in kernel mode through special registers:</p>
+                <ul>
+                    <li>FS segment for x86</li>
+                    <li>GS segment for x64</li>
+                    <li>System coprocessor registers for ARM</li>
+                </ul>
+                <p>Functions like <code>PsGetCurrentProcess</code> and <code>PsGetCurrentThread</code> query the PCR/PRCB to provide the current process and thread information.</p>
+                <p class="analogy">Imagine your computer as a team of robots. Each robot has a control panel (PCR) where it tracks important information. Inside this panel, there's a control box (PRCB) with details about the robot's tasks and capabilities.</p>
+            </div>
+        
+            <div class="section">
+                <h2>System Calls</h2>
+                <p>An operating system (OS) manages hardware resources and provides interfaces through system calls, which are typically functions in the kernel servicing I/O requests from users. When you want to save a file, the OS handles requests through system calls that check permissions, access the file system, and manage data transfer to the hard disk.</p>
+                <p>The OS implements system calls using two key data structures:</p>
+                <ul>
+                    <li><strong>Service Table Descriptor:</strong> Holds metadata about supported system calls.</li>
+                    <li><strong>Arrays of Function Pointers:</strong> KeServiceDescriptorTable for standard calls and KeServiceDescriptorTableShadow for GUI-related calls.</li>
+                </ul>
+                <p>These tables help the OS track what actions it can perform for various requests.</p>
+                <p class="analogy">Think of the OS as a head chef in a restaurant. When you place an order (system call), the chef checks the menu (service table) and processes your request while ensuring everything is done correctly behind the scenes.</p>
+            </div>
+        
+            <div class="section">
+                <h2>Faults, Traps, and Interrupts</h2>
+                <p>The processor interacts with peripheral devices through interrupts, which are signals that require the processor's attention. When a device sends an interrupt, the processor pauses its current task to address the request. The processor knows how to handle requests by referencing an array of function pointers.</p>
+                <p>Interrupts allow peripheral devices to get the processor's attention. Each interrupt has a unique number, enabling the processor to execute the appropriate handler function.</p>
+                <p>Exceptions can occur during instruction execution and are classified into:</p>
+                <ul>
+                    <li><strong>Faults:</strong> Correctable exceptions, such as page faults that can be handled and retried.</li>
+                    <li><strong>Traps:</strong> Exceptions from special instructions (e.g., SYSCALL) that redirect execution to a specific handler.</li>
+                </ul>
+                <p class="analogy">Imagine a busy office where various tasks are happening simultaneously. If someone needs immediate help (interrupt), the office manager (processor) pauses their current work to assist. If a task encounters an issue (fault), the manager can resolve it and continue, while traps might be like special procedures that redirect tasks for different handling.</p>
+            </div>
+                        
+
+            <p>In contemporary computing systems, the processor connects to peripheral devices through a data bus like PCI Express, FireWire, or USB. When a device requires the processor’s attention, it triggers an <strong>interrupt</strong> that forces the processor to pause its current task and handle the device's request.</p>
+
+            <h2>How the Processor Handles Interrupts</h2>
+            <p>The processor knows how to handle the request by indexing into an array of function pointers associated with the interrupt number. When an interrupt is received, the processor executes the function at the corresponding index and resumes its previous task.</p>
+
+            <h3>Types of Interrupts</h3>
+            <p>Interrupts can be classified into two main categories:</p>
+            <ul>
+                <li><strong>Hardware Interrupts:</strong> Generated by hardware devices, these interrupts are asynchronous and can occur at any time.</li>
+                <li><strong>Software Interrupts:</strong> These are synchronous events triggered by conditions in the running code, such as division by zero or page faults.</li>
+            </ul>
+
+            <h2>Exceptions: Faults and Traps</h2>
+            <p>When the processor executes an instruction, it may encounter exceptions, which can be classified into:</p>
+            <ul>
+                <li><strong>Faults:</strong> Correctable exceptions where the processor can fix the issue and re-execute the instruction (e.g., page faults).</li>
+                <li><strong>Traps:</strong> Exceptions caused by executing special instructions (e.g., <code>SYSCALL</code>), leading to specific actions without needing correction.</li>
+            </ul>
+
+            <div class="analogy">
+                <h3>Fun Analogy to Understand Interrupts</h3>
+                <h4>Hardware Interrupts:</h4>
+                <p>Imagine you’re at your desk (the processor), working on a project. Suddenly, the office phone rings (a hardware interrupt). You pause your work to answer it. Once the call is done, you return to your previous task.</p>
+                
+                <h4>Faults:</h4>
+                <p>Now, while typing a report, you realize your coffee cup is empty (like a page fault). You pause, refill your cup, and resume typing from where you left off.</p>
+
+                <h4>Traps:</h4>
+                <p>Finally, pressing a special button under your desk sends a message to your boss (a trap). After sending the message, you continue with your next task on the list.</p>
+            </div>
+
+            <h2>Key Differences Between Faults and Traps</h2>
+            <ul>
+                <li><strong>Faults:</strong> The processor pauses, fixes the problem, and restarts the same task.</li>
+                <li><strong>Traps:</strong> The processor performs a special task and continues from the next instruction immediately after the trap.</li>
+            </ul>
+
+            <h2>Interrupt Request Level (IRQL)</h2>
+            <p>The Windows kernel uses an abstract concept called <strong>Interrupt Request Level (IRQL)</strong> to manage system interruptibility. Interrupts can be divided into:</p>
+            <ul>
+                <li><strong>Software Interrupts:</strong> Synchronous events triggered by the code.</li>
+                <li><strong>Hardware Interrupts:</strong> Asynchronous events triggered by devices.</li>
+            </ul>
+
+            <p>An IRQL is simply a number assigned to a processor, which defines the order in which interrupts are handled. The general rule is that interrupts at IRQL <em>X</em> will mask all interrupts less than <em>X</em>.</p>
+
+            <h3>Common IRQL Levels</h3>
+            <ul>
+                <li><strong>PASSIVE LEVEL (0):</strong> The lowest IRQL, where most user-mode and kernel code runs.</li>
+                <li><strong>APC LEVEL (1):</strong> The level for asynchronous procedure calls.</li>
+                <li><strong>DISPATCH LEVEL (2):</strong> The highest software IRQL, used for critical tasks.</li>
+            </ul>
+
+            <div class="analogy">
+                <h3>Understanding IRQL with an Analogy</h3>
+                <p>Imagine a classroom with a teacher (the processor) managing different tasks:</p>
+                <ul>
+                    <li><strong>Hardware Interrupts:</strong> Like students raising their hands while the teacher explains something.</li>
+                    <li><strong>Software Interrupts:</strong> Like the teacher giving reminders to themselves.</li>
+                </ul>
+                
+                <h4>How IRQL Works:</h4>
+                <p>IRQL is like a priority system:</p>
+                <ul>
+                    <li>Higher IRQL tasks are handled first, blocking lower-priority tasks.</li>
+                    <li>Lower IRQL tasks wait until higher ones are completed.</li>
+                </ul>
+                
+                <h4>Types of IRQL Levels:</h4>
+                <ul>
+                    <li><strong>PASSIVE LEVEL (0):</strong> Regular classroom time.</li>
+                    <li><strong>APC LEVEL (1):</strong> Reminder notes.</li>
+                    <li><strong>DISPATCH LEVEL (2):</strong> Fire drills that require immediate attention.</li>
+                </ul>
+            </div>
+
+                <h2>Key Takeaways</h2>
+                <ul>
+                    <li>IRQL helps decide which interruptions should be handled first.</li>
+                    <li>Higher IRQL tasks are more urgent and block lower-priority tasks.</li>
+                    <li>IRQL is not the same as thread priority; it’s about managing interrupts.</li>
+                </ul>
+                        
+                <h1>Understanding Pool Memory and Execution Context in Windows</h1>
+
+                <h2>Pool Memory</h2>
+                <p>Similar to user-mode applications, kernel-mode code can allocate memory at run-time. The general name for it is <strong>pool memory</strong>; one can think of it like the heap in user mode. Pool memory is generally divided into two types: <strong>paged pool</strong> and <strong>non-paged pool</strong>.</p>
+
+                <h3>Paged Pool Memory</h3>
+                <p>Paged pool memory is memory that can be paged out at any given time by the memory manager. When kernel-mode code touches a buffer that is paged out, it triggers a page-fault exception that causes the memory manager to page in that buffer from disk.</p>
+
+                <h3>Non-Paged Pool Memory</h3>
+                <p>Non-paged pool memory is memory that can never be paged out; in other words, accessing such memory never triggers a page fault.</p>
+
+                <h3>Importance of Pool Memory Types</h3>
+                <p>This distinction is important because it has consequences for code running at high IRQLs. Suppose a kernel thread is currently running at <code>DISPATCH_LEVEL</code> and it references memory that has been paged out and needs to be handled by the page-fault handler; because the page fault handler (see <code>MmAccessFault</code>) needs to issue a request to bring the page from disk and the thread dispatcher runs at <code>DISPATCH_LEVEL</code>, it cannot resolve the exception and results in a bugcheck. This is one of the reasons why code running at <code>DISPATCH_LEVEL</code> must only reside in and access non-paged pool memory.</p>
+
+                <h3>Allocation and Freeing of Pool Memory</h3>
+                <p>Pool memory is allocated and freed by the <code>ExAllocatePool*</code> and <code>ExFreePool*</code> family of functions. By default, non-paged pool memory (type <code>NonPagedPool</code>) is mapped with read, write, and execute permission on x86/x64, but non-executable on ARM; on Windows 8, one can request non-executable, non-paged pool memory by specifying the <code>NonPagedPoolNX</code> pool type. Paged pool memory is mapped read, write, executable on x86, but non-executable on x64/ARM.</p>
+
+                <h2>Analogy: Understanding Pool Memory</h2>
+                <h3>Pool Memory (Like Different Kinds of Lockers)</h3>
+                <p>Imagine you’re in a school with two types of lockers:</p>
+                <ul>
+                    <li><strong>Paged Pool Lockers</strong> (like regular school lockers): You can put your stuff in them, but they might be moved to a storage room (like paging out to disk) if they’re not needed for a while. When you need your stuff, it’ll take some time for someone to fetch it back from storage (this is like a page fault).</li>
+                    <li><strong>Non-Paged Pool Lockers</strong> (like special VIP lockers): These lockers always keep your items where you put them and never move them to storage. You can access your items instantly without waiting (no page fault).</li>
+                </ul>
+                <p>In the computer, paged pool memory can be moved to disk (paged out) when it’s not in use, while non-paged pool memory always stays in RAM (so it’s quicker to access). This becomes important at high priority levels like <code>DISPATCH_LEVEL</code>, where things need to be super fast—waiting for data to come from disk could cause the system to crash (bugcheck). So, the code running at these high levels must use non-paged pool memory.</p>
+
+                <h2>Memory Descriptor Lists</h2>
+                <p>A memory descriptor list (MDL) is a data structure used to describe a set of physical pages mapped by a virtual address. Each MDL entry describes one contiguous buffer, and multiple entries can be linked together. Once an MDL is built for an existing buffer, the physical pages can be locked in memory (meaning they will not be reused) and can be mapped into another virtual address.</p>
+
+                <h3>Usage of MDLs</h3>
+                <p>To be useful, MDLs must be initialized, probed, and locked, and then mapped. To better understand the concept, consider some of the practical uses of MDLs.</p>
+                <ul>
+                    <li>Suppose a driver needs to map some memory in kernel space to the user-mode address space of a process or vice versa. In order to achieve this, it would first initialize an MDL to describe the memory buffer (<code>IoAllocateMdl</code>), ensure that the current thread has access to those pages and lock them (<code>MmProbeAndLockPages</code>), and then map those pages in memory (<code>MmMapLockedPagesSpecifyCache</code>) in that process.</li>
+                    <li>Another scenario is when a driver needs to write to some read-only pages (such as those in the code section). One way to achieve this is through MDLs. The driver would initialize the MDL, lock it, and then map it to another virtual address with write permission. In this scenario, the driver can use MDLs to implement a <code>VirtualProtect</code>-like function in kernel mode.</li>
+                </ul>
+
+                <h3>Analogy: Memory Descriptor Lists (Like Sharing Lockers)</h3>
+                <p>Now, imagine you want to share a locker with someone else, or access someone else’s locker for specific items. You need a way to describe exactly which lockers are being shared and where they are.</p>
+                <p>MDLs (Memory Descriptor Lists) are like the list of lockers you’re sharing. Each entry on the list describes one locker (or memory buffer) and where it’s located. Once you create the MDL, you can “lock” the lockers so no one else uses them, and then you can map or “link” these lockers to another person’s list of lockers.</p>
+
+                <h3>How MDLs Work</h3>
+                <p>Let’s say you’re a driver (like the class helper) and you need to move books (data) between a teacher’s private locker (kernel space) and a student’s locker (user space):</p>
+                <ul>
+                    <li><strong>Initialize the MDL:</strong> Create a list that describes which lockers (memory pages) are involved.</li>
+                    <li><strong>Probe and Lock the Pages:</strong> Make sure you have access to these lockers and lock them so they can’t be used by others while you’re working.</li>
+                    <li><strong>Map the Pages:</strong> Now you can link these lockers (map the memory) so both the teacher and the student can access them.</li>
+                </ul>
+                <p>In the case of wanting to write to “read-only lockers” (read-only memory), MDLs allow you to bypass the restriction by linking those pages to another locker with write permission, just like giving yourself special permission to modify the books in the teacher’s locker.</p>
+
+                <h3>Recap of MDLs</h3>
+                <p><strong>Pool Memory:</strong> Like lockers—paged pool lockers can be temporarily moved to storage, while non-paged pool lockers always stay where they are.</p>
+                <p><strong>MDLs:</strong> Like sharing lockers—MDLs describe which lockers (memory pages) are involved, lock them in place, and map them for shared access.</p>
+                <p>This helps the operating system manage memory efficiently and safely, especially when switching between different areas like user mode (students) and kernel mode (teachers).</p>
+
+                <h2>Processes and Threads</h2>
+                <p>In simple terms, processes and threads in an operating system are two closely related components that allow programs to run efficiently.</p>
+
+                <h3>Processes and Threads Structures</h3>
+                <p>A thread is defined by two kernel data structures: <code>ETHREAD</code> and <code>KTHREAD</code>. An <code>ETHREAD</code> structure contains housekeeping information about the thread (i.e., thread ID, associated process, debugging enabled/disabled, etc.). A <code>KTHREAD</code> structure contains the scheduling information (e.g., quantum, priority, etc.).</p>
+                <p>A process is defined by two kernel data structures: <code>EPROCESS</code> and <code>KPROCESS</code>. An <code>EPROCESS</code> structure contains various pieces of information regarding the process, including a process ID, a list of handles, and memory management information. The <code>KPROCESS</code> structure contains information about scheduling for the entire process.</p>
+
+                <h3>Analogy: Processes and Threads</h3>
+                <p>Processes and threads can be understood using an analogy of a restaurant:</p>
+                <ul>
+                    <li><strong>Processes:</strong> Think of each process as a different restaurant. Each restaurant has its own kitchen, menu, and staff (resources) to operate.</li>
+                    <li><strong>Threads:</strong> Within each restaurant (process), you have chefs (threads) that perform various tasks. Each chef can cook different dishes simultaneously (multi-threading), but they all rely on the same kitchen and resources (the process).</li>
+                </ul>
+
+                <h2>Execution Context</h2>
+                <p>The execution context refers to the information available to a thread at a specific point in time, including its address space, stack, and CPU state.</p>
+
+                <h3>Types of Execution Context</h3>
+                <ul>
+                    <li><strong>Thread Context:</strong> Specific to the executing thread, containing information necessary for the thread to execute its task.</li>
+                    <li><strong>System Context:</strong> Associated with the System process, representing the global context in which all threads run.</li>
+                    <li><strong>Arbitrary Context:</strong> Pertains to the context of the thread that was running before a context switch.</li>
+                </ul>
+
+                <h3>Important Considerations</h3>
+                <p>Drivers and their entry points must be aware of the execution context, as it dictates how resources are accessed and managed. The context can significantly impact performance and stability.</p>
+
+                <h2>Analogy: Execution Context (Like Different Classrooms)</h2>
+                <p>Imagine you’re in a school where each classroom represents a different execution context:</p>
+                <ul>
+                    <li><strong>Thread Context:</strong> Each student in a classroom (thread) has their own set of materials (information) needed to learn.</li>
+                    <li><strong>System Context:</strong> The school itself provides the framework (system) in which all classrooms operate.</li>
+                    <li><strong>Arbitrary Context:</strong> When switching classrooms (context switch), the student must adapt to the new environment and materials available in that classroom.</li>
+                </ul>
+
+                <h3>Summary of Execution Context</h3>
+                <p>Understanding execution context is crucial for developers, as it affects how processes interact with system resources and manage execution flows. Each context provides the necessary information to execute efficiently.</p>
+
+                <h2>Linked Lists</h2>
+                <p>Linked lists are fundamental data structures used in kernel programming for managing collections of objects, allowing for dynamic memory allocation and efficient data organization.</p>
+
+                <h3>Types of Linked Lists</h3>
+                <ul>
+                    <li><strong>Singly-Linked List:</strong> Each entry points to the next one, creating a one-way chain of elements.</li>
+                    <li><strong>Sequenced Singly-Linked List:</strong> Similar to singly-linked lists but supports atomic operations to ensure thread safety.</li>
+                    <li><strong>Circular Doubly-Linked List:</strong> Each entry points to both the next and previous entries, allowing traversal in both directions.</li>
+                </ul>
+
+                <h3>Functions to Manipulate Lists</h3>
+                <p>Common functions used for manipulating linked lists include:</p>
+                <ul>
+                    <li><code>InsertHeadList</code>: Adds an element to the head of the list.</li>
+                    <li><code>RemoveEntryList</code>: Removes a specified entry from the list.</li>
+                </ul>
+
+                <h3>Importance in Kernel Programming</h3>
+                <p>Linked lists play a crucial role in the kernel's data structures, enabling efficient management of processes, threads, and other resources.</p>
+
+                <h3>Analogy: Linked Lists (Like Train Cars)</h3>
+                <p>Linked lists can be visualized as a series of train cars connected in a chain:</p>
+                <ul>
+                    <li><strong>Singly-Linked List:</strong> Each train car (entry) points to the next car, creating a one-way train.</li>
+                    <li><strong>Circular Doubly-Linked List:</strong> Each car can point both forward and backward, allowing you to traverse in either direction.</li>
+                </ul>
+
+                <h2>Conclusion</h2>
+                <p>This overview highlights how the Windows kernel manages memory and processes, emphasizing the significance of pool memory, MDLs, execution contexts, and linked lists in kernel programming. Understanding these details is crucial for developing efficient and secure drivers or kernel-level applications.</p>
+                    
+
+        </article>
+
+        <div class="share">
+            <h3>Share this:</h3>
+            <a href="#">Twitter</a> |
+            <a href="#">Facebook</a>
+        </div>
+
+        <div class="latest-articles">
+            <h2>Latest Articles</h2>
+            <article>
+                <h3><a href="#">Enhancing System Security with Auditd on Kali Linux</a></h3>
+                <p>June 18, 2024</p>
+            </article>
+            <article>
+                <h3><a href="#">Wazuh-Docker Deployment</a></h3>
+                <p>June 16, 2024</p>
+            </article>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 HackHubAfrica</p>
+        <div class="social-media">
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://x.com/@HackHubAfrica" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="https://github.com/HackHubAfrica" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        </div>
+    </footer>
+</body>
+</html>
