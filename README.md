@@ -23,6 +23,35 @@ I am an Electrical & Embedded Systems Engineer specializing in end-to-end IoT pr
 3. PCB Layout, Schematic Delivery, & Firmware Coding
 4. Deployment-ready Documentation & Code Handoff
 
+Skills List:
+
+    Python
+
+    MATLAB
+
+    Control Systems Engineering
+
+    Electrical Engineering
+
+    AutoCAD
+
+    PCB Design
+
+    Eagle
+
+    EasyEDA
+
+    PlatformIO
+
+    Embedded Systems
+
+    Internet of Things (IoT)
+
+    Firmware Development
+
+    Technical Documentation
+
+    GitHub Pages
 Let's discuss your project goals—click "Invite to Job" or "Message" to get started!
 <table>
   <tr>
