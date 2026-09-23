@@ -1,3 +1,5 @@
+# Hi there, I'm an IoT & Systems Automation Engineer 👋
+
 Are you looking to bridge hardware design, system automation, and cloud deployment into a single, reliable workflow?
 
 I am an Electrical & Embedded Systems Engineer specializing in end-to-end IoT product design, industrial control automation, and electrical schematic design. I take projects from raw concept and simulation to physical PCB layout, firmware deployment, and automated testing.
