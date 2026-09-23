@@ -52,34 +52,44 @@ Skills List:
     Technical Documentation
 
     GitHub Pages
-Let's discuss your project goals—click "Invite to Job" or "Message" to get started!
-<table>
-  <tr>
-    <td><a href="LINK1"><img src="assets/python.svg" width="100"/></a></td>
-    <td><a href="LINK2"><img src="assets/docker.svg" width="100"/></a></td>
-    <td><a href="LINK3"><img src="assets/arduino.svg" width="100"/></a></td>
-    <td><a href="LINK4"><img src="assets/bash.svg" width="100"/></a></td>
-  </tr>
-</table>
+### 🛠 Tech Stack & Tools
 
-#### 🌐 Connect with me:
-I believe in collaboration and knowledge sharing. Feel free to reach out via the following platforms:
+#### Programming & Scripting
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![MATLAB](https://img.shields.io/badge/MATLAB-0076A8?style=for-the-badge&logo=mathworks&logoColor=white)
+![C++](https://img.shields.io/badge/C%2B%2B-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white)
+![Bash](https://img.shields.io/badge/Bash-4EAA25?style=for-the-badge&logo=gnu-bash&logoColor=white)
 
-<table>
-  <tr>
-    <td><a href="https://github.com/hackhubafrica"><img src="assets/github.png" width="100"/></a></td>
-    <td><a href="LINK2"><img src="assets/htb.jpg" width="100"/></a></td>
-    <td><a href="LINK3"><img src="assets/medium.png" width="100"/></a></td>
-    <td><a href="https://twitter.com/hackhubafrica"><img src="assets/x.jpg" width="100"/></a></td>
-  </tr>
-  <tr>
-    <td><a href="LINK5"><img src="assets/hackerone.png" width="100"/></a></td>
-    <td><a href="LINK6"><img src="assets/proton.jpg" width="100"/></a></td>
-    <td><a href="https://linkedin.com/in/brian-muthoni"><img src="assets/linkedin.svg" width="100"/></a></td>
-    <td><a href="https://dev.to/hackhubafrica"><img src="assets/devto.svg" width="100"/></a></td>
-  </tr>
-</table>
+#### Hardware, Schematics & Embedded
+![PlatformIO](https://img.shields.io/badge/PlatformIO-F6821F?style=for-the-badge&logo=platformio&logoColor=white)
+![AutoCAD](https://img.shields.io/badge/AutoCAD-0696D7?style=for-the-badge&logo=autodesk&logoColor=white)
+![Eagle](https://img.shields.io/badge/EAGLE_PCB-0072C6?style=for-the-badge&logo=autodesk&logoColor=white)
+![EasyEDA](https://img.shields.io/badge/EasyEDA-006699?style=for-the-badge&logo=electronics&logoColor=white)
+![Arduino](https://img.shields.io/badge/Arduino-00979D?style=for-the-badge&logo=arduino&logoColor=white)
+![ESP32](https://img.shields.io/badge/ESP32-E7352C?style=for-the-badge&logo=espressif&logoColor=white)
 
+#### CI/CD, Deployment & Version Control
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
+![GitHub Pages](https://img.shields.io/badge/GitHub_Pages-222222?style=for-the-badge&logo=github&logoColor=white)
+
+---
+
+### ⚙️ Core Engineering Capabilities
+
+- **⚡ Hardware & PCB Design:** Circuit schematic drafting and PCB layout in EasyEDA and Eagle.
+- **🔌 Embedded IoT Systems:** Firmware design using PlatformIO (ESP32/STM32) with MQTT, Wi-Fi, and BLE integration.
+- **⚙️ Control Systems & Simulation:** Feedback control loops, state-space modeling, PID tuning, and Python/MATLAB automated script testing.
+- **📐 Electrical Planning:** Single-line diagrams (SLDs), wiring schematics, and load distribution blueprints in AutoCAD.
+- **📜 Automated Documentation:** Continuous integration and deployment (CI/CD) of technical docs published via GitHub Pages.
+
+---
+
+### 📫 Connect With Me
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com)
+[![Upwork](https://img.shields.io/badge/Upwork-6FDA44?style=for-the-badge&logo=upwork&logoColor=white)](https://upwork.com)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:your-email@example.com)
 # MyWebsites
 - [Telecom](https://telecom-1.gitbook.io/telecom/)
 - [HackHubAfrica](https://hackhubafricas-organization-1.gitbook.io/ctf/)
