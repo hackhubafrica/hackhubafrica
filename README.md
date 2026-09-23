@@ -25,54 +25,39 @@ I am an Electrical & Embedded Systems Engineer specializing in end-to-end IoT pr
 
 Skills List:
 
-    Python
-
-    MATLAB
-
-    Control Systems Engineering
-
-    Electrical Engineering
-
-    AutoCAD
-
-    PCB Design
-
-    Eagle
-
-    EasyEDA
-
-    PlatformIO
-
-    Embedded Systems
-
-    Internet of Things (IoT)
-
-    Firmware Development
-
-    Technical Documentation
-
-    GitHub Pages
-### 🛠 Tech Stack & Tools
-
+    1.Python
+    2.MATLAB
+    3.Control Systems Engineering
+    4.Electrical Engineering
+    5.AutoCAD
+    6.PCB Design
+    7.Eagle
+    8.EasyEDA
+    9.PlatformIO
+    10.Embedded Systems
+    11.Internet of Things (IoT)
+    12.Firmware Development
+    13.Technical Documentation
+    14.GitHub Pages
+    
 #### Programming & Scripting
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![MATLAB](https://img.shields.io/badge/MATLAB-0076A8?style=for-the-badge&logo=mathworks&logoColor=white)
-![C++](https://img.shields.io/badge/C%2B%2B-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white)
-![Bash](https://img.shields.io/badge/Bash-4EAA25?style=for-the-badge&logo=gnu-bash&logoColor=white)
+[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![MATLAB](https://img.shields.io/badge/MATLAB-0076A8?style=for-the-badge&logo=mathworks&logoColor=white)](https://www.mathworks.com/products/matlab.html)
+[![C++](https://img.shields.io/badge/C%2B%2B-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white)](https://isocpp.org/)
+[![Bash](https://img.shields.io/badge/Bash-4EAA25?style=for-the-badge&logo=gnu-bash&logoColor=white)](https://www.gnu.org/software/bash/)
 
 #### Hardware, Schematics & Embedded
-![PlatformIO](https://img.shields.io/badge/PlatformIO-F6821F?style=for-the-badge&logo=platformio&logoColor=white)
-![AutoCAD](https://img.shields.io/badge/AutoCAD-0696D7?style=for-the-badge&logo=autodesk&logoColor=white)
-![Eagle](https://img.shields.io/badge/EAGLE_PCB-0072C6?style=for-the-badge&logo=autodesk&logoColor=white)
-![EasyEDA](https://img.shields.io/badge/EasyEDA-006699?style=for-the-badge&logo=electronics&logoColor=white)
-![Arduino](https://img.shields.io/badge/Arduino-00979D?style=for-the-badge&logo=arduino&logoColor=white)
-![ESP32](https://img.shields.io/badge/ESP32-E7352C?style=for-the-badge&logo=espressif&logoColor=white)
+[![PlatformIO](https://img.shields.io/badge/PlatformIO-F6821F?style=for-the-badge&logo=platformio&logoColor=white)](https://platformio.org/)
+[![AutoCAD](https://img.shields.io/badge/AutoCAD-0696D7?style=for-the-badge&logo=autodesk&logoColor=white)](https://www.autodesk.com/products/autocad/)
+[![Eagle](https://img.shields.io/badge/EAGLE_PCB-0072C6?style=for-the-badge&logo=autodesk&logoColor=white)](https://www.autodesk.com/products/eagle/)
+[![EasyEDA](https://img.shields.io/badge/EasyEDA-006699?style=for-the-badge&logo=electronics&logoColor=white)](https://easyeda.com/)
+[![Arduino](https://img.shields.io/badge/Arduino-00979D?style=for-the-badge&logo=arduino&logoColor=white)](https://www.arduino.cc/)
+[![ESP32](https://img.shields.io/badge/ESP32-E7352C?style=for-the-badge&logo=espressif&logoColor=white)](https://www.espressif.com/en/products/socs/esp32)
 
 #### CI/CD, Deployment & Version Control
-![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
-![GitHub Pages](https://img.shields.io/badge/GitHub_Pages-222222?style=for-the-badge&logo=github&logoColor=white)
-
+[![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)](https://git-scm.com/)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/)
+[![GitHub Pages](https://img.shields.io/badge/GitHub_Pages-222222?style=for-the-badge&logo=github&logoColor=white)](https://pages.github.com/)
 ---
 
 ### ⚙️ Core Engineering Capabilities
