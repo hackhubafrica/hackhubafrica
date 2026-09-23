@@ -1,28 +1,29 @@
-## Hello, I'm HackHubAfrica 👋
+Are you looking to bridge hardware design, system automation, and cloud deployment into a single, reliable workflow?
 
-<h1 align="center">Hi there, I'm HackHubAfrica</h1>
-<h3 align="center">A passionate Electrical & Telecommunications Engineer with a deep interest in Cybersecurity.</h3>
+I am an Electrical & Embedded Systems Engineer specializing in end-to-end IoT product design, industrial control automation, and electrical schematic design. I take projects from raw concept and simulation to physical PCB layout, firmware deployment, and automated testing.
 
-<p align="left">
-  <img src="https://komarev.com/ghpvc/?username=hackhubafrica&label=Profile%20views&color=0e75b6&style=flat" alt="hackhubafrica" />
-</p>
+### Key Capabilities
 
-#### 👨‍💻 About Me:
-I am an experienced and driven engineer with expertise in **Network Security** and **Penetration Testing**. My focus lies in securing digital infrastructures and developing advanced protocols to defend against evolving cyber threats. I’m continually learning and adapting to the latest trends in both **AI** and **Cybersecurity** to enhance my skillset and stay ahead of emerging risks.
+⚡ Embedded Systems & Hardware Design
+• PCB Layout & Schematic Capture: EasyEDA, Eagle PCB
+• Firmware & Prototyping: PlatformIO (ESP32, STM32, Arduino frameworks)
+• IoT Architecture: Wi-Fi/BLE/MQTT protocols, sensor integration, and power planning
 
-- 🔭 **Currently working on**: Developing robust cybersecurity systems for the Internet of Things (IoT) and performing vulnerability assessments.
-- 🌱 **Currently learning**: Exploring how Artificial Intelligence can optimize security threat detection and mitigation.
-- 👯 **Collaborating on**: Open-source cybersecurity projects and building innovative network security tools with fellow engineers.
-- 🤝 **Looking to help with**: Designing and integrating machine learning models into real-time security monitoring systems.
+⚙️ Control Systems & Automation
+• Engineering Simulations: System modeling, state-space analysis, PID tuning, and control design using MATLAB & Simulink
+• Scripting & Automation: Python automation for hardware-in-the-loop (HIL) testing, data parsing, and build scripts
 
-#### 📈 Achievements & Interests:
-- **Cybersecurity Certifications**: Actively pursuing certifications in **Certified Ethical Hacker (CEH)**, **CompTIA Security+**, and **CISSP**.
-- **Security Researcher**: Conducted several penetration tests and security audits on enterprise-level infrastructures.
-- **Competitive Edge**: Engaged in Capture the Flag (CTF) challenges with a strong record of solving complex cybersecurity puzzles.
+📐 Electrical Planning & Documentation
+• CAD Engineering: AutoCAD electrical planning, single-line diagrams (SLDs), and wiring distribution layout
+• CI/CD & Documentation: Automated technical documentation generation deployed via GitHub Pages and Git version control
 
-#### 🛠️ Tools & Technologies:
-As a developer and cybersecurity engineer, I work with a wide variety of tools and technologies. Here's a snapshot of my technical skills:
+### How I Work
+1. Clear Requirements & Architecture Review
+2. Rapid Hardware & Control System Simulation
+3. PCB Layout, Schematic Delivery, & Firmware Coding
+4. Deployment-ready Documentation & Code Handoff
 
+Let's discuss your project goals—click "Invite to Job" or "Message" to get started!
 <table>
   <tr>
     <td><a href="LINK1"><img src="assets/python.svg" width="100"/></a></td>
